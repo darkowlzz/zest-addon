@@ -8,3 +8,25 @@ var zestOFF = document.getElementById('zestButtonOFF');
 zestOFF.onclick = function() {
   addon.port.emit('RECORDOFF');
 }
+
+// Receive the request logs and list in recordList
+addon.port.on('LOGREQUEST', function(req) {
+  var list = document.getElementById('recordList');
+  var ele = document.createElement('div');
+  var title = document.createElement('span');
+  title.textContent = req.url;
+  var open = document.createElement('button');
+  open.onclick = function() {
+    addon.port.emit('SHOWJSON', req.id);
+  }
+  open.textContent = 'open'
+  ele.appendChild(title);
+  ele.appendChild(open);
+  list.appendChild(ele);
+});
+
+// Receive view content and display in main content
+addon.port.on('VIEWJSON', function(body) {
+  var main = document.getElementById('mainContent');
+  main.textContent = body;
+});
