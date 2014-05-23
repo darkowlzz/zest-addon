@@ -9,6 +9,21 @@ zestOFF.onclick = function() {
   addon.port.emit('RECORDOFF');
 }
 
+var clearRec = document.getElementById('clearRecords');
+clearRec.onclick = function() {
+  addon.port.emit('CLEAR');
+
+  // Clear main content area
+  var main = document.getElementById('mainContent');
+  main.textContent = '';
+
+  // Clear the request log list
+  var list = document.getElementById('recordList');
+  while(list.hasChildNodes()) {
+    list.removeChild(list.lastChild);
+  }
+}
+
 // Receive the request logs and list in recordList
 addon.port.on('LOGREQUEST', function(req) {
   var list = document.getElementById('recordList');
