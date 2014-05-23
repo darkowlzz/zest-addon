@@ -1,4 +1,10 @@
 // Control buttons
+var lockTab = document.getElementById('lockTab');
+lockTab.onclick = function() {
+  console.log('lock clicked');
+  addon.port.emit('LOCKTAB');
+}
+
 var zestON = document.getElementById('zestButtonON');
 zestON.onclick = function() {
   addon.port.emit('RECORDON');
