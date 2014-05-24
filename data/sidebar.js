@@ -1,3 +1,5 @@
+var ZestRecorderStatus = false;
+
 // Control buttons
 var lockTab = document.getElementById('lockTab');
 lockTab.onclick = function() {
@@ -6,12 +8,15 @@ lockTab.onclick = function() {
 
 var zestON = document.getElementById('zestButtonON');
 zestON.onclick = function() {
-  addon.port.emit('RECORDON');
-}
-
-var zestOFF = document.getElementById('zestButtonOFF');
-zestOFF.onclick = function() {
-  addon.port.emit('RECORDOFF');
+  ZestRecorderStatus = !ZestRecorderStatus;
+  if (ZestRecorderStatus) {
+    addon.port.emit('RECORDON');
+    zestON.textContent = 'Stop Recording';
+  }
+  else {
+    addon.port.emit('RECORDOFF');
+    zestON.textContent = 'Start Recording';
+  }
 }
 
 var clearRec = document.getElementById('clearRecords');
