@@ -1,7 +1,6 @@
 // Control buttons
 var lockTab = document.getElementById('lockTab');
 lockTab.onclick = function() {
-  console.log('lock clicked');
   addon.port.emit('LOCKTAB');
 }
 
@@ -50,4 +49,15 @@ addon.port.on('LOGREQUEST', function(req) {
 addon.port.on('VIEWJSON', function(body) {
   var main = document.getElementById('mainContent');
   main.textContent = body;
+});
+
+// Receive monitor status of tabs and update the indicator
+addon.port.on('MONITORSIG', function(monitor) {
+  var monitorSig = document.getElementById('monitorSig');
+  if (monitor) {
+    monitorSig.textContent = 'Tab monitor ON';
+  }
+  else {
+    monitorSig.textContent = 'Tab monitor OFF';
+  }
 });
