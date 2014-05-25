@@ -13,12 +13,12 @@ zestON.onclick = function() {
   if (ZestRecorderStatus) {
     addon.port.emit('RECORDON');
     zestON.textContent = 'Stop Recording';
-    recCircle.classList.toggle('recShow');
+    recCircle.classList.toggle('blink');
   }
   else {
     addon.port.emit('RECORDOFF');
     zestON.textContent = 'Start Recording';
-    recCircle.classList.toggle('recShow');
+    recCircle.classList.toggle('blink');
   }
 }
 
