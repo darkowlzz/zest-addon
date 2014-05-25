@@ -22,6 +22,9 @@
 
 .recShow {
   background-color: red;
+}
+
+.blink {
   animation: blink 1s steps(3, start) infinite;
 }
 
