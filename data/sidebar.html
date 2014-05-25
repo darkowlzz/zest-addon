@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
 <head>
   <meta name="application-name" content="Zest"/>
@@ -6,14 +7,14 @@
   <link rel="stylesheet" type="text/css" href="sidebar.css"/>
 </head>
 <body>
-  <div id='monitorSig'>Tab monitor Off</div>
+  <div id="monitorSig">
+    <div class="float-left circle monitorOFFcolor" id="monitorTab"></div>
+    <div class="float-left circle" id="recCircle"></div>
+  </div>
+  <br>
 
   <div class="content">
-    Main Content:
-    <div id="mainContent">
       <textarea id="zestText" name="zestContent" rows="20" cols="40" placeholder="Zest Content"></textarea>
-
-    </div>
   </div>
 
   <div class="controls">
