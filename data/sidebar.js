@@ -24,8 +24,8 @@ clearRec.onclick = function() {
   addon.port.emit('CLEAR');
 
   // Clear main content area
-  var main = document.getElementById('mainContent');
-  main.textContent = '';
+  var main = document.getElementById('zestText');
+  main.value = '';
 
   // Clear the request log list
   var list = document.getElementById('recordList');
@@ -52,8 +52,8 @@ addon.port.on('LOGREQUEST', function(req) {
 
 // Receive view content and display in main content
 addon.port.on('VIEWJSON', function(body) {
-  var main = document.getElementById('mainContent');
-  main.textContent = body;
+  var main = document.getElementById('zestText');
+  main.value = body;
 });
 
 // Receive monitor status of tabs and update the indicator
