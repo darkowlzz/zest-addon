@@ -7,15 +7,18 @@ lockTab.onclick = function() {
 }
 
 var zestON = document.getElementById('zestButtonON');
+var recCircle = document.getElementById('recCircle');
 zestON.onclick = function() {
   ZestRecorderStatus = !ZestRecorderStatus;
   if (ZestRecorderStatus) {
     addon.port.emit('RECORDON');
     zestON.textContent = 'Stop Recording';
+    recCircle.classList.toggle('recShow');
   }
   else {
     addon.port.emit('RECORDOFF');
     zestON.textContent = 'Start Recording';
+    recCircle.classList.toggle('recShow');
   }
 }
 
@@ -58,11 +61,13 @@ addon.port.on('VIEWJSON', function(body) {
 
 // Receive monitor status of tabs and update the indicator
 addon.port.on('MONITORSIG', function(monitor) {
-  var monitorSig = document.getElementById('monitorSig');
+  var monitorTab = document.getElementById('monitorTab');
   if (monitor) {
-    monitorSig.textContent = 'Tab monitor ON';
+    monitorTab.classList.remove('monitorOFFcolor');
+    monitorTab.classList.add('monitorONcolor');
   }
   else {
-    monitorSig.textContent = 'Tab monitor OFF';
+    monitorTab.classList.add('monitorOFFcolor');
+    monitorTab.classList.remove('monitorONcolor');
   }
 });
