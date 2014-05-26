@@ -1,0 +1,38 @@
+.scrollList {
+  overflow-y: auto;
+  width: 300px;
+  height: 300px;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.circle {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.monitorONcolor {
+  background-color: green;
+}
+
+.monitorOFFcolor {
+  background-color: yellow;
+}
+
+.recShow {
+  background-color: red;
+}
+
+.blink {
+  animation: blink 1s steps(3, start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+.float-left {
+  float: left;
+  margin: 2px;
+}
