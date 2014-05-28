@@ -6,6 +6,7 @@ lockTab.onclick = function() {
   addon.port.emit('LOCKTAB');
 }
 
+// Handle zest recorder button clicks
 var zestON = document.getElementById('zestButtonON');
 var recCircle = document.getElementById('recCircle');
 zestON.onclick = function() {
@@ -22,6 +23,7 @@ zestON.onclick = function() {
   }
 }
 
+// Handle clear logs button click
 var clearRec = document.getElementById('clearRecords');
 clearRec.onclick = function() {
   addon.port.emit('CLEAR');
@@ -71,3 +73,29 @@ addon.port.on('MONITORSIG', function(monitor) {
     monitorTab.classList.remove('monitorONcolor');
   }
 });
+
+// Get zest content textbox text wrap state
+function getTextWrapState() {
+  var zestText = document.getElementById('zestText');
+  if (zestText.wrap == 'off') {
+    return false;
+  }
+  else if (zestText.wrap == 'on') {
+    return true;
+  }
+}
+
+// Handle text wrap context menu item 
+var textWrapCM = document.getElementById('textWrapCM');
+textWrapCM.onclick = function() {
+  var textWrap = getTextWrapState();
+  var zestText = document.getElementById('zestText');
+  if (!textWrap) {
+    zestText.wrap = 'on';
+    textWrapCM.label = 'Disable Text Wrap';
+  }
+  else {
+    zestText.wrap = 'off';
+    textWrapCM.label = 'Enable Text Wrap';
+  }
+}
