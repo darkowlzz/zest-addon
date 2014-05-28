@@ -6,6 +6,11 @@
   max-height: 300px;
 }
 
+.label {
+  font-family: Helvetica;
+  font-size: 80%;
+}
+
 .circle {
   border-radius: 50%;
   width: 10px;
