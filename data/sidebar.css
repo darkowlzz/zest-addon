@@ -7,6 +7,19 @@
   border-style: double;
 }
 
+.logElement {
+  font-family: Helvetica;
+  font-size: 80%;
+  color: black;
+  padding: 10px 5px;
+}
+
+.logElement:hover {
+  background-color: #005dff;
+  color: white;
+  cursor: pointer;
+}
+
 .label {
   font-family: Helvetica;
   font-size: 80%;
