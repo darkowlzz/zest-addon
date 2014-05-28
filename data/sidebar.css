@@ -1,9 +1,9 @@
 .scrollList {
   overflow-y: auto;
-  width: 300px;
-  height: 300px;
-  max-width: 300px;
-  max-height: 300px;
+  width: 380px;
+  height: 200px;
+  max-width: 380px;
+  max-height: 200px;
 }
 
 .label {
