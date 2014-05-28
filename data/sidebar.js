@@ -43,15 +43,22 @@ clearRec.onclick = function() {
 addon.port.on('LOGREQUEST', function(req) {
   var list = document.getElementById('recordList');
   var ele = document.createElement('div');
+  ele.classList.add('logElement');
+  var url = req.url;
+  ele.title = url;
+
   var title = document.createElement('span');
-  title.textContent = req.url;
-  var open = document.createElement('button');
-  open.onclick = function() {
+  // slice the url if they are too long
+  if (url.length > 52) {
+    var url = url.slice(0, 52) + '...';
+  }
+  title.textContent = url;
+
+  ele.onclick = function() {
     addon.port.emit('SHOWJSON', req.id);
   }
-  open.textContent = 'open'
+
   ele.appendChild(title);
-  ele.appendChild(open);
   list.appendChild(ele);
 });
 
