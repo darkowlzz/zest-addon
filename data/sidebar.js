@@ -106,3 +106,10 @@ textWrapCM.onclick = function() {
     textWrapCM.label = 'Enable Text Wrap';
   }
 }
+
+// Handle Save Zest File context menu item
+var saveAsCM = document.getElementById('saveAsCM');
+saveAsCM.onclick = function() {
+  var zestText = document.getElementById('zestText');
+  addon.port.emit('SAVEZEST', zestText.value);
+}
