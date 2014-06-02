@@ -1,3 +1,18 @@
+.button {
+  border-radius: 15px;
+  background: #a8b5c1;
+  color: white;
+  font-size: 80%;
+  text-align: center;
+  padding: 3px 8px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.button:active {
+  background: #4193e0;
+}
+
 .scrollList {
   overflow-y: auto;
   width: 375px;
