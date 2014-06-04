@@ -40,11 +40,12 @@ clearRec.onclick = function() {
 }
 
 // Receive the request logs and list in recordList
-addon.port.on('LOGREQUEST', function(req) {
+addon.port.on('LOGREQUEST', function(zst) {
+  console.log('LOGREQUEST RECEIVED');
   var list = document.getElementById('recordList');
   var ele = document.createElement('div');
   ele.classList.add('logElement');
-  var url = req.url;
+  var url = zst.url;
   ele.title = url;
 
   var title = document.createElement('span');
@@ -55,7 +56,7 @@ addon.port.on('LOGREQUEST', function(req) {
   title.textContent = url;
 
   ele.onclick = function() {
-    addon.port.emit('SHOWJSON', req.id);
+    addon.port.emit('SHOWJSON', zst.id);
   }
 
   ele.appendChild(title);
