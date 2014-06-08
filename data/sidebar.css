@@ -70,3 +70,8 @@
   float: left;
   margin: 2px;
 }
+
+.checkbox {
+  font-family: Helvetica;
+  font-size: 70%;
+}

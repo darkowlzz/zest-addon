@@ -39,9 +39,14 @@ clearRec.onclick = function() {
   }
 }
 
+// Handle response body checkbox
+var respPref = document.getElementById('withRespBody');
+respPref.onchange = function() {
+  addon.port.emit('WITHRESPBODY', respPref.checked);
+}
+
 // Receive the request logs and list in recordList
 addon.port.on('LOGREQUEST', function(zst) {
-  console.log('LOGREQUEST RECEIVED');
   var list = document.getElementById('recordList');
   var ele = document.createElement('div');
   ele.classList.add('logElement');
