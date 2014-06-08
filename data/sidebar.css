@@ -3,7 +3,7 @@
   border-radius: 15px;
   background: #a8b5c1;
   color: white;
-  font-size: 80%;
+  font-size: 70%;
   text-align: center;
   padding: 3px 8px;
   margin: 5px;
@@ -27,6 +27,8 @@
 .logElement {
   font-family: Helvetica;
   font-size: 80%;
+  /* `auto` to fill parent width. */
+  width: auto;
   color: black;
   padding: 10px 5px;
 }
@@ -71,6 +73,11 @@
 
 .float-left {
   float: left;
+  margin: 2px;
+}
+
+.float-right {
+  float: right;
   margin: 2px;
 }
 

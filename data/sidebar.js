@@ -53,6 +53,14 @@ addon.port.on('LOGREQUEST', function(zst) {
   var url = zst.url;
   ele.title = url;
 
+  // close button
+  var close = document.createElement('span');
+  close.setAttribute('class', 'button float-right');
+  close.textContent = 'x';
+  close.onclick = function() {
+    list.removeChild(ele);
+  }
+
   var title = document.createElement('span');
   // slice the url if they are too long
   if (url.length > 52) {
@@ -65,6 +73,7 @@ addon.port.on('LOGREQUEST', function(zst) {
   }
 
   ele.appendChild(title);
+  ele.appendChild(close);
   list.appendChild(ele);
 });
 
@@ -77,13 +86,16 @@ addon.port.on('VIEWJSON', function(body) {
 // Receive monitor status of tabs and update the indicator
 addon.port.on('MONITORSIG', function(monitor) {
   var monitorTab = document.getElementById('monitorTab');
+  var lockBtn = document.getElementById('lockTab');
   if (monitor) {
     monitorTab.classList.remove('monitorOFFcolor');
     monitorTab.classList.add('monitorONcolor');
+    lockBtn.textContent = 'Unlock Tab';
   }
   else {
     monitorTab.classList.add('monitorOFFcolor');
     monitorTab.classList.remove('monitorONcolor');
+    lockBtn.textContent = 'Lock Tab';
   }
 });
 
@@ -96,6 +108,7 @@ function getTextWrapState() {
   else if (zestText.wrap == 'on') {
     return true;
   }
+  return null;
 }
 
 // Handle text wrap context menu item 
