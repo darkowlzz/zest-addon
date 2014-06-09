@@ -133,3 +133,33 @@ saveAsCM.onclick = function() {
   var zestText = document.getElementById('zestText');
   addon.port.emit('SAVEZEST', zestText.value);
 }
+
+// Handle Change Title context menu item
+var changeTitle = document.getElementById('changeTitle');
+changeTitle.onclick = function() {
+  var title = prompt('Enter title: ');
+  changeZest('title', title);
+}
+
+// Handle Change Author context menu item
+var changeAuthor = document.getElementById('changeAuthor');
+changeAuthor.onclick = function() {
+  var author = prompt('Enter author: ');
+  changeZest('author', author);
+}
+
+// Handle Change DEscription context menu item
+var changeDesc = document.getElementById('changeDesc');
+changeDesc.onclick = function() {
+  var desc = prompt('Enter description: ');
+  changeZest('description', desc);
+}
+
+// Change zest text property
+function changeZest(property, value) {
+  var zestText = document.getElementById('zestText');
+  var z = JSON.parse(zestText.value);
+  z[property] = value;
+  var z = JSON.stringify(z, undefined, 2);
+  zestText.value = z;
+}
