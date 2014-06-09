@@ -57,6 +57,7 @@ addon.port.on('LOGREQUEST', function(zst) {
   var close = document.createElement('span');
   close.setAttribute('class', 'button float-right');
   close.textContent = 'x';
+  close.title = 'Delete this item.';
   close.onclick = function() {
     list.removeChild(ele);
   }
