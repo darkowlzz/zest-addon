@@ -97,7 +97,6 @@ addon.port.on('LOGREQUEST', function(zst) {
 
 // Receive view content and display in main content
 addon.port.on('VIEWJSON', function(body) {
-  console.log('now we are moving...');
   currentZest = body;
   var main = document.getElementById('zestText');
   main.value = body;
@@ -197,7 +196,6 @@ function updateView() {
  */
 
 $(function(){
-  console.log('We are initializing...');
   $('#tree').dynatree({});
 });
 
@@ -205,7 +203,6 @@ function createGUI() {
   $('#tree').dynatree('getRoot').removeChildren();
 
   var z = JSON.parse(currentZest);
-  console.log('creating GUI...');
 
   var numOfReq = z.statements.length;
   var kids = [];
@@ -228,7 +225,7 @@ function createGUI() {
   }
 
   $('#tree').dynatree('getRoot').addChild(
-      {title: z.title, isFolder: true, key: 'folder1',
+      {title: z.statements[0].url, isFolder: true, key: 'folder1', expand: true,
         children: kids
       }
   );
