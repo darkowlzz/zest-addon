@@ -5,42 +5,59 @@
   <meta name="description" content="Zest Sidebar"/>
   <meta charset="UTF-8"/>
   <link rel="stylesheet" type="text/css" href="sidebar.css"/>
+
+  <!-- dynatree lib imports -->
+  <script src="dynatree/jquery/jquery.js" type="text/javascript"></script>
+  <script src="dynatree/jquery/jquery-ui.custom.js" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="dynatree/src/skin/ui.dynatree.css" id="skinsheet"/>
+  <script src="dynatree/src/jquery.dynatree.js" type="text/javascript"></script>
 </head>
 <body>
-  <div id="monitorSig">
-    <div class="float-left label">Current Tab:</div>
-    <div title="Current tab monitor status. 'Green' for monitored tab. 'Yellow' for unmonitored tab." class="float-left circle monitorOFFcolor" id="monitorTab"></div>
-    <div class="float-left label">Recorder:</div>
-    <div title="Zest recorder status. Blinks when recorder is ON." class="float-left circle recShow" id="recCircle"></div>
-  </div>
-  <br>
 
-  <div class="content">
-    <textarea contextmenu="mymenu" id="zestText" name="zestContent" rows="30" cols="48" wrap="off" readonly="true" placeholder="Zest Content"></textarea>
-  </div>
-
-  <menu type="context" id="mymenu">
-    <menuitem label="Enable Text Wrap" id="textWrapCM"></menuitem>
-    <menuitem label="Save as a Zest file" id="saveAsCM"></menuitem>
-    <menuitem label="Change Title" id="changeTitle"></menuitem>
-    <menuitem label="Change Author" id="changeAuthor"></menuitem>
-    <menuitem label="Change Description" id="changeDesc"></menuitem>
-  </menu>
-
-  <div class="controls">
-    <hr>
-    <div title="Lock and monitor currently active tab." id="lockTab" class="button float-left">Lock Tab</div>
-    <div title="Start the zest recorder." id="zestButtonON" class="button float-left">Start Recording</div>
-    <div title="Clear the recorded logs." id="clearRecords" class="button float-left">Clear Records</div>
-    <div title="Generate zest with/without response body." class="checkbox float-left">
-      <input id="withRespBody" type="checkbox" name="responseBody" value="resp">With Resp. Body</div>
+  <div id='sidebar'>
+    <div id="monitorSig" class="inner">
+      <div class="float-left label">Current Tab:</div>
+      <div title="Current tab monitor status. 'Green' for monitored tab. 'Yellow' for unmonitored tab." class="float-left circle monitorOFFcolor" id="monitorTab"></div>
+      <div class="float-left label">Recorder:</div>
+      <div title="Zest recorder status. Blinks when recorder is ON." class="float-left circle recShow" id="recCircle"></div>
+      <div title="Switch between zest text and GUI" id="switch" class="button float-left">Switch</div>
+   </div>
     <br>
-    <hr>
-  </div>
 
-  <div class="list">
-    <div class="scrollList" id="recordList">
+    <div class="box">
+      <div id="noGUI" class="cards txt">
+        <textarea contextmenu="mymenu" id="zestText" name="zestContent" rows="28" cols="48" wrap="off" readonly="true" placeholder="Zest Content"></textarea>
+      </div>
+      <div id="GUI" class="cards tree">
+        <div id="tree">
 
+        </div>
+      </div>
+    </div>
+
+    <menu type="context" id="mymenu">
+      <menuitem label="Enable Text Wrap" id="textWrapCM"></menuitem>
+      <menuitem label="Save as a Zest file" id="saveAsCM"></menuitem>
+      <menuitem label="Change Title" id="changeTitle"></menuitem>
+      <menuitem label="Change Author" id="changeAuthor"></menuitem>
+      <menuitem label="Change Description" id="changeDesc"></menuitem>
+    </menu>
+
+    <div class="inner">
+      <hr>
+      <div title="Lock and monitor currently active tab." id="lockTab" class="button float-left">Lock Tab</div>
+      <div title="Start the zest recorder." id="zestButtonON" class="button float-left">Start Recording</div>
+      <div title="Clear the recorded logs." id="clearRecords" class="button float-left">Clear Records</div>
+      <div title="Generate zest with/without response body." class="checkbox float-left">
+        <input id="withRespBody" type="checkbox" name="responseBody" value="resp">With Resp. Body</div>
+      <br>
+      <hr>
+    </div>
+
+    <div class="inner">
+      <div class="scrollList" id="recordList">
+
+      </div>
     </div>
   </div>
   <script src="sidebar.js"></script>
