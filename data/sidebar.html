@@ -26,21 +26,27 @@
 
     <div class="box">
       <div id="noGUI" class="cards txt">
-        <textarea contextmenu="mymenu" id="zestText" name="zestContent" rows="28" cols="48" wrap="off" readonly="true" placeholder="Zest Content"></textarea>
+        <textarea contextmenu="textViewCM" id="zestText" name="zestContent" rows="28" cols="48" wrap="off" readonly="true" placeholder="Zest Content"></textarea>
       </div>
       <div id="GUI" class="cards tree">
-        <div id="tree">
+        <div id="tree" contextmenu="treeViewCM">
 
         </div>
       </div>
     </div>
 
-    <menu type="context" id="mymenu">
+    <!-- Textview context menu -->
+    <menu type="context" id="textViewCM">
       <menuitem label="Enable Text Wrap" id="textWrapCM"></menuitem>
       <menuitem label="Save as a Zest file" id="saveAsCM"></menuitem>
       <menuitem label="Change Title" id="changeTitle"></menuitem>
       <menuitem label="Change Author" id="changeAuthor"></menuitem>
       <menuitem label="Change Description" id="changeDesc"></menuitem>
+    </menu>
+
+    <!-- Treeview context menu -->
+    <menu type="context" id="treeViewCM">
+      <menuitem label="Save as a Zest file" id="saveAsTvCM"></menuitem>
     </menu>
 
     <div class="inner">

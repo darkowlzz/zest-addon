@@ -146,33 +146,45 @@ textWrapCM.onclick = function() {
   }
 }
 
-// Handle Save Zest File context menu item
+/* Textview context menu item handler */
+
+// Save Zest File
 var saveAsCM = document.getElementById('saveAsCM');
 saveAsCM.onclick = function() {
   var zestText = document.getElementById('zestText');
   addon.port.emit('SAVEZEST', zestText.value);
 }
 
-// Handle Change Title context menu item
+// Change Title
 var changeTitle = document.getElementById('changeTitle');
 changeTitle.onclick = function() {
   var title = prompt('Enter title: ');
   changeZest('title', title);
 }
 
-// Handle Change Author context menu item
+// Change Author
 var changeAuthor = document.getElementById('changeAuthor');
 changeAuthor.onclick = function() {
   var author = prompt('Enter author: ');
   changeZest('author', author);
 }
 
-// Handle Change DEscription context menu item
+// Change Description
 var changeDesc = document.getElementById('changeDesc');
 changeDesc.onclick = function() {
   var desc = prompt('Enter description: ');
   changeZest('description', desc);
 }
+
+/* Treeview context menu item handler */
+
+// Save Zest File
+var saveAsTv = document.getElementById('saveAsTvCM');
+saveAsTv.onclick = function() {
+  var zestText = document.getElementById('zestText');
+  addon.port.emit('SAVEZEST', zestText.value);
+}
+
 
 // Change zest text property
 function changeZest(property, value) {
