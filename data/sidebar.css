@@ -1,18 +1,22 @@
+/* Box storing the cards. */
 .box {
   height: 400px;
   width: 380px;
   margin-top: 5px;
 }
 
+/* Textview and treeview cards */
 .cards {
   position: absolute;
 }
 
+/* Textview specific styles */
 .txt {
   z-index: 1;
   border-style: double;
 }
 
+/* Treeview specific styles */
 .tree {
   overflow-y: auto;
   z-index: 2;
@@ -48,6 +52,7 @@
   border-style: double;
 }
 
+/* Styles for the logged zest objects */
 .logElement {
   font-family: Helvetica;
   font-size: 80%;
@@ -68,7 +73,7 @@
   font-size: 80%;
 }
 
-/* Round indicators */
+/* Recorder indicators */
 .circle {
   border-radius: 50%;
   width: 10px;

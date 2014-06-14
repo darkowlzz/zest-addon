@@ -15,20 +15,31 @@
 <body>
 
   <div id='sidebar'>
-    <div id="monitorSig" class="inner">
+
+    <!-- Sidebar first row -->
+    <div id="monitorSig">
+
+      <!-- Recorder indicators -->
       <div class="float-left label">Current Tab:</div>
       <div title="Current tab monitor status. 'Green' for monitored tab. 'Yellow' for unmonitored tab." class="float-left circle monitorOFFcolor" id="monitorTab"></div>
       <div class="float-left label">Recorder:</div>
       <div title="Zest recorder status. Blinks when recorder is ON." class="float-left circle recShow" id="recCircle"></div>
+
+      <!-- Zest treeview and textview switcher button -->
       <div title="Switch between zest text and GUI" id="switch" class="button float-left">Switch</div>
-   </div>
+    </div>
     <br>
 
+    <!-- Sidebar second row -->
     <div class="box">
-      <div id="noGUI" class="cards txt">
+
+      <!-- Textview card -->
+      <div id="textview" class="cards txt">
         <textarea contextmenu="textViewCM" id="zestText" name="zestContent" rows="28" cols="48" wrap="off" readonly="true" placeholder="Zest Content"></textarea>
       </div>
-      <div id="GUI" class="cards tree">
+
+      <!-- Treeview card -->
+      <div id="treeview" class="cards tree">
         <div id="tree" contextmenu="treeViewCM">
 
         </div>
@@ -49,7 +60,8 @@
       <menuitem label="Save as a Zest file" id="saveAsTvCM"></menuitem>
     </menu>
 
-    <div class="inner">
+    <!-- Sidebar third row -->
+    <div>
       <hr>
       <div title="Lock and monitor currently active tab." id="lockTab" class="button float-left">Lock Tab</div>
       <div title="Start the zest recorder." id="zestButtonON" class="button float-left">Start Recording</div>
@@ -60,11 +72,13 @@
       <hr>
     </div>
 
-    <div class="inner">
+    <!-- Sidebar fourth row -->
+    <div>
       <div class="scrollList" id="recordList">
 
       </div>
     </div>
+
   </div>
   <script src="sidebar.js"></script>
 </body>
