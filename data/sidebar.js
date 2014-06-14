@@ -1,11 +1,47 @@
+/* Emit signal constants */
+const SIG_LOCKTAB = 'LOCKTAB';
+const SIG_RECORD_ON = 'RECORDON';
+const SIG_RECORD_OFF = 'RECORDOFF';
+const SIG_CLEAR_LOGS = 'CLEAR';
+const SIG_WITH_RESPONSE_BODY = 'WITHRESPBODY';
+const SIG_GET_JSON = 'SHOWJSON';
+const SIG_SAVE_ZEST = 'SAVEZEST';
+
+/* Receive signal constants */
+const SIG_LOG_REQUEST = 'LOGREQUEST';
+const SIG_RCV_JSON = 'VIEWJSON';
+const SIG_MONITOR_SIGNAL = 'MONITORSIG';
+
+/* Label constants */
+const RECORD_ON = 'Start Recording';
+const RECORD_OFF = 'Stop Recording';
+const DELETE_LOG_ITEM = 'Delete this item';
+const LOCK_ON = 'Lock Tab';
+const LOCK_OFF = 'Unlock Tab';
+
+const TEXT_WRAP = 'Enable Text Wrap';
+const TEXT_UNWRAP = 'Disable Text Wrap';
+
+const GET_TITLE = 'Enter new title: ';
+const GET_AUTHOR = 'Enter author: ';
+const GET_DESC = 'Enter description: ';
+
+/* Other constants */
+const LETTERS_LIMIT = 52;
+
+/* Globals */
 var ZestRecorderStatus = false;
 var ZestGUIView = true;
 var currentZest = '';
 
+
+/**** Sidebar first row buttons ****/
+
+// Zest card view switch button handler
 var switchBut = document.getElementById('switch');
 switchBut.onclick = function() {
   ZestGUIView = !ZestGUIView;
-  var gui = document.getElementById('GUI');
+  var gui = document.getElementById('treeview');
   if (ZestGUIView) {
     gui.style.zIndex = "2";
   }
@@ -14,10 +50,13 @@ switchBut.onclick = function() {
   }
 }
 
+
+/**** Sidebar third row buttons ****/
+
 // Control buttons
 var lockTab = document.getElementById('lockTab');
 lockTab.onclick = function() {
-  addon.port.emit('LOCKTAB');
+  addon.port.emit(SIG_LOCKTAB);
 }
 
 // Handle zest recorder button clicks
@@ -26,13 +65,13 @@ var recCircle = document.getElementById('recCircle');
 zestON.onclick = function() {
   ZestRecorderStatus = !ZestRecorderStatus;
   if (ZestRecorderStatus) {
-    addon.port.emit('RECORDON');
-    zestON.textContent = 'Stop Recording';
+    addon.port.emit(SIG_RECORD_ON);
+    zestON.textContent = RECORD_OFF;
     recCircle.classList.toggle('blink');
   }
   else {
-    addon.port.emit('RECORDOFF');
-    zestON.textContent = 'Start Recording';
+    addon.port.emit(SIG_RECORD_OFF);
+    zestON.textContent = RECORD_ON;
     recCircle.classList.toggle('blink');
   }
 }
@@ -40,7 +79,7 @@ zestON.onclick = function() {
 // Handle clear logs button click
 var clearRec = document.getElementById('clearRecords');
 clearRec.onclick = function() {
-  addon.port.emit('CLEAR');
+  addon.port.emit(SIG_CLEAR_LOGS);
 
   // Clear main content area
   var main = document.getElementById('zestText');
@@ -59,11 +98,14 @@ clearRec.onclick = function() {
 // Handle response body checkbox
 var respPref = document.getElementById('withRespBody');
 respPref.onchange = function() {
-  addon.port.emit('WITHRESPBODY', respPref.checked);
+  addon.port.emit(SIG_WITH_RESPONSE_BODY, respPref.checked);
 }
 
+
+/**** Addon signal receivers ****/
+
 // Receive the request logs and list in recordList
-addon.port.on('LOGREQUEST', function(zst) {
+addon.port.on(SIG_LOG_REQUEST, function(zst) {
   var list = document.getElementById('recordList');
   var ele = document.createElement('div');
   ele.classList.add('logElement');
@@ -74,20 +116,20 @@ addon.port.on('LOGREQUEST', function(zst) {
   var close = document.createElement('span');
   close.setAttribute('class', 'button float-right');
   close.textContent = 'x';
-  close.title = 'Delete this item.';
+  close.title = DELETE_LOG_ITEM;
   close.onclick = function() {
     list.removeChild(ele);
   }
 
   var title = document.createElement('span');
   // slice the url if they are too long
-  if (url.length > 52) {
-    var url = url.slice(0, 52) + '...';
+  if (url.length > LETTERS_LIMIT) {
+    var url = url.slice(0, LETTERS_LIMIT) + '...';
   }
   title.textContent = url;
 
   ele.onclick = function() {
-    addon.port.emit('SHOWJSON', zst.id);
+    addon.port.emit(SIG_GET_JSON, zst.id);
   }
 
   ele.appendChild(title);
@@ -96,7 +138,7 @@ addon.port.on('LOGREQUEST', function(zst) {
 });
 
 // Receive view content and display in main content
-addon.port.on('VIEWJSON', function(body) {
+addon.port.on(SIG_RCV_JSON, function(body) {
   currentZest = body;
   var main = document.getElementById('zestText');
   main.value = body;
@@ -104,87 +146,78 @@ addon.port.on('VIEWJSON', function(body) {
 });
 
 // Receive monitor status of tabs and update the indicator
-addon.port.on('MONITORSIG', function(monitor) {
+addon.port.on(SIG_MONITOR_SIGNAL, function(monitor) {
   var monitorTab = document.getElementById('monitorTab');
   var lockBtn = document.getElementById('lockTab');
   if (monitor) {
     monitorTab.classList.remove('monitorOFFcolor');
     monitorTab.classList.add('monitorONcolor');
-    lockBtn.textContent = 'Unlock Tab';
+    lockBtn.textContent = LOCK_OFF;
   }
   else {
     monitorTab.classList.add('monitorOFFcolor');
     monitorTab.classList.remove('monitorONcolor');
-    lockBtn.textContent = 'Lock Tab';
+    lockBtn.textContent = LOCK_ON;
   }
 });
 
-// Get zest content textbox text wrap state
-function getTextWrapState() {
-  var zestText = document.getElementById('zestText');
-  if (zestText.wrap == 'off') {
-    return false;
-  }
-  else if (zestText.wrap == 'on') {
-    return true;
-  }
-  return null;
-}
 
-// Handle text wrap context menu item 
+/**** Textview context menu item handler ****/
+
+// Text wrap
 var textWrapCM = document.getElementById('textWrapCM');
 textWrapCM.onclick = function() {
   var textWrap = getTextWrapState();
   var zestText = document.getElementById('zestText');
   if (!textWrap) {
     zestText.wrap = 'on';
-    textWrapCM.label = 'Disable Text Wrap';
+    textWrapCM.label = TEXT_UNWRAP;
   }
   else {
     zestText.wrap = 'off';
-    textWrapCM.label = 'Enable Text Wrap';
+    textWrapCM.label = TEXT_WRAP;
   }
 }
-
-/* Textview context menu item handler */
 
 // Save Zest File
 var saveAsCM = document.getElementById('saveAsCM');
 saveAsCM.onclick = function() {
   var zestText = document.getElementById('zestText');
-  addon.port.emit('SAVEZEST', zestText.value);
+  addon.port.emit(SIG_SAVE_ZEST, zestText.value);
 }
 
 // Change Title
 var changeTitle = document.getElementById('changeTitle');
 changeTitle.onclick = function() {
-  var title = prompt('Enter title: ');
+  var title = prompt(GET_TITLE);
   changeZest('title', title);
 }
 
 // Change Author
 var changeAuthor = document.getElementById('changeAuthor');
 changeAuthor.onclick = function() {
-  var author = prompt('Enter author: ');
+  var author = prompt(GET_AUTHOR);
   changeZest('author', author);
 }
 
 // Change Description
 var changeDesc = document.getElementById('changeDesc');
 changeDesc.onclick = function() {
-  var desc = prompt('Enter description: ');
+  var desc = prompt(GET_DESC);
   changeZest('description', desc);
 }
 
-/* Treeview context menu item handler */
+/**** Treeview context menu item handler ****/
 
 // Save Zest File
 var saveAsTv = document.getElementById('saveAsTvCM');
 saveAsTv.onclick = function() {
   var zestText = document.getElementById('zestText');
-  addon.port.emit('SAVEZEST', zestText.value);
+  addon.port.emit(SIG_SAVE_ZEST, zestText.value);
 }
 
+
+/**** Helper functions ****/
 
 // Change zest text property
 function changeZest(property, value) {
@@ -201,16 +234,30 @@ function updateView() {
   zestText.value = JSON.stringify(currentZest, undefined, 2);
 }
 
+// Get zest content textbox text wrap state
+function getTextWrapState() {
+  var zestText = document.getElementById('zestText');
+  if (zestText.wrap == 'off') {
+    return false;
+  }
+  else if (zestText.wrap == 'on') {
+    return true;
+  }
+  return null;
+}
+
 
 /**
  * Using JQuery below for dynatree 
  * NOTE: Update the above code to use jquery
  */
 
+// Initialize the treeview
 $(function(){
   $('#tree').dynatree({});
 });
 
+// Redraw the treeview
 function createGUI() {
   $('#tree').dynatree('getRoot').removeChildren();
 
