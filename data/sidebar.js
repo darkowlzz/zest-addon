@@ -13,6 +13,7 @@ const SIG_LOG_REQUEST = 'LOGREQUEST';
 const SIG_RCV_JSON = 'VIEWJSON';
 const SIG_MONITOR_SIGNAL = 'MONITORSIG';
 const SIG_LOG_IMPORT = 'LOGIMPORT';
+const SIG_SHOW_IMPORT = 'SHOWIMPORT';
 
 /* Label constants */
 const RECORD_ON = 'Start Recording';
@@ -168,6 +169,13 @@ addon.port.on(SIG_MONITOR_SIGNAL, function(monitor) {
 addon.port.on(SIG_LOG_IMPORT, function(importedZest) {
   console.log('TITLE: ' + importedZest.title);
   console.log('ID: ' + importedZest.id);
+});
+
+addon.port.on(SIG_SHOW_IMPORT, function(importedZest) {
+  currentZest = importedZest.zest;
+  var main  = document.getElementById('zestText');
+  main.value = currentZest;
+  createGUI();
 });
 
 /**** Textview context menu item handler ****/
