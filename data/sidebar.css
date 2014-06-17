@@ -1,3 +1,25 @@
+.logbox {
+  width: 375px;
+  height: 200px;
+}
+
+.scrollList {
+  height: 200px;
+  width: 374px;
+}
+
+#recordList {
+  position: absolute;
+}
+
+/*
+#importList {
+  position: absolute;
+  z-index: 0;
+  background: yellow;
+}
+*/
+
 /* Box storing the cards. */
 .box {
   height: 400px;
