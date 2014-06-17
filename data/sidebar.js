@@ -6,11 +6,16 @@ const SIG_CLEAR_LOGS = 'CLEAR';
 const SIG_WITH_RESPONSE_BODY = 'WITHRESPBODY';
 const SIG_GET_JSON = 'SHOWJSON';
 const SIG_SAVE_ZEST = 'SAVEZEST';
+const SIG_IMPORT = 'IMPORTZEST';
+const SIG_GET_IMPORT = 'GETIMPORTEDZEST';
 
 /* Receive signal constants */
 const SIG_LOG_REQUEST = 'LOGREQUEST';
 const SIG_RCV_JSON = 'VIEWJSON';
 const SIG_MONITOR_SIGNAL = 'MONITORSIG';
+//const SIG_LOG_IMPORT = 'LOGIMPORT';
+const SIG_SHOW_IMPORT = 'SHOWIMPORT';
+const SIG_SHOW_IMPORT_IN_VIEW = 'SHOWIMPORTINVIEW';
 
 /* Label constants */
 const RECORD_ON = 'Start Recording';
@@ -32,7 +37,9 @@ const LETTERS_LIMIT = 52;
 /* Globals */
 var ZestRecorderStatus = false;
 var ZestGUIView = true;
+var logView = true;
 var currentZest = '';
+var importCount = 0;
 
 
 /**** Sidebar first row buttons ****/
@@ -49,6 +56,21 @@ switchBut.onclick = function() {
     gui.style.zIndex = "0";
   }
 }
+
+// Log switch button handler
+/*
+var logSwitch = document.getElementById('logSwitch');
+logSwitch.onclick = function() {
+  logView = !logView;
+  var importList = document.getElementById('importList');
+  if (logView) {
+    importList.style.zIndex = "2";
+  }
+  else {
+    importList.style.zIndex = "0";
+  }
+}
+*/
 
 
 /**** Sidebar third row buttons ****/
@@ -161,6 +183,56 @@ addon.port.on(SIG_MONITOR_SIGNAL, function(monitor) {
   }
 });
 
+// Receive imported zest items and log them
+/* XXX Might be used sometime in future
+addon.port.on(SIG_LOG_IMPORT, function(importedZest) {
+  console.log('TITLE: ' + importedZest.title);
+  console.log('ID: ' + importedZest.id);
+});
+*/
+
+// Receive imported zest and show in tree/text-views & import logs
+addon.port.on(SIG_SHOW_IMPORT, function(importedZest) {
+  console.log('WE ARE LOGGING IMPORTS');
+
+  currentZest = importedZest.zest;
+  var main  = document.getElementById('zestText');
+  main.value = currentZest;
+  createGUI();
+
+  /*
+    ==This was part of the attempt to create a list of imported files==
+
+  console.log('CREATED VIEWS');
+
+  var list = document.getElementById('importList');
+  var ele = document.createElement('div');
+  console.log('created element');
+  ele.classList.add('logElement');
+
+  var title = document.createElement('span');
+  title.textContent = importedZest.title;
+
+  console.log('adding onclick listener');
+  ele.onclick = function() {
+    console.log('someone clicked me');
+    addon.port.emit(SIG_GET_IMPORT, importedZest.id);
+  }
+
+  console.log('appending the logs');
+  ele.appendChild(title);
+  list.appendChild(ele);
+  */
+});
+
+/*
+addon.port.on(SIG_SHOW_IMPORT_IN_VIEW, function(zst) {
+  currentZest = zst;
+  var main = document.getElementById('zestText');
+  main.value = currentZest;
+  createGUI();
+});
+*/
 
 /**** Textview context menu item handler ****/
 
@@ -216,6 +288,11 @@ saveAsTv.onclick = function() {
   addon.port.emit(SIG_SAVE_ZEST, zestText.value);
 }
 
+// Import Zest File
+var importZest = document.getElementById('importZest');
+importZest.onclick = function() {
+  addon.port.emit(SIG_IMPORT);
+}
 
 /**** Helper functions ****/
 
@@ -244,6 +321,14 @@ function getTextWrapState() {
     return true;
   }
   return null;
+}
+
+function createZestImport(zst) {
+  importCount++;
+  return {
+           zest: zst, 
+           id: importCount
+         }
 }
 
 

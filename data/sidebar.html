@@ -27,6 +27,11 @@
 
       <!-- Zest treeview and textview switcher button -->
       <div title="Switch between zest text and GUI" id="switch" class="button float-left">Switch</div>
+
+      <!-- Zest live logs and import logs switcher button 
+      <div title="Switch between live logs and import logs" id="logSwitch" class="button float-left">Log Switch</div>
+      -->
+
     </div>
     <br>
 
@@ -39,8 +44,8 @@
       </div>
 
       <!-- Treeview card -->
-      <div id="treeview" class="cards tree">
-        <div id="tree" contextmenu="treeViewCM">
+      <div id="treeview" class="cards tree" contextmenu="treeViewCM">
+        <div id="tree" >
 
         </div>
       </div>
@@ -58,6 +63,7 @@
     <!-- Treeview context menu -->
     <menu type="context" id="treeViewCM">
       <menuitem label="Save as a Zest file" id="saveAsTvCM"></menuitem>
+      <menuitem label="Import a Zest file" id="importZest"></menuitem>
     </menu>
 
     <!-- Sidebar third row -->
@@ -73,10 +79,17 @@
     </div>
 
     <!-- Sidebar fourth row -->
-    <div>
+    <div class="logbox">
+
       <div class="scrollList" id="recordList">
 
       </div>
+
+      <!--
+      <div class="scrollList" id="importList">
+
+      </div>
+      -->
     </div>
 
   </div>
