@@ -41,6 +41,21 @@ var logView = true;
 var currentZest = '';
 var importCount = 0;
 
+/**
+ * Recording modes:
+ * 0 => Record per page load. This includes all the html, css, js and
+ *      media files in the page.
+ * 1 => Record continuously everything until the recorder is stopped.
+ */
+var recordMode = 0;
+
+// Listener to change in mode and notify the recorder.
+var recMode = document.getElementById('recMode');
+recMode.onchange = function() {
+  recordMode = parseInt(recMode.value);
+  console.log('mode changing ' + recordMode);
+  addon.port.emit('MODECHANGE', recordMode);
+}
 
 /**** Sidebar first row buttons ****/
 
