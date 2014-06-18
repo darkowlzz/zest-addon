@@ -1,3 +1,11 @@
+define(['dynatree/jquery/jquery',
+        'dynatree/jquery/jquery-ui.custom',
+        'dynatree/src/jquery.dynatree'],
+        function(_) {
+
+  return {
+    start: function(addon) {
+
 /* Emit signal constants */
 const SIG_LOCKTAB = 'LOCKTAB';
 const SIG_RECORD_ON = 'RECORDON';
@@ -389,3 +397,8 @@ function createGUI() {
       }
   );
 }
+
+    }
+  }
+
+});
