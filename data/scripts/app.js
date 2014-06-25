@@ -7,6 +7,5 @@ requirejs.config({
 });
 
 requirejs(['main'], function(m) {
-  console.log('PASSING addon');
   m.start(addon);
 });
