@@ -23,14 +23,16 @@ define(['signalConst',
        *      media files in the page.
        * 1 => Record continuously everything until the recorder is stopped.
        */
-      var recordMode = 0;
+      //var recordMode = 0;
 
       // Listener to change in mode and notify the recorder.
+      /*
       var recMode = document.getElementById('recMode');
       recMode.onchange = function() {
         recordMode = parseInt(recMode.value);
         addon.port.emit('MODECHANGE', recordMode);
       }
+      */
 
       /**** Sidebar first row buttons ****/
 
@@ -114,13 +116,13 @@ define(['signalConst',
         close.textContent = 'x';
         close.title = label.DELETE_LOG_ITEM;
         close.onclick = function() {
-        list.removeChild(ele);
+          list.removeChild(ele);
         }
 
         var title = document.createElement('span');
         // slice the url if they are too long
         if (url.length > LETTERS_LIMIT) {
-        var url = url.slice(0, LETTERS_LIMIT) + '...';
+          var url = url.slice(0, LETTERS_LIMIT) + '...';
         }
         title.textContent = url;
 
