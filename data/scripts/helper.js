@@ -20,6 +20,38 @@ define(function() {
         return true;
       }
       return null;
+    },
+
+    // Change the card view
+    showCard: function(card) {
+      var treeV = document.getElementById('treeview');
+      var textV = document.getElementById('textview');
+      var runV = document.getElementById('runview');
+
+      switch(card) {
+        case 'tree':
+          treeV.style.display = 'inline';
+          textV.style.display = 'none';
+          runV.style.display = 'none';
+          break;
+        case 'text':
+          treeV.style.display = 'none';
+          textV.style.display = 'inline';
+          runV.style.display = 'none';
+          break;
+        case 'run':
+          treeV.style.display = 'none';
+          textV.style.display = 'none';
+          runV.style.display = 'inline';
+          break;
+      }
+    },
+
+    clearResults: function() {
+      var tbody = document.getElementById('runTableBody');
+      while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+      }
     }
   }
 });

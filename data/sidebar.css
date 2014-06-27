@@ -34,14 +34,24 @@
 
 /* Textview specific styles */
 .txt {
-  z-index: 1;
+  z-index: 2;
   border-style: double;
 }
 
 /* Treeview specific styles */
 .tree {
   overflow-y: auto;
-  z-index: 2;
+  z-index: 3;
+  background: white;
+  height: 400px;
+  width: 380px;
+  border-style: double;
+}
+
+/* RunView */
+.run{
+  overflow-y: auto;
+  z-index: 1;
   background: white;
   height: 400px;
   width: 380px;
@@ -51,9 +61,10 @@
 /* Sidebar buttons */
 .button {
   border-radius: 15px;
-  background: #a8b5c1;
+  background: #6F95AE;
   color: white;
-  font-size: 70%;
+  font-family: Helvetica;
+  font-size: 60%;
   text-align: center;
   padding: 3px 8px;
   margin: 5px;
@@ -62,6 +73,15 @@
 
 .button:active {
   background: #4193e0;
+}
+
+/* Zest run button */
+#runButton {
+  background: #4C9ED9;
+}
+
+#lockTab, #zestButtonON {
+  background: #4ACEC7;
 }
 
 /* Sidebar request log list */
@@ -103,15 +123,15 @@
 }
 
 .monitorONcolor {
-  background-color: green;
+  background-color: #3DB517;
 }
 
 .monitorOFFcolor {
-  background-color: yellow;
+  background-color: #F9FF01;
 }
 
 .recShow {
-  background-color: red;
+  background-color: #FF3D00;
 }
 
 .blink {

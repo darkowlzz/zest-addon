@@ -1,9 +1,5 @@
-define(['signalConst',
-        'labels',
-        'treeView',
-        'helper',
-        ],
-        function(signal, label, tree, helper) {
+define(['signalConst', 'labels', 'treeView','helper'],
+       function(signal, label, tree, helper) {
 
   return {
     start: function(addon) {
@@ -14,39 +10,32 @@ define(['signalConst',
       /* Globals */
       var ZestRecorderStatus = false;
       var ZestGUIView = true;
+      var RunView = false;
       var logView = true;
       var currentZest = '';
-
-      /**
-       * Recording modes:
-       * 0 => Record per page load. This includes all the html, css, js and
-       *      media files in the page.
-       * 1 => Record continuously everything until the recorder is stopped.
-       */
-      //var recordMode = 0;
-
-      // Listener to change in mode and notify the recorder.
-      /*
-      var recMode = document.getElementById('recMode');
-      recMode.onchange = function() {
-        recordMode = parseInt(recMode.value);
-        addon.port.emit('MODECHANGE', recordMode);
-      }
-      */
 
       /**** Sidebar first row buttons ****/
 
       // Zest card view switch button handler
-      var switchBut = document.getElementById('switch');
-      switchBut.onclick = function() {
-        ZestGUIView = !ZestGUIView;
-        var gui = document.getElementById('treeview');
-        if (ZestGUIView) {
-          gui.style.zIndex = "2";
-        }
-        else {
-          gui.style.zIndex = "0";
-        }
+      var treeButton = document.getElementById('treeButton');
+      treeButton.onclick = function() {
+        helper.showCard('tree');
+      }
+
+      var textButton = document.getElementById('textButton');
+      textButton.onclick = function() {
+        helper.showCard('text');
+      }
+
+      var runViewButton = document.getElementById('runViewButton');
+      runViewButton.onclick = function() {
+        helper.showCard('run');
+      }
+
+      var runButton = document.getElementById('runButton');
+      runButton.onclick = function() {
+        addon.port.emit('RUNTHIS', currentZest);
+        helper.clearResults();
       }
 
       /**** Sidebar third row buttons ****/
@@ -167,6 +156,44 @@ define(['signalConst',
         tree.createTree(currentZest);
       });
 
+      addon.port.on('RESULT_RCV', function(result) {
+        var runTableBody = document.getElementById('runTableBody');
+
+        var row = document.createElement('tr');
+        var id = document.createElement('td');
+        var method = document.createElement('td');
+        var url = document.createElement('td');
+        var respCode = document.createElement('td');
+        var respLength = document.createElement('td');
+        var respTime = document.createElement('td');
+        var rslt = document.createElement('td');
+
+        id.textContent = result.id;
+        method.textContent = result.method;
+        if (result.url.length > 20) {
+          url.textContent = result.url.slice(0, 20) + '...';
+        }
+        else {
+          url.textContent = result.url;
+        }
+        url.title = result.url;
+        respCode.textContent = result.respCode;
+        respLength.textContent = result.length;
+        respTime.textContent = result.time;
+        rslt.textContent = result.result;
+
+        row.appendChild(id);
+        row.appendChild(method);
+        row.appendChild(url);
+        row.appendChild(respCode);
+        row.appendChild(respLength);
+        row.appendChild(respTime);
+        row.appendChild(rslt);
+
+        runTableBody.appendChild(row);
+
+      });
+
       /**** Textview context menu item handler ****/
 
       // Text wrap
@@ -226,7 +253,6 @@ define(['signalConst',
       importZest.onclick = function() {
         addon.port.emit(signal.SIG_IMPORT);
       }
-
     }
   }
 
