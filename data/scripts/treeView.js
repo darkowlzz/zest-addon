@@ -10,11 +10,18 @@ define(['dynatree/jquery/jquery',
 
   return {
     clear: function() {
-      $('#tree').dynatree('getRoot').removeChildren();
+      try {
+        $('#tree').dynatree('getRoot').removeChildren();
+      }
+      catch(e) {}
     },
 
     createTree: function(currentZest) {
-      $('#tree').dynatree('getRoot').removeChildren();
+      try {
+        $('#tree').dynatree('getRoot').removeChildren();
+      }
+      catch(e) {}
+
       var z = JSON.parse(currentZest);
       var numOfReq = z.statements.length;
       var kids = [];

@@ -6,13 +6,6 @@
   <meta charset="UTF-8"/>
   <link rel="stylesheet" type="text/css" href="sidebar.css"/>
   <link rel="stylesheet" type="text/css" href="scripts/dynatree/src/skin/ui.dynatree.css" id="skinsheet"/>
-
-  <!-- dynatree lib imports -->
-  <!--
-  <script src="dynatree/jquery/jquery.js" type="text/javascript"></script>
-  <script src="dynatree/jquery/jquery-ui.custom.js" type="text/javascript"></script>
-  <script src="dynatree/src/jquery.dynatree.js" type="text/javascript"></script>
-  -->
 </head>
 <body>
 
@@ -28,11 +21,10 @@
       <div title="Zest recorder status. Blinks when recorder is ON." class="float-left circle recShow" id="recCircle"></div>
 
       <!-- Zest treeview and textview switcher button -->
-      <div title="Switch between zest text and GUI" id="switch" class="button float-left">Switch</div>
-
-      <!-- Zest live logs and import logs switcher button 
-      <div title="Switch between live logs and import logs" id="logSwitch" class="button float-left">Log Switch</div>
-      -->
+      <div title="Zest tree view" id="treeButton" class="button float-left">Tree View</div>
+      <div title="Zest text view" id="textButton" class="button float-left">Text View</div>
+      <div title="Zest run results" id="runViewButton" class="button float-left">Results</div>
+      <div title="Run the current zest." id="runButton" class="button float-left">Run</div>
 
     </div>
     <br>
@@ -48,10 +40,24 @@
       <!-- Treeview card -->
       <div id="treeview" class="cards tree" contextmenu="treeViewCM">
         <div id="tree" >
-
         </div>
       </div>
-    </div>
+
+      <!-- RunView card -->
+      <div id="runview" class="cards run">
+        <div>
+        <table border="1" id="runTable">
+          <tr>
+            <th>ID</th> <th>Method</th> <th>URL</th>
+            <th>Response Code</th> <th>Response Length</th>
+            <th>Response Time</th> <th>Result</th>
+          </tr>
+          <tbody id="runTableBody">
+          </tbody>
+        </table>
+        </div>
+      </div>
+   </div>
 
     <!-- Textview context menu -->
     <menu type="context" id="textViewCM">
