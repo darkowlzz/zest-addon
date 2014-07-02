@@ -29,16 +29,20 @@ define(['dynatree/jquery/jquery',
       var temp2 = null;
       for (var i of z.statements) {
         temp2 = []
+        try {
           if (i.assertions[0].rootExpression.elementType == 'ZestExpressionStatusCode') {
             temp2.push({title: 'Assert - Status Code (' + i.assertions[0].rootExpression.code + ')' })
           }
           if (i.assertions[1].rootExpression.elementType == 'ZestExpressionLength') {
             temp2.push({title: 'Assert - Length (response.body = ' + i.assertions[1].rootExpression.length + ')'});
           }
-          temp = {
-            title: (i.method + ' : ' + i.url), isFolder: true,
-                   children: temp2
-          }
+        }
+        catch(e) {}
+
+        temp = {
+          title: (i.method + ' : ' + i.url), isFolder: true,
+                 children: temp2
+        }
         kids.push(temp);
       }
       $('#tree').dynatree('getRoot').addChild({
