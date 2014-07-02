@@ -157,3 +157,25 @@
   font-family: Helvetica;
   font-size: 70%;
 }
+
+/* Table rows */
+.tableRow {
+  background-color: #F4F5F6;
+}
+
+.table {
+  font-family: Helvetica;
+  font-size: 70%;
+}
+
+.tableRow:hover {
+  background-color: #F9F8E6;
+}
+
+.tableCellPass {
+  background-color: #669900;
+}
+
+.tableCellFail {
+  background-color: #CA5651;
+}

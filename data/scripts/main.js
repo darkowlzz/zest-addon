@@ -1,4 +1,4 @@
-define(['signalConst', 'labels', 'treeView','helper'],
+define(['signalConst', 'labels', 'treeView', 'helper'],
        function(signal, label, tree, helper) {
 
   return {
@@ -180,8 +180,17 @@ define(['signalConst', 'labels', 'treeView','helper'],
         respCode.textContent = result.respCode;
         respLength.textContent = result.length;
         respTime.textContent = result.time;
-        rslt.textContent = result.result;
+        if (result.result == true) {
+          rslt.textContent = 'PASS';
+          rslt.classList.add('tableCellPass');
+        }
+        else {
+          rslt.textContent = 'FAIL';
+          rslt.title = result.resultDesc;
+          rslt.classList.add('tableCellFail');
+        }
 
+        row.classList.add('tableRow');
         row.appendChild(id);
         row.appendChild(method);
         row.appendChild(url);
