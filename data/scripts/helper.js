@@ -47,6 +47,11 @@ define(function() {
       }
     },
 
+    clearTextView: function() {
+      var main = document.getElementById('zestText');
+      main.value = '';
+    },
+
     clearResults: function() {
       var tbody = document.getElementById('runTableBody');
       while (tbody.firstChild) {

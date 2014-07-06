@@ -68,9 +68,8 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       clearRec.onclick = function() {
         addon.port.emit(signal.SIG_CLEAR_LOGS);
 
-        // Clear main content area
-        var main = document.getElementById('zestText');
-        main.value = '';
+        // Clear text-view
+        helper.clearTextView();
 
         // Clear tree-view
         tree.clear();
@@ -116,7 +115,12 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         title.textContent = url;
 
         ele.onclick = function() {
-          addon.port.emit(signal.SIG_GET_JSON, zst.id);
+          if (ZestRecorderStatus) {
+            alert('Please STOP the recorder first.');
+          }
+          else {
+            addon.port.emit(signal.SIG_GET_JSON, zst.id);
+          }
         }
 
         ele.appendChild(title);
@@ -124,7 +128,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         list.appendChild(ele);
       });
 
-      // Receive view content and display in main content
+      // Receive view content and display in treeView and textView cards
       addon.port.on(signal.SIG_RCV_JSON, function(body) {
         currentZest = body;
         var main = document.getElementById('zestText');
@@ -201,6 +205,11 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
         runTableBody.appendChild(row);
 
+      });
+
+      addon.port.on('CLEAR_CARDS', function() {
+        tree.clear();
+        helper.clearResults();
       });
 
       /**** Textview context menu item handler ****/
