@@ -5,7 +5,45 @@ define(['dynatree/jquery/jquery',
 
   // Initialize dynatree
   $(function(){
-    $('#tree').dynatree({});
+    $('#tree').dynatree({
+      dnd: {
+        onDragStart: function(node) {
+          // Drag only the folders
+          if (node.data.isFolder) {
+            return true;
+          }
+          else {
+            return false;
+          }
+        },
+        onDragStop: function(node) {
+        },
+        autoExpandMS: 1000,
+        preventVoidMoves: true,
+        onDragEnter: function(node, sourceNode) {
+          return true;
+        },
+        onDragOver: function(node, sourceNode, hitMode) {
+          // Prevent dropping a parent below it's own child.
+          if (node.isDescendantOf(sourceNode)) {
+            return false;
+          }
+          // Prevent dropping a folder below a non-folder
+          if (!node.data.isFolder) {
+            return false;
+          }
+        },
+        onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+          if (node.data.isFolder) {
+            // Drop folder as a sibling after the target
+            sourceNode.move(node, 'after');
+          }
+        },
+        onDragLeave: function(node, sourceNode) {
+        }
+      }
+
+    });
   });
 
   return {
@@ -17,14 +55,14 @@ define(['dynatree/jquery/jquery',
     },
 
     createTree: function(currentZest) {
+      var tree = $('#tree').dynatree('getRoot');
       try {
-        $('#tree').dynatree('getRoot').removeChildren();
+        tree.removeChildren();
       }
       catch(e) {}
 
       var z = JSON.parse(currentZest);
       var numOfReq = z.statements.length;
-      var kids = [];
       var temp = null;
       var temp2 = null;
       for (var i of z.statements) {
@@ -40,15 +78,11 @@ define(['dynatree/jquery/jquery',
         catch(e) {}
 
         temp = {
-          title: (i.method + ' : ' + i.url), isFolder: true,
+          title: (i.method + ' : ' + i.url), isFolder: true, key: i.url,
                  children: temp2
         }
-        kids.push(temp);
+        tree.addChild(temp);
       }
-      $('#tree').dynatree('getRoot').addChild({
-        title: z.statements[0].url, isFolder: true, key: 'folder1', expand: true,
-        children: kids
-      });
     }
 
   }

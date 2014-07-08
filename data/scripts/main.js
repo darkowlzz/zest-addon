@@ -271,6 +271,21 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       importZest.onclick = function() {
         addon.port.emit(signal.SIG_IMPORT);
       }
+
+      /**
+       * Might be useful to detect changes in tree.
+       * Pending....
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          console.log('MUTATION OBSERVED: ' + mutation.type);
+        });
+      });
+
+      var config = { attributes: true, childList: true, characterData: true }
+
+      var target = document.getElementById('tree');
+      observer.observe(target, config);
+      */
     }
   }
 
