@@ -55,9 +55,9 @@ define(['dynatree/jquery/jquery',
     },
 
     createTree: function(currentZest) {
-      var tree = $('#tree').dynatree('getRoot');
+      var root = $('#tree').dynatree('getRoot');
       try {
-        tree.removeChildren();
+        root.removeChildren();
       }
       catch(e) {}
 
@@ -69,20 +69,21 @@ define(['dynatree/jquery/jquery',
         temp2 = []
         try {
           if (i.assertions[0].rootExpression.elementType == 'ZestExpressionStatusCode') {
-            temp2.push({title: 'Assert - Status Code (' + i.assertions[0].rootExpression.code + ')' })
+            temp2.push({title: 'Assert - Status Code (' + i.assertions[0].rootExpression.code + ')', icon: 'assert.png' })
           }
           if (i.assertions[1].rootExpression.elementType == 'ZestExpressionLength') {
-            temp2.push({title: 'Assert - Length (response.body = ' + i.assertions[1].rootExpression.length + ')'});
+            temp2.push({title: 'Assert - Length (response.body = ' + i.assertions[1].rootExpression.length + ')', icon: 'assert.png' });
           }
         }
         catch(e) {}
 
         temp = {
-          title: (i.method + ' : ' + i.url), isFolder: true, key: i.url,
+          title: (i.method + ' : ' + i.url), isFolder: true, key: i.index, icon: 'request.png',
                  children: temp2
         }
-        tree.addChild(temp);
+        root.addChild(temp);
       }
+
     }
 
   }

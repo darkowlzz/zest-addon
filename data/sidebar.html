@@ -20,11 +20,14 @@
       <div class="float-left label">Recorder:</div>
       <div title="Zest recorder status. Blinks when recorder is ON." class="float-left circle recShow" id="recCircle"></div>
 
-      <!-- Zest treeview and textview switcher button -->
-      <div title="Zest tree view" id="treeButton" class="button float-left">Tree View</div>
-      <div title="Zest text view" id="textButton" class="button float-left">Text View</div>
-      <div title="Zest run results" id="runViewButton" class="button float-left">Results</div>
-      <div title="Run the current zest." id="runButton" class="button float-left">Run</div>
+      <!-- Icons -->
+      <input title="Load Zest Script" type="image" src="images/load.png" id="importZest" class="icon">
+      <input title="Save Zest Script" type="image" src="images/save.png" id="saveAsTvCM" class="icon">
+
+      <input title="Tree View" type="image" src="images/tree.png" id="treeButton" class="icon">
+      <input title="Text View" type="image" src="images/textscript.png" id="textButton" class="icon">
+      <input title="Run Results" type="image" src="images/result.png" id="runViewButton" class="icon">
+      <input title="Run Zest Script" type="image" src="images/run.png" id="runButton" class="icon">
 
     </div>
     <br>
@@ -38,7 +41,7 @@
       </div>
 
       <!-- Treeview card -->
-      <div id="treeview" class="cards tree" contextmenu="treeViewCM">
+      <div id="treeview" class="cards tree">
         <div id="tree" >
         </div>
       </div>
@@ -68,18 +71,12 @@
       <menuitem label="Change Description" id="changeDesc"></menuitem>
     </menu>
 
-    <!-- Treeview context menu -->
-    <menu type="context" id="treeViewCM">
-      <menuitem label="Save as a Zest file" id="saveAsTvCM"></menuitem>
-      <menuitem label="Import a Zest file" id="importZest"></menuitem>
-    </menu>
-
     <!-- Sidebar third row -->
     <div>
       <hr>
-      <div title="Lock and monitor currently active tab." id="lockTab" class="button float-left">Lock Tab</div>
-      <div title="Start the zest recorder." id="zestButtonON" class="button float-left">Start Recording</div>
-      <div title="Clear the recorded logs." id="clearRecords" class="button float-left">Clear Records</div>
+      <input title="Lock and monitor current tab." type="image" src="images/unlock.png" id="lockTab" class="icon">
+      <input title="Record a new Zest script." type="image" src="images/cassette.png" id="zestButtonON" class="icon">
+      <input title="Clear everything." type="image" src="images/broom.png" id="clearRecords" class="icon">
       <div title="Generate zest with/without response body." class="checkbox float-left">
         <input id="withRespBody" type="checkbox" name="responseBody" value="resp">With Resp. Body</div>
       <br>
