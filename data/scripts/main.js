@@ -53,12 +53,14 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         ZestRecorderStatus = !ZestRecorderStatus;
         if (ZestRecorderStatus) {
           addon.port.emit(signal.SIG_RECORD_ON);
-          zestON.textContent = label.RECORD_OFF;
+          zestON.title = label.RECORD_OFF;
+          zestON.src = 'images/cassette-red.png';
           recCircle.classList.toggle('blink');
         }
         else {
           addon.port.emit(signal.SIG_RECORD_OFF);
-          zestON.textContent = label.RECORD_ON;
+          zestON.title = label.RECORD_ON;
+          zestON.src = 'images/cassette.png';
           recCircle.classList.toggle('blink');
         }
       }
@@ -143,12 +145,14 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         if (monitor) {
           monitorTab.classList.remove('monitorOFFcolor');
           monitorTab.classList.add('monitorONcolor');
-          lockBtn.textContent = label.LOCK_OFF;
+          lockBtn.title = label.LOCK_OFF;
+          lockBtn.src = 'images/lock.png';
         }
         else {
           monitorTab.classList.add('monitorOFFcolor');
           monitorTab.classList.remove('monitorONcolor');
-          lockBtn.textContent = label.LOCK_ON;
+          lockBtn.title = label.LOCK_ON;
+          lockBtn.src = 'images/unlock.png';
         }
       });
 
