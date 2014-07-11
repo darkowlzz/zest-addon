@@ -131,11 +131,15 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       });
 
       // Receive view content and display in treeView and textView cards
-      addon.port.on(signal.SIG_RCV_JSON, function(body) {
-        currentZest = body;
-        var main = document.getElementById('zestText');
-        main.value = body;
-        tree.createTree(currentZest);
+      addon.port.on(signal.SIG_RCV_JSON, function(z) {
+        currentZest = z.zest;
+        helper.renderZestTextAs(currentZest);
+        tree.createTree(z);
+      });
+
+      // Receive updated zest text
+      addon.port.on('UPDATE_TEXT_VIEW', function(z) {
+        helper.renderZestTextAs(z);
       });
 
       // Receive monitor status of tabs and update the indicator
@@ -161,7 +165,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         currentZest = importedZest.zest;
         var main  = document.getElementById('zestText');
         main.value = currentZest;
-        tree.createTree(currentZest);
+        tree.createTree(importedZest);
       });
 
       addon.port.on('RESULT_RCV', function(result) {
@@ -244,21 +248,21 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       var changeTitle = document.getElementById('changeTitle');
       changeTitle.onclick = function() {
         var title = prompt(label.GET_TITLE);
-        helper.changeZest('title', title);
+        helper.changeZestProperty('title', title);
       }
 
       // Change Author
       var changeAuthor = document.getElementById('changeAuthor');
       changeAuthor.onclick = function() {
         var author = prompt(label.GET_AUTHOR);
-        helper.changeZest('author', author);
+        helper.changeZestProperty('author', author);
       }
 
       // Change Description
       var changeDesc = document.getElementById('changeDesc');
       changeDesc.onclick = function() {
         var desc = prompt(label.GET_DESC);
-        helper.changeZest('description', desc);
+        helper.changeZestProperty('description', desc);
       }
 
       /**** Treeview context menu item handler ****/
@@ -276,20 +280,12 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         addon.port.emit(signal.SIG_IMPORT);
       }
 
-      /**
-       * Might be useful to detect changes in tree.
-       * Pending....
-      var observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-          console.log('MUTATION OBSERVED: ' + mutation.type);
-        });
-      });
-
-      var config = { attributes: true, childList: true, characterData: true }
-
-      var target = document.getElementById('tree');
-      observer.observe(target, config);
-      */
+      document.addEventListener('treeChange', function(a) {
+        addon.port.emit('TREE_CHANGED', {src: a.detail.src,
+                                         dst: a.detail.trg,
+                                         id: a.detail.id
+                                        });
+      }, false);
     }
   }
 

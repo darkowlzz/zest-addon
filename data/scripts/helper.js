@@ -1,13 +1,19 @@
 define(function() {
 
+  function renderZestTextAs(z) {
+    var zestText = document.getElementById('zestText');
+    zestText.value = z;
+  }
+
   return {
+    renderZestTextAs: renderZestTextAs,
+
     // Change zest text property
-    changeZest: function(property, value) {
-      var zestText = document.getElementById('zestText');
+    changeZestProperty: function(property, value) {
       var z = JSON.parse(zestText.value);
       z[property] = value;
       var z = JSON.stringify(z, undefined, 2);
-      zestText.value = z;
+      renderZestTextAs(z);
     },
 
     // Get zest content textbox text wrap state

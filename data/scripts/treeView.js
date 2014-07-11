@@ -3,6 +3,9 @@ define(['dynatree/jquery/jquery',
         'dynatree/src/jquery.dynatree'],
         function(_){
 
+  var currentZest;
+  var zestId;
+
   // Initialize dynatree
   $(function(){
     $('#tree').dynatree({
@@ -35,6 +38,14 @@ define(['dynatree/jquery/jquery',
         },
         onDrop: function(node, sourceNode, hitMode, ui, draggable) {
           if (node.data.isFolder) {
+            var evt = new CustomEvent('treeChange', {
+                                        detail: {
+                                          src: parseInt(sourceNode.data.key),
+                                          trg: parseInt(node.data.key),
+                                          id: parseInt(zestId)
+                                        }
+                                      });
+            document.dispatchEvent(evt);
             // Drop folder as a sibling after the target
             sourceNode.move(node, 'after');
           }
@@ -54,7 +65,10 @@ define(['dynatree/jquery/jquery',
       catch(e) {}
     },
 
-    createTree: function(currentZest) {
+    createTree: function(importedZest) {
+      currentZest = importedZest.zest;
+      zestId = importedZest.id;
+
       var root = $('#tree').dynatree('getRoot');
       try {
         root.removeChildren();
