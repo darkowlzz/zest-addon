@@ -6,6 +6,7 @@
   <meta charset="UTF-8"/>
   <link rel="stylesheet" type="text/css" href="sidebar.css"/>
   <link rel="stylesheet" type="text/css" href="scripts/dynatree/src/skin/ui.dynatree.css" id="skinsheet"/>
+  <link rel="stylesheet" type="text/css" href="scripts/dynatree/doc/contextmenu/jquery.contextMenu.css"/>
 </head>
 <body>
 
@@ -37,7 +38,8 @@
 
       <!-- Textview card -->
       <div id="textview" class="cards txt">
-        <textarea contextmenu="textViewCM" id="zestText" name="zestContent" rows="28" cols="48" wrap="off" readonly="true" placeholder="Zest Content"></textarea>
+        <textarea contextmenu="textViewCM" id="zestText" name="zestContent" rows="28" cols="48" wrap="off" readonly="true" placeholder="Zest Content">
+        </textarea>
       </div>
 
       <!-- Treeview card -->
@@ -65,11 +67,16 @@
     <!-- Textview context menu -->
     <menu type="context" id="textViewCM">
       <menuitem label="Enable Text Wrap" id="textWrapCM"></menuitem>
-      <menuitem label="Save as a Zest file" id="saveAsCM"></menuitem>
       <menuitem label="Change Title" id="changeTitle"></menuitem>
       <menuitem label="Change Author" id="changeAuthor"></menuitem>
       <menuitem label="Change Description" id="changeDesc"></menuitem>
     </menu>
+
+    <!-- Definition of tree node context menu -->
+    <ul id="nodeMenu" class="contextMenu">
+      <li><a href="#key">Key</a></li>
+      <li><a href="#delete">Delete</a></li>
+    </ul>
 
     <!-- Sidebar third row -->
     <div>
@@ -79,6 +86,9 @@
       <input title="Clear everything." type="image" src="images/broom.png" id="clearRecords" class="icon">
       <div title="Generate zest with/without response body." class="checkbox float-left">
         <input id="withRespBody" type="checkbox" name="responseBody" value="resp">With Resp. Body</div>
+      <div class="float-left">
+        <input title="Enter the search term and search through the zest." type="search" id="searchBar" placeholder="Search">
+      </div>
       <br>
       <hr>
     </div>

@@ -238,10 +238,18 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       }
 
       // Save Zest File
-      var saveAsCM = document.getElementById('saveAsCM');
-      saveAsCM.onclick = function() {
-        var zestText = document.getElementById('zestText');
-        addon.port.emit(signal.SIG_SAVE_ZEST, zestText.value);
+      var searchBar = document.getElementById('searchBar');
+      searchBar.onkeypress = function(event) {
+        if (event.keyCode == 13) {
+          var searchText = searchBar.value;
+          var zestText = document.getElementById('zestText');
+          zestText.focus();
+          var l = zestText.value.indexOf(searchText);
+          if (l != -1) {
+            zestText.selectionStart = l;
+            zestText.selectionEnd = l + searchText.length;
+          }
+        }
       }
 
       // Change Title
@@ -280,12 +288,16 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         addon.port.emit(signal.SIG_IMPORT);
       }
 
-      document.addEventListener('treeChange', function(a) {
-        addon.port.emit('TREE_CHANGED', {src: a.detail.src,
-                                         dst: a.detail.trg,
-                                         id: a.detail.id
+      document.addEventListener('treeChange', function(data) {
+        addon.port.emit('TREE_CHANGED', {src: data.detail.src,
+                                         dst: data.detail.trg,
+                                         id: data.detail.id
                                         });
       }, false);
+
+      document.addEventListener('deleteNode', function(data) {
+        addon.port.emit('DELETE_NODE', data.detail);
+      });
     }
   }
 

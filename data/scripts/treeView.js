@@ -1,14 +1,68 @@
 define(['dynatree/jquery/jquery',
         'dynatree/jquery/jquery-ui.custom',
-        'dynatree/src/jquery.dynatree'],
+        'dynatree/src/jquery.dynatree',
+        'dynatree/doc/contextmenu/jquery.contextMenu-custom'],
         function(_){
 
   var currentZest;
   var zestId;
 
+  function emitSignal(eventName, data) {
+    var evt = new CustomEvent(eventName, { detail: data });
+    document.dispatchEvent(evt);
+  }
+
+  function deleteNode(node) {
+    var newNode;
+    if (node.isLastSibling()) {
+      newNode = node.getNextSibling();
+    }
+    var num = node.data.key;
+    emitSignal('deleteNode', {
+      nodeKey: parseInt(node.data.key),
+      treeId: parseInt(zestId)
+    });
+    node.remove();
+    if (newNode) {
+      renameTree(num, newNode);
+    }
+  }
+
+  function renameTree(initNum, start) {
+    var num = initNum;
+    start.data.key = num;
+    while(start = start.getNextSibling()) {
+      num++;
+      start.data.key = num;
+    }
+  }
+
+  function bindContextMenu(span) {
+    $(span).contextMenu({menu: "nodeMenu"}, function(action, el, pos) {
+      var node = $.ui.dynatree.getNode(el);
+      console.log(action);
+      switch(action) {
+        case "delete":
+          deleteNode(node);
+          break;
+        case "key":
+          console.log('key: ' + node.data.key);
+      }
+    })
+  }
+
   // Initialize dynatree
   $(function(){
     $('#tree').dynatree({
+      onClick: function(node, event) {
+        if ($('.contextMenu:visible').length > 0) {
+          $('.contextMenu').hide();
+          return false;
+        }
+      },
+      onCreate: function(node, span) {
+        bindContextMenu(span);
+      },
       dnd: {
         onDragStart: function(node) {
           // Drag only the folders
@@ -38,16 +92,33 @@ define(['dynatree/jquery/jquery',
         },
         onDrop: function(node, sourceNode, hitMode, ui, draggable) {
           if (node.data.isFolder) {
-            var evt = new CustomEvent('treeChange', {
-                                        detail: {
-                                          src: parseInt(sourceNode.data.key),
-                                          trg: parseInt(node.data.key),
-                                          id: parseInt(zestId)
-                                        }
-                                      });
-            document.dispatchEvent(evt);
+            var first, num;
+
+            // Emit signal to apply the change in zestLogs
+            emitSignal('treeChange', {
+              src: parseInt(sourceNode.data.key),
+              trg: parseInt(node.data.key),
+              id: parseInt(zestId)
+            });
+
+            // Rename the 'key' of the reorganized tree.
+            // Select the first element to rename.
+            if (sourceNode.isFirstSibling()) {
+              first = sourceNode.getNextSibling();
+              num = 1;
+            } else if (sourceNode.data.key < node.data.key) {
+              first = sourceNode.getPrevSibling();
+              num = sourceNode.data.key - 1;
+            } else {
+              first = node;
+              num = node.data.key;
+            }
+
             // Drop folder as a sibling after the target
             sourceNode.move(node, 'after');
+
+            // Apply renaming after moving the node above.
+            renameTree(num, first);
           }
         },
         onDragLeave: function(node, sourceNode) {
