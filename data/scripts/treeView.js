@@ -12,6 +12,13 @@ define(['dynatree/jquery/jquery',
     document.dispatchEvent(evt);
   }
 
+  function runNode(node) {
+    emitSignal('runNode', {
+      nodeKey: parseInt(node.data.key),
+      treeId: parseInt(zestId)
+    });
+  }
+
   function deleteNode(node) {
     var newNode;
     if (node.isLastSibling()) {
@@ -42,6 +49,9 @@ define(['dynatree/jquery/jquery',
       var node = $.ui.dynatree.getNode(el);
       console.log(action);
       switch(action) {
+        case "run":
+          runNode(node);
+          break;
         case "delete":
           deleteNode(node);
           break;
@@ -61,7 +71,12 @@ define(['dynatree/jquery/jquery',
         }
       },
       onCreate: function(node, span) {
-        bindContextMenu(span);
+        if (node.data.isFolder) {
+          bindContextMenu(span);
+        }
+        else {
+          // context menu for non-folders
+        }
       },
       dnd: {
         onDragStart: function(node) {
