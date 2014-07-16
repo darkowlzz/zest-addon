@@ -1,3 +1,7 @@
+.ui-widget {
+  font-size: 0.7em;
+}
+
 .icon {
   float: left;
   margin: auto 6px;
