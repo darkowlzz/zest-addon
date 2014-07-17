@@ -29,9 +29,10 @@ define(
       node.setTitle(line);
     }
     else if (attr == 'ZestExpressionLength') {
+      node.data.selectedVar = val.selectedVar;
       node.data.body = val.length;
       node.data.approx = val.approx;
-      var line = 'Assert - Length (response.body = ' + node.data.body + ' +/- ' + node.data.approx + '%)';
+      var line = 'Assert - Length (' + node.data.selectedVar + ' = ' + node.data.body + ' +/- ' + node.data.approx + '%)';
       node.setTitle(line);
     }
     /*
@@ -135,9 +136,27 @@ define(
             });
           }
           else if (node.data.type == 'ZestExpressionLength') {
+            var p0 = $('<p>Variable Name: </p>');
+            var x0 = $('<select id="varName"></select>');
+            var varList = ['request.body', 'request.header', 'request.method',
+                           'request.url', 'response.body', 'response.header',
+                           'response.url'];
+            var tmp;
+            var selectedVar = node.data.selectedVar;
+            for (var v of varList) {
+              tmp = $('<option value="' + v + '">' + v + '</option>');
+              if (v == node.data.selectedVar) {
+                console.log('matches ' + v);
+                tmp.attr('selected', 'selected');
+              }
+              x0.append(tmp);
+            }
+            p0.append(x0);
+            $('#zestDialog').append(p0);
+
             var p1 = $('<p>Length: </p>');
             var x1 = $('<input id="length" type="number" value="' + 
-                       node.data.body + '">');
+                       (selectedVar?node.data[selectedVar] : 0) + '">');
             p1.append(x1);
             $('#zestDialog').append(p1);
 
@@ -145,8 +164,13 @@ define(
             var x2 = $('<input id="approx" type="number" min="0" max="100"' +
                       'value="' + node.data.approx + '">');
             p2.append(x2);
-
             $('#zestDialog').append(p2);
+
+            $('#varName').change(function() {
+              var newSel = $('#varName :selected').text();
+              $('#length').val(node.data[newSel]);
+            });
+
             $('#zestDialog').dialog({
               modal: true,
               height: 200,
@@ -158,7 +182,9 @@ define(
                   click: function() {
                     var approx = $('#approx').val();
                     var len = $('#length').val();
+                    selectedVar = $('#varName :selected').text();
                     var v = {
+                      selectedVar: selectedVar,
                       length: len,
                       approx: approx
                     }
@@ -309,9 +335,16 @@ define(
             temp2.push({
               title: 'Assert - Length (response.body = ' + i.assertions[1].rootExpression.length + ' +/- ' + i.assertions[1].rootExpression.approx + '%)',
               icon: 'assert.png',
+              type: i.assertions[1].rootExpression.elementType,
+              selectedVar: 'response.body',
               approx: i.assertions[1].rootExpression.approx,
-              body: i.assertions[1].rootExpression.length,
-              type: i.assertions[1].rootExpression.elementType
+              'response.body': i.assertions[1].rootExpression.length,
+              'response.url': i.response.url.length,
+              'response.header': i.response.headers.length,
+              'request.body': i.data.length,
+              'request.header': i.headers.length,
+              'request.method': i.method.length,
+              'request.url': i.url.length
             });
           }
         }
