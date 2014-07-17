@@ -23,10 +23,15 @@ define(
   }
 
   function updateNode(attr, node, val) {
+    var changes;
     if (attr == 'ZestExpressionStatusCode') {
       node.data.statCode = val;
       var line = 'Assert - Status Code (' + node.data.statCode + ')';
       node.setTitle(line);
+      changes = {
+        type: 'ZestExpressionStatusCode',
+        code: val
+      }
     }
     else if (attr == 'ZestExpressionLength') {
       node.data.selectedVar = val.selectedVar;
@@ -34,15 +39,19 @@ define(
       node.data.approx = val.approx;
       var line = 'Assert - Length (' + node.data.selectedVar + ' = ' + node.data.body + ' +/- ' + node.data.approx + '%)';
       node.setTitle(line);
+      changes = {
+        type: 'ZestExpressionLength',
+        variableName: val.selectedVar,
+        length: val.length,
+        approx: val.approx
+      }
     }
-    /*
+
     emitSignal('changeAttr', {
-      nodeKey: parseInt(node.data.key),
+      nodeKey: parseInt(node.data.parentNodeKey),
       treeId: parseInt(zestId),
-      attr: attr,
-      value: val
+      changes: changes,
     });
-    */
   }
 
   function deleteNode(node) {
@@ -327,14 +336,16 @@ define(
             temp2.push({
               title: 'Assert - Status Code (' + i.assertions[0].rootExpression.code + ')',
               icon: 'assert.png',
+              parentNodeKey: i.index,
+              type: i.assertions[0].rootExpression.elementType,
               statCode: i.assertions[0].rootExpression.code,
-              type: i.assertions[0].rootExpression.elementType
             })
           }
           if (i.assertions[1].rootExpression.elementType == 'ZestExpressionLength') {
             temp2.push({
               title: 'Assert - Length (response.body = ' + i.assertions[1].rootExpression.length + ' +/- ' + i.assertions[1].rootExpression.approx + '%)',
               icon: 'assert.png',
+              parentNodeKey: i.index,
               type: i.assertions[1].rootExpression.elementType,
               selectedVar: 'response.body',
               approx: i.assertions[1].rootExpression.approx,

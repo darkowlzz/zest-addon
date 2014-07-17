@@ -309,15 +309,6 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       document.addEventListener('changeAttr', function(data) {
         addon.port.emit('CHANGE_ATTR', data.detail);
       });
-
-      $('#foor').click(function() {
-        $('#fooo').dialog({
-          modal: true,
-          height: 200,
-          width: 200,
-          closeOnEscape: true
-        });
-      });
     }
   }
 
