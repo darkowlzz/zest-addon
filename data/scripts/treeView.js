@@ -79,6 +79,12 @@ define(
     }
   }
 
+  // XXX Depends on issue #94
+  function deleteAssertionNode(node) {
+    emitSignal('deleteAssertionNode', {})
+    node.remove();
+  }
+
   function bindRequestContextMenu(span) {
     $(span).contextMenu({menu: 'nodeMenu'}, function(action, el, pos) {
       var node = $.ui.dynatree.getNode(el);
@@ -155,7 +161,6 @@ define(
             for (var v of varList) {
               tmp = $('<option value="' + v + '">' + v + '</option>');
               if (v == node.data.selectedVar) {
-                console.log('matches ' + v);
                 tmp.attr('selected', 'selected');
               }
               x0.append(tmp);
@@ -215,7 +220,7 @@ define(
           }
           break;
         case 'delete':
-          console.log('Deleting...');
+          console.log('Delete not implemented yet.');
           //deleteAssertNode(node);
           break;
         default:

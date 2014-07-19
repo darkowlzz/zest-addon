@@ -140,6 +140,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
       // Receive updated zest text
       addon.port.on('UPDATE_TEXT_VIEW', function(z) {
+        currentZest = z;
         helper.renderZestTextAs(z);
       });
 
