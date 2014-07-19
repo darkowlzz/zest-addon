@@ -36,6 +36,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       runButton.onclick = function() {
         addon.port.emit('RUNTHIS', currentZest);
         helper.clearResults();
+        helper.showCard('run');
       }
 
       /**** Sidebar third row buttons ****/
@@ -139,6 +140,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
       // Receive updated zest text
       addon.port.on('UPDATE_TEXT_VIEW', function(z) {
+        currentZest = z;
         helper.renderZestTextAs(z);
       });
 
@@ -241,10 +243,10 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       var searchBar = document.getElementById('searchBar');
       searchBar.onkeypress = function(event) {
         if (event.keyCode == 13) {
-          var searchText = searchBar.value;
+          var searchText = searchBar.value.toLowerCase();
           var zestText = document.getElementById('zestText');
           zestText.focus();
-          var l = zestText.value.indexOf(searchText);
+          var l = zestText.value.toLowerCase().indexOf(searchText);
           if (l != -1) {
             zestText.selectionStart = l;
             zestText.selectionEnd = l + searchText.length;
@@ -297,6 +299,16 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
       document.addEventListener('deleteNode', function(data) {
         addon.port.emit('DELETE_NODE', data.detail);
+      });
+
+      document.addEventListener('runNode', function(data) {
+        addon.port.emit('RUN_NODE', data.detail);
+        helper.clearResults();
+        helper.showCard('run')
+      });
+
+      document.addEventListener('changeAttr', function(data) {
+        addon.port.emit('CHANGE_ATTR', data.detail);
       });
     }
   }

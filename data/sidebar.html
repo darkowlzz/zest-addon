@@ -4,6 +4,8 @@
   <meta name="application-name" content="Zest"/>
   <meta name="description" content="Zest Sidebar"/>
   <meta charset="UTF-8"/>
+  <!-- jquery-ui themes smoothness css -->
+  <link rel="stylesheet" href="styles/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" href="sidebar.css"/>
   <link rel="stylesheet" type="text/css" href="scripts/dynatree/src/skin/ui.dynatree.css" id="skinsheet"/>
   <link rel="stylesheet" type="text/css" href="scripts/dynatree/doc/contextmenu/jquery.contextMenu.css"/>
@@ -62,7 +64,7 @@
         </table>
         </div>
       </div>
-   </div>
+    </div>
 
     <!-- Textview context menu -->
     <menu type="context" id="textViewCM">
@@ -72,9 +74,19 @@
       <menuitem label="Change Description" id="changeDesc"></menuitem>
     </menu>
 
+    <div id="zestDialog" style="display: none;">
+    </div>
+
     <!-- Definition of tree node context menu -->
     <ul id="nodeMenu" class="contextMenu">
       <li><a href="#key">Key</a></li>
+      <li><a href="#run">Run req</a></li>
+      <li><a href="#delete">Delete</a></li>
+    </ul>
+
+    <!-- Definition of assertions context menu -->
+    <ul id="assertMenu" class="contextMenu">
+      <li><a href="#edit">Edit</a></li>
       <li><a href="#delete">Delete</a></li>
     </ul>
 
