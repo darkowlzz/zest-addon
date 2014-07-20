@@ -9,6 +9,11 @@ define(
 
   var currentZest;
   var zestId;
+  var statusCodeList = [100, 101, 200, 201, 202, 203, 204, 205, 206, 300,
+                        301, 302, 303, 304, 305, 306, 400, 401, 402, 403,
+                        404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
+                        414, 415, 416, 417, 500, 501, 502, 503, 504, 505];
+
 
   function emitSignal(eventName, data) {
     var evt = new CustomEvent(eventName, { detail: data });
@@ -23,32 +28,50 @@ define(
   }
 
   function updateNode(attr, node, val) {
-    var changes;
-    if (attr == 'ZestExpressionStatusCode') {
-      node.data.statCode = val;
-      var line = 'Assert - Status Code (' + node.data.statCode + ')';
-      node.setTitle(line);
-      changes = {
-        type: 'ZestExpressionStatusCode',
-        code: val
-      }
-    }
-    else if (attr == 'ZestExpressionLength') {
-      node.data.selectedVar = val.selectedVar;
-      node.data.body = val.length;
-      node.data.approx = val.approx;
-      var line = 'Assert - Length (' + node.data.selectedVar + ' = ' + node.data.body + ' +/- ' + node.data.approx + '%)';
-      node.setTitle(line);
-      changes = {
-        type: 'ZestExpressionLength',
-        variableName: val.selectedVar,
-        length: val.length,
-        approx: val.approx
-      }
+    var changes, title;
+    switch (attr) {
+      case 'ZestRequest':
+        node.data.requestURL = val.requestURL;
+        node.data.requestMethod = val.requestMethod;
+        node.data.requestBody = val.requestBody;
+        node.data.requestHeader = val.requestHeader;
+        node.data.responseStatusCode = val.responseStatusCode;
+        node.data.responseTime = val.responseTime;
+        node.data.responseHeader = val.resHeaders;
+        node.data.responseBody = val.responseBody;
+
+        title = node.data.requestMethod + ' : ' + node.data.requestURL;
+        node.setTitle(title);
+        changes = {
+          type: node.data.type,
+          attr: val
+        }
+        break;
+      case 'ZestExpressionStatusCode':
+        node.data.statCode = val;
+        title = 'Assert - Status Code (' + node.data.statCode + ')';
+        node.setTitle(title);
+        changes = {
+          type: node.data.type,
+          code: val
+        }
+        break;
+      case 'ZestExpressionLength':
+        node.data.selectedVar = val.selectedVar;
+        node.data.body = val.length;
+        node.data.approx = val.approx;
+        title = 'Assert - Length (' + node.data.selectedVar + ' = ' + node.data.body + ' +/- ' + node.data.approx + '%)';
+        node.setTitle(title);
+        changes = {
+          type: node.data.type,
+          variableName: val.selectedVar,
+          length: val.length,
+          approx: val.approx
+        }
     }
 
     emitSignal('changeAttr', {
-      nodeKey: parseInt(node.data.parentNodeKey),
+      nodeKey: node.data.isFolder ? parseInt(node.data.key) : parseInt(node.data.parentNodeKey),
       treeId: parseInt(zestId),
       changes: changes,
     });
@@ -130,7 +153,7 @@ define(
 
     /** Creating request tab content **/
     var tab1p0 = $('<p id="reqInfo-url-para">URL: <input type="url"' + 
-               'id="reqInfo-url" value="' + node.data.requestURL + '"></p>');
+                 'id="reqInfo-url" value="' + node.data.requestURL + '"></p>');
     tab1.append(tab1p0);
 
     var tab1p1 = $('<p id="reqInfo-method-para">Method: </p>');
@@ -149,19 +172,27 @@ define(
     tab1.append(tab1p1);
 
     var tab1p2 = $('<p id="reqInfo-header-para">Headers: </p>');
-    var x1 = $('<textarea rows="15" cols="50" wrap="hard">' + node.data.requestHeader + '</textarea>');
+    var x1 = $('<textarea id="reqInfo-header" rows="15" cols="50" wrap="hard">' + node.data.requestHeader + '</textarea>');
     tab1p2.append(x1);
     tab1.append(tab1p2);
 
     var tab1p3 = $('<p id="reqInfo-body-para">Body: </p>');
-    var x2 = $('<textarea rows="10" cols="50" wrap="hard">' + node.data.requestBody + '</textarea>');
+    var x2 = $('<textarea id="reqInfo-body" rows="10" cols="50" wrap="hard">' + node.data.requestBody + '</textarea>');
     tab1p3.append(x2);
     tab1.append(tab1p3);
 
     /** Creating response tab content **/
     var tab2p0 = $('<p id="resInfo-status-para">' + 
-               'Status Code: <input type="number" id="resInfo-status" ' +
-               'value="' + node.data.responseStatusCode + '"</p>');
+                   'Status Code: </p>');
+    var xn = $('<select id="resInfo-status"></select>');
+    for (var c of statusCodeList) {
+      tmp = $('<option value="' + c + '">' + c + '</option>');
+      if (c == node.data.responseStatusCode) {
+        tmp.attr('selected', 'selected');
+      }
+      xn.append(tmp);
+    }
+    tab2p0.append(xn);
     tab2.append(tab2p0);
 
     var tab2p1 = $('<p id="resInfo-time-para">' + 
@@ -170,12 +201,12 @@ define(
     tab2.append(tab2p1);
 
     var tab2p2 = $('<p id="resInfo-header-para">Headers: </p>');
-    var x3 = $('<textarea rows="15" cols="50" wrap="hard">' + node.data.responseHeader + '</textarea>');
+    var x3 = $('<textarea id="resInfo-header" rows="15" cols="50" wrap="hard">' + node.data.responseHeader + '</textarea>');
     tab2p2.append(x3);
     tab2.append(tab2p2);
 
     var tab2p3 = $('<p id="resInfo-body-para">Body: </p>');
-    var x4 = $('<textarea rows="10" cols="50" wrap="hard">' + node.data.responseBody + '</textarea>');
+    var x4 = $('<textarea id="resInfo-body" rows="10" cols="50" wrap="hard">' + node.data.responseBody + '</textarea>');
     tab2p3.append(x4);
     tab2.append(tab2p3);
 
@@ -194,6 +225,28 @@ define(
         {
           text: 'Save',
           click: function() {
+            var reqUrl = $('#reqInfo-url').val();
+            var reqMethod = $('#reqInfo-method :selected').text();
+            var reqHeaders = $('#reqInfo-header').val();
+            var reqBody = $('#reqInfo-body').val();
+
+            var resStatus = $('#resInfo-status :selected').text();
+            var resTime = $('#resInfo-time').val();
+            var resHeaders = $('#resInfo-header').text();
+            var resBody = $('#resInfo-body').text();
+
+            var v = {
+              requestURL: reqUrl,
+              requestMethod: reqMethod,
+              requestBody: reqBody,
+              requestHeader: reqHeaders,
+              responseStatusCode: resStatus,
+              responseTime: resTime,
+              responseHeader: resHeaders,
+              responseBody: resBody
+            }
+
+            updateNode(node.data.type, node, v);
             $(this).dialog('close');
           }
         },
@@ -214,12 +267,8 @@ define(
     if (node.data.type == 'ZestExpressionStatusCode') {
       var p = $('<p id="statPara">Status Code: </p>');
       var x = $('<select></select>');
-      var codeList = [100, 101, 200, 201, 202, 203, 204, 205, 206, 300,
-                      301, 302, 303, 304, 305, 306, 400, 401, 402, 403,
-                      404, 405, 406, 407, 408, 409, 410, 411, 412, 413,
-                      414, 415, 416, 417, 500, 501, 502, 503, 504, 505];
       var tmp;
-      for (var c of codeList) {
+      for (var c of statusCodeList) {
         tmp = $('<option value="' + c + '">' + c + '</option>');
         if (c == node.data.statCode) {
           tmp.attr('selected', 'selected');
@@ -344,7 +393,6 @@ define(
       },
       onDblClick: function(node, event) {
         if (node.data.isFolder) {
-          // XXX WIP
           requestInfo(node);
         }
         else {
@@ -483,6 +531,7 @@ define(
           // returning data.
           title: (i.method + ' : ' + i.url), isFolder: true, key: i.index,
                  icon: 'request.png', children: temp2,
+                 type: i.elementType,
                  requestURL: i.url,
                  requestMethod: i.method,
                  requestBody: i.data,
