@@ -228,8 +228,23 @@ define(
 
   // XXX Depends on issue #94
   function deleteAssertionNode(node) {
-    emitSignal('deleteAssertionNode', {})
+    var parent = node.getParent();
+    emitSignal('deleteAssertionNode', {
+      nodeKey: node.data.parentNodeKey,
+      treeId: parseInt(zestId),
+      id: node.data.childId
+    });
     node.remove();
+    parent.data.childNodes--;
+    try {
+      var list = parent.getChildren();
+      var i = 0;
+      for (var c of list) {
+        c.data.childId = i;
+        i++;
+      }
+    }
+    catch(e) {}
   }
 
 
@@ -241,10 +256,11 @@ define(
         case 'edit':
           assertionEditor(node);
           break;
+
         case 'delete':
-          console.log('Delete not implemented yet.');
-          //deleteAssertNode(node);
+          deleteAssertionNode(node);
           break;
+
         default:
           break;
       }
@@ -535,11 +551,6 @@ define(
         $('#zestDialog').empty();
       }
     });
-  }
-
-  // XXX WIP
-  function addAssertion() {
-    
   }
 
   // Request Info of a node
