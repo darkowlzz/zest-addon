@@ -310,6 +310,14 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       document.addEventListener('changeAttr', function(data) {
         addon.port.emit('CHANGE_ATTR', data.detail);
       });
+
+      document.addEventListener('addElement', function(data) {
+        addon.port.emit('ADD_ELEMENT', data.detail);
+      });
+
+      document.addEventListener('deleteAssertionNode', function(data) {
+        addon.port.emit('DELETE_ASSERTION', data.detail);
+      });
     }
   }
 
