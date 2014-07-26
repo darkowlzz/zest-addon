@@ -47,6 +47,11 @@ define(
           addElement(node, assets);
           break;
 
+        case 'addComment':
+          var isNew = true;
+          addComment(node, isNew);
+          break;
+
         default:
 
       }
@@ -146,7 +151,7 @@ define(
     });
   }
 
-  function updateNode(attr, node, childId, val) {
+  function updateNode(attr, node, val) {
     var changes, title;
     switch (attr) {
       case 'ZestRequest':
@@ -166,13 +171,23 @@ define(
         }
         break;
 
+      case 'ZestComment':
+        node.data.comment = val;
+        title = 'Comment: ' + val;
+        node.setTitle(title);
+        changes = {
+          type: node.data.type,
+          attr: val
+        }
+        break;
+
       case 'ZestExpressionStatusCode':
         node.data.statCode = val;
         title = 'Assert - Status Code (' + node.data.statCode + ')';
         node.setTitle(title);
         changes = {
           type: node.data.type,
-          code: val
+          code: node.data.statCode
         }
         break;
 
@@ -180,13 +195,13 @@ define(
         node.data.selectedVar = val.selectedVar;
         node.data[val.selectedVar] = val.length;
         node.data.approx = val.approx;
-        title = 'Assert - Length (' + node.data.selectedVar + ' = ' + node.data[val.selectedVar] + ' +/- ' + node.data.approx + '%)';
+        title = 'Assert - Length (' + val.selectedVar + ' = ' + val.length + ' +/- ' + val.approx + '%)';
         node.setTitle(title);
         changes = {
           type: node.data.type,
-          variableName: val.selectedVar,
+          variableName: node.data.selectedVar,
           length: val.length,
-          approx: val.approx
+          approx: node.data.approx
         }
         break;
 
@@ -195,7 +210,7 @@ define(
         node.data.regex = val.regex;
         node.data.caseSense = val.caseSense;
         node.data.inverse = val.inverse;
-        title = 'Assert - ' + node.data.selectedVar + ' Regex (' + node.data.regex + ')';
+        title = 'Assert - ' + val.selectedVar + ' Regex (' + val.regex + ')';
         node.setTitle(title);
         changes = {
           type: node.data.type,
@@ -209,12 +224,17 @@ define(
       default:
     }
 
-    emitSignal('changeAttr', {
+    var data = {
       nodeKey: node.data.isFolder ? parseInt(node.data.key) : parseInt(node.data.parentNodeKey),
       treeId: parseInt(zestId),
-      changes: changes,
-      id: node.data.childId
-    });
+      changes: changes
+    }
+
+    if (node.data.childId != undefined) {
+      data.id = node.data.childId;
+    }
+
+    emitSignal('changeAttr', data);
   }
 
   function renameTree(initNum, start) {
@@ -226,7 +246,6 @@ define(
     }
   }
 
-  // XXX Depends on issue #94
   function deleteAssertionNode(node) {
     var parent = node.getParent();
     emitSignal('deleteAssertionNode', {
@@ -315,7 +334,7 @@ define(
           text: 'Save',
           click: function() {
             var v = $('#statPara :selected').text();
-            updateNode('ZestExpressionStatusCode', node, node.data.childId, parseInt(v));
+            updateNode('ZestExpressionStatusCode', node, parseInt(v));
             $(this).dialog('close');
           }
         },
@@ -392,7 +411,7 @@ define(
               approx: approx
             }
             if (!assets.isNew) {
-              updateNode('ZestExpressionLength', node, node.data.childId, v);
+              updateNode('ZestExpressionLength', node, v);
             }
             else {
               addElementToReq('ZestExpressionLength', node, v);
@@ -474,7 +493,7 @@ define(
               inverse: inverse
             }
             if (!assets.isNew) {
-              updateNode('ZestExpressionRegex', node, node.data.childId, v);
+              updateNode('ZestExpressionRegex', node, v);
             }
             else {
               addElementToReq('ZestExpressionRegex', node, v);
@@ -555,111 +574,189 @@ define(
 
   // Request Info of a node
   function requestInfo(node) {
-    var tabDiv = $('<div id="tabs">' + 
-                   '<ul>' +
-                     '<li><a href="#tabs-1">Request</a></li>' +
-                     '<li><a href="#tabs-2">Response</a></li>' +
-                   '</ul>' +
-                   '</div>');
-    var tab1 = $('<div id="tabs-1"></div>');
-    var tab2 = $('<div id="tabs-2"></div>');
+    switch (node.data.type) {
+      case 'ZestRequest':
+        var tabDiv = $('<div id="tabs">' + 
+                       '<ul>' +
+                         '<li><a href="#tabs-1">Request</a></li>' +
+                         '<li><a href="#tabs-2">Response</a></li>' +
+                       '</ul>' +
+                       '</div>');
+        var tab1 = $('<div id="tabs-1"></div>');
+        var tab2 = $('<div id="tabs-2"></div>');
 
-    /** Creating request tab content **/
-    var tab1p0 = $('<p id="reqInfo-url-para">URL: <input type="url"' + 
-                 'id="reqInfo-url" value="' + node.data['request.url'] + '"></p>');
-    tab1.append(tab1p0);
+        /** Creating request tab content **/
+        var tab1p0 = $('<p id="reqInfo-url-para">URL: <input type="url"' + 
+                       'id="reqInfo-url" value="' + node.data['request.url'] + 
+                       '"></p>');
+        tab1.append(tab1p0);
 
-    var tab1p1 = $('<p id="reqInfo-method-para">Method: </p>');
-    var x0 = $('<select id="reqInfo-method"></select>');
-    var methodList = ['GET', 'POST'];
-    var selectedMethod = node.data.requestMethod;
-    var tmp;
-    for (var m of methodList) {
-      tmp = $('<option value="' + m + '">' + m + '</option>');
-      if (m == selectedMethod) {
-        tmp.attr('selected', 'selected');
-      }
-      x0.append(tmp);
+        var tab1p1 = $('<p id="reqInfo-method-para">Method: </p>');
+        var x0 = $('<select id="reqInfo-method"></select>');
+        var methodList = ['GET', 'POST'];
+        var selectedMethod = node.data['request.method'];
+        var tmp;
+        for (var m of methodList) {
+          tmp = $('<option value="' + m + '">' + m + '</option>');
+          if (m == selectedMethod) {
+            tmp.attr('selected', 'selected');
+          }
+          x0.append(tmp);
+        }
+        tab1p1.append(x0);
+        tab1.append(tab1p1);
+
+        var tab1p2 = $('<p id="reqInfo-header-para">Headers: </p>');
+        var x1 = $('<textarea id="reqInfo-header" rows="15" cols="50" wrap="hard">' + node.data['request.header'] + '</textarea>');
+        tab1p2.append(x1);
+        tab1.append(tab1p2);
+
+        var tab1p3 = $('<p id="reqInfo-body-para">Body: </p>');
+        var x2 = $('<textarea id="reqInfo-body" rows="10" cols="50" wrap="hard">' + node.data['request.body'] + '</textarea>');
+        tab1p3.append(x2);
+        tab1.append(tab1p3);
+
+        /** Creating response tab content **/
+        var tab2p0 = $('<p id="resInfo-status-para">' + 
+                       'Status Code: </p>');
+        var xn = $('<select id="resInfo-status"></select>');
+        for (var c of statusCodeList) {
+          tmp = $('<option value="' + c + '">' + c + '</option>');
+          if (c == node.data['response.statusCode']) {
+            tmp.attr('selected', 'selected');
+          }
+          xn.append(tmp);
+        }
+        tab2p0.append(xn);
+        tab2.append(tab2p0);
+
+        var tab2p1 = $('<p id="resInfo-time-para">' + 
+                       'Time in ms: <input type="number" id="resInfo-time" ' +
+                       'value="' + node.data['response.time'] + '"></p>');
+        tab2.append(tab2p1);
+
+        var tab2p2 = $('<p id="resInfo-header-para">Headers: </p>');
+        var x3 = $('<textarea id="resInfo-header" rows="15" cols="50" wrap="hard">' + node.data['response.header'] + '</textarea>');
+        tab2p2.append(x3);
+        tab2.append(tab2p2);
+
+        var tab2p3 = $('<p id="resInfo-body-para">Body: </p>');
+        var x4 = $('<textarea id="resInfo-body" rows="10" cols="50" wrap="hard">' + node.data['response.body'] + '</textarea>');
+        tab2p3.append(x4);
+        tab2.append(tab2p3);
+
+        tabDiv.append(tab1);
+        tabDiv.append(tab2);
+
+        tabDiv.tabs();
+
+        $('#zestDialog').append(tabDiv);
+        $('#zestDialog').dialog({
+          modal: true,
+          height: 700,
+          width: 350,
+          title: 'Zest Request',
+          buttons: [
+            {
+              text: 'Save',
+              click: function() {
+                var reqUrl = $('#reqInfo-url').val();
+                var reqMethod = $('#reqInfo-method :selected').text();
+                var reqHeaders = $('#reqInfo-header').val();
+                var reqBody = $('#reqInfo-body').val();
+
+                var resStatus = $('#resInfo-status :selected').text();
+                var resTime = $('#resInfo-time').val();
+                var resHeaders = $('#resInfo-header').text();
+                var resBody = $('#resInfo-body').text();
+
+                var v = {
+                  'request.url': reqUrl,
+                  'request.method': reqMethod,
+                  'request.body': reqBody,
+                  'request.header': reqHeaders,
+                  'response.statusCode': resStatus,
+                  'response.time': resTime,
+                  'response.header': resHeaders,
+                  'response.body': resBody
+                }
+
+                updateNode(node.data.type, node, v);
+                $(this).dialog('close');
+              }
+            },
+            {
+              text: 'Cancel',
+              click: function() {
+                $(this).dialog('close');
+              }
+            }
+          ],
+          beforeClose: function(event, ui) {
+            $('#zestDialog').empty();
+          }
+        });
+        break;
+
+      case 'ZestComment':
+        addComment(node);
+        break;
     }
-    tab1p1.append(x0);
-    tab1.append(tab1p1);
+  }
 
-    var tab1p2 = $('<p id="reqInfo-header-para">Headers: </p>');
-    var x1 = $('<textarea id="reqInfo-header" rows="15" cols="50" wrap="hard">' + node.data.requestHeader + '</textarea>');
-    tab1p2.append(x1);
-    tab1.append(tab1p2);
-
-    var tab1p3 = $('<p id="reqInfo-body-para">Body: </p>');
-    var x2 = $('<textarea id="reqInfo-body" rows="10" cols="50" wrap="hard">' + node.data.requestBody + '</textarea>');
-    tab1p3.append(x2);
-    tab1.append(tab1p3);
-
-    /** Creating response tab content **/
-    var tab2p0 = $('<p id="resInfo-status-para">' + 
-                   'Status Code: </p>');
-    var xn = $('<select id="resInfo-status"></select>');
-    for (var c of statusCodeList) {
-      tmp = $('<option value="' + c + '">' + c + '</option>');
-      if (c == node.data.responseStatusCode) {
-        tmp.attr('selected', 'selected');
-      }
-      xn.append(tmp);
+  function addComment(node, isNew) {
+    var p0 = $('<p>Comment:</p>');
+    var x0 = $('<textarea id="commentText" rows="7" cols="40"></textarea>');
+    if (!isNew) {
+      console.log('Not NEW');
+      console.log(node.data.comment);
+      x0.val(node.data.comment);
     }
-    tab2p0.append(xn);
-    tab2.append(tab2p0);
+    p0.append(x0);
 
-    var tab2p1 = $('<p id="resInfo-time-para">' + 
-               'Time in ms: <input type="number" id="resInfo-time" ' +
-               'value="' + node.data.responseTime + '"></p>');
-    tab2.append(tab2p1);
+    $('#zestDialog').append(p0);
 
-    var tab2p2 = $('<p id="resInfo-header-para">Headers: </p>');
-    var x3 = $('<textarea id="resInfo-header" rows="15" cols="50" wrap="hard">' + node.data.responseHeader + '</textarea>');
-    tab2p2.append(x3);
-    tab2.append(tab2p2);
-
-    var tab2p3 = $('<p id="resInfo-body-para">Body: </p>');
-    var x4 = $('<textarea id="resInfo-body" rows="10" cols="50" wrap="hard">' + node.data.responseBody + '</textarea>');
-    tab2p3.append(x4);
-    tab2.append(tab2p3);
-
-    tabDiv.append(tab1);
-    tabDiv.append(tab2);
-
-    tabDiv.tabs();
-
-    $('#zestDialog').append(tabDiv);
     $('#zestDialog').dialog({
       modal: true,
-      height: 700,
+      height: 300,
       width: 350,
-      title: 'Zest Request',
+      title: 'Add Zest Comment',
       buttons: [
         {
           text: 'Save',
           click: function() {
-            var reqUrl = $('#reqInfo-url').val();
-            var reqMethod = $('#reqInfo-method :selected').text();
-            var reqHeaders = $('#reqInfo-header').val();
-            var reqBody = $('#reqInfo-body').val();
+            var cmt = $('#commentText').val();
+            var root = node.getParent();
+            var index = root.getChildren().length + 1;
 
-            var resStatus = $('#resInfo-status :selected').text();
-            var resTime = $('#resInfo-time').val();
-            var resHeaders = $('#resInfo-header').text();
-            var resBody = $('#resInfo-body').text();
+            if (isNew) {
+              var newComment = root.addChild({
+                title: 'Comment: ' + cmt,
+                isFolder: true,
+                key: index,
+                icon: 'comment.png',
+                type: 'ZestComment',
+                comment: cmt
+              });
+              newComment.move(node, 'after');
+              var nodeKey = parseInt(node.data.key) + 1;
+              renameTree(nodeKey, newComment);
 
-            var v = {
-              'request.url': reqUrl,
-              'request.method': reqMethod,
-              'request.body': reqBody,
-              'request.header': reqHeaders,
-              'response.statusCode': resStatus,
-              'response.time': resTime,
-              'response.header': resHeaders,
-              'response.body': resBody
+              var ele = {
+                comment: cmt,
+                index: nodeKey,
+                elementType: 'ZestComment'
+              }
+              emitSignal('addParentElement', {
+                precedingNodeKey: parseInt(node.data.key),
+                treeId: parseInt(zestId),
+                element: ele
+              });
             }
-
-            updateNode(node.data.type, node, v);
+            else {
+              console.log('UPDATING OLD');
+              updateNode(node.data.type, node, cmt);
+            }
             $(this).dialog('close');
           }
         },
@@ -681,6 +778,7 @@ define(
   $(function(){
     $('#tree').dynatree({
       onClick: function(node, event) {
+        node.activate();
         // Expand only when the expander is clicked
         if (node.getEventTargetType(event) == 'expander') {
           node.toggleExpand();

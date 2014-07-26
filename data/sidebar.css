@@ -43,7 +43,7 @@
 
 /* Treeview specific styles */
 .tree {
-  overflow-y: auto;
+  overflow: auto;
   z-index: 3;
   background: white;
   height: 400px;
