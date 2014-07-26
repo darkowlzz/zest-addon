@@ -290,6 +290,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         addon.port.emit(signal.SIG_IMPORT);
       }
 
+      // Change in tree due to drag and drop
       document.addEventListener('treeChange', function(data) {
         addon.port.emit('TREE_CHANGED', {src: data.detail.src,
                                          dst: data.detail.trg,
@@ -311,12 +312,18 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         addon.port.emit('CHANGE_ATTR', data.detail);
       });
 
+      // Add assertion child elements
       document.addEventListener('addElement', function(data) {
         addon.port.emit('ADD_ELEMENT', data.detail);
       });
 
       document.addEventListener('deleteAssertionNode', function(data) {
         addon.port.emit('DELETE_ASSERTION', data.detail);
+      });
+
+      // Add a node at the root
+      document.addEventListener('addParentElement', function(data) {
+        addon.port.emit('ADD_PARENT_ELEMENT', data.detail);
       });
     }
   }
