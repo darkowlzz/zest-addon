@@ -1,3 +1,5 @@
+'use strict';
+
 /* Label constants */
 define({
   RECORD_ON: 'Start Recording',
