@@ -5,7 +5,7 @@ requirejs.config({
   'shim': {
     'dynatree/jquery/jquery-ui.custom': ['dynatree/jquery/jquery'],
     'dynatree/src/jquery.dynatree': ['dynatree/jquery/jquery'],
-    'dynatree/doc/contextmenu/jquery.contextMenu-custom': ['dynatree/jquery/jquery']
+    'dynatree/doc/contextmenu/jquery.contextMenu-custom': ['dynatree/jquery/jquery'] // jshint ignore:line
   }
 });
 

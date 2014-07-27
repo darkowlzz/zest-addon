@@ -1,3 +1,5 @@
+/* global zestText */
+
 'use strict';
 
 define(function() {
@@ -14,7 +16,7 @@ define(function() {
     changeZestProperty: function(property, value) {
       var z = JSON.parse(zestText.value);
       z[property] = value;
-      var z = JSON.stringify(z, undefined, 2);
+      z = JSON.stringify(z, undefined, 2);
       renderZestTextAs(z);
     },
 
@@ -66,5 +68,5 @@ define(function() {
         tbody.removeChild(tbody.firstChild);
       }
     }
-  }
+  };
 });

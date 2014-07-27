@@ -1,3 +1,5 @@
+/* global alert, prompt */
+
 'use strict';
 
 define(['signalConst', 'labels', 'treeView', 'helper'],
@@ -11,9 +13,9 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
       /* Globals */
       var ZestRecorderStatus = false;
-      var ZestGUIView = true;
-      var RunView = false;
-      var logView = true;
+      //var ZestGUIView = true;
+      //var RunView = false;
+      //var logView = true;
       var currentZest = '';
 
       /**** Sidebar first row buttons ****/
@@ -22,24 +24,24 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       var treeButton = document.getElementById('treeButton');
       treeButton.onclick = function() {
         helper.showCard('tree');
-      }
+      };
 
       var textButton = document.getElementById('textButton');
       textButton.onclick = function() {
         helper.showCard('text');
-      }
+      };
 
       var runViewButton = document.getElementById('runViewButton');
       runViewButton.onclick = function() {
         helper.showCard('run');
-      }
+      };
 
       var runButton = document.getElementById('runButton');
       runButton.onclick = function() {
         addon.port.emit('RUNTHIS', currentZest);
         helper.clearResults();
         helper.showCard('run');
-      }
+      };
 
       /**** Sidebar third row buttons ****/
 
@@ -47,7 +49,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       var lockTab = document.getElementById('lockTab');
       lockTab.onclick = function() {
         addon.port.emit(signal.SIG_LOCKTAB);
-      }
+      };
 
       // Handle zest recorder button clicks
       var zestON = document.getElementById('zestButtonON');
@@ -66,7 +68,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
           zestON.src = 'images/cassette.png';
           recCircle.classList.toggle('blink');
         }
-      }
+      };
 
       // Handle clear logs button click
       var clearRec = document.getElementById('clearRecords');
@@ -84,13 +86,13 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         while(list.hasChildNodes()) {
           list.removeChild(list.lastChild);
         }
-      }
+      };
 
       // Handle response body checkbox
       var respPref = document.getElementById('withRespBody');
       respPref.onchange = function() {
         addon.port.emit(signal.SIG_WITH_RESPONSE_BODY, respPref.checked);
-      }
+      };
 
 
       /**** Addon signal receivers ****/
@@ -110,12 +112,12 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         close.title = label.DELETE_LOG_ITEM;
         close.onclick = function() {
           list.removeChild(ele);
-        }
+        };
 
         var title = document.createElement('span');
         // slice the url if they are too long
         if (url.length > LETTERS_LIMIT) {
-          var url = url.slice(0, LETTERS_LIMIT) + '...';
+          url = url.slice(0, LETTERS_LIMIT) + '...';
         }
         title.textContent = url;
 
@@ -126,7 +128,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
           else {
             addon.port.emit(signal.SIG_GET_JSON, zst.id);
           }
-        }
+        };
 
         ele.appendChild(title);
         ele.appendChild(close);
@@ -196,7 +198,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         respCode.textContent = result.respCode;
         respLength.textContent = result.length;
         respTime.textContent = result.time;
-        if (result.result == true) {
+        if (result.result === true) {
           rslt.textContent = 'PASS';
           rslt.classList.add('tableCellPass');
         }
@@ -239,7 +241,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
           zestText.wrap = 'off';
           textWrapCM.label = label.TEXT_WRAP;
         }
-      }
+      };
 
       // Save Zest File
       var searchBar = document.getElementById('searchBar');
@@ -254,28 +256,28 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
             zestText.selectionEnd = l + searchText.length;
           }
         }
-      }
+      };
 
       // Change Title
       var changeTitle = document.getElementById('changeTitle');
       changeTitle.onclick = function() {
         var title = prompt(label.GET_TITLE);
         helper.changeZestProperty('title', title);
-      }
+      };
 
       // Change Author
       var changeAuthor = document.getElementById('changeAuthor');
       changeAuthor.onclick = function() {
         var author = prompt(label.GET_AUTHOR);
         helper.changeZestProperty('author', author);
-      }
+      };
 
       // Change Description
       var changeDesc = document.getElementById('changeDesc');
       changeDesc.onclick = function() {
         var desc = prompt(label.GET_DESC);
         helper.changeZestProperty('description', desc);
-      }
+      };
 
       /**** Treeview context menu item handler ****/
 
@@ -284,13 +286,13 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       saveAsTv.onclick = function() {
         var zestText = document.getElementById('zestText');
         addon.port.emit(signal.SIG_SAVE_ZEST, zestText.value);
-      }
+      };
 
       // Import Zest File
       var importZest = document.getElementById('importZest');
       importZest.onclick = function() {
         addon.port.emit(signal.SIG_IMPORT);
-      }
+      };
 
       // Change in tree due to drag and drop
       document.addEventListener('treeChange', function(data) {
@@ -307,7 +309,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       document.addEventListener('runNode', function(data) {
         addon.port.emit('RUN_NODE', data.detail);
         helper.clearResults();
-        helper.showCard('run')
+        helper.showCard('run');
       });
 
       document.addEventListener('changeAttr', function(data) {
@@ -328,6 +330,6 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         addon.port.emit('ADD_PARENT_ELEMENT', data.detail);
       });
     }
-  }
+  };
 
 });

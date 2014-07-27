@@ -1,3 +1,5 @@
+/* global CustomEvent, $ */
+
 'use strict';
 
 define(
@@ -7,7 +9,7 @@ define(
     'dynatree/src/jquery.dynatree',
     'dynatree/doc/contextmenu/jquery.contextMenu-custom'
   ],
-  function(_){
+  function(_){ // jshint ignore:line
 
   var currentZest;
   var zestId;
@@ -26,7 +28,7 @@ define(
   }
 
   function bindRequestContextMenu(span) {
-    $(span).contextMenu({menu: 'nodeMenu'}, function(action, el, pos) {
+    $(span).contextMenu({menu: 'nodeMenu'}, function(action, el, pos) { // jshint ignore:line
       var node = $.ui.dynatree.getNode(el);
       switch(action) {
         case 'run':
@@ -45,7 +47,7 @@ define(
           var assets = {
             name: 'assertion',
             types: ['Length', 'Regex'],
-          }
+          };
           addElement(node, assets);
           break;
 
@@ -57,7 +59,7 @@ define(
         default:
 
       }
-    })
+    });
   }
 
   function runNode(node) {
@@ -90,17 +92,19 @@ define(
     switch (attr) {
       case 'ZestExpressionLength':
         var child = {
-          title: 'Assert - Length (' + val.selectedVar + ' = ' + val.length + ' +/- ' + val.approx + '%)',
+          title: 'Assert - Length (' + val.selectedVar + ' = ' +
+                 val.length + ' +/- ' + val.approx + '%)',
           icon: 'assert.png',
           parentNodeKey: node.data.key,
           type: attr,
           selectedVar: val.selectedVar,
           approx: val.approx,
           childId: (node.data.childNodes - 1)
-        }
+        };
 
         child['response.body'] = node.data['response.body'].length;
-        child['response.url'] = node.data['request.url'].length; // need to get original response url
+        // need to get original response url
+        child['response.url'] = node.data['request.url'].length;
         child['response.header'] = node.data['response.header'].length;
         child['request.body'] = node.data['request.body'].length;
         child['request.header'] = node.data['request.header'].length;
@@ -116,7 +120,7 @@ define(
           length: val.length,
           approx: val.approx,
           varName: val.selectedVar,
-        }
+        };
         break;
 
       case 'ZestExpressionRegex':
@@ -138,7 +142,7 @@ define(
           varName: val.selectedVar,
           caseExact: val.caseSense,
           not: val.inverse,
-        }
+        };
         break;
 
       default:
@@ -170,7 +174,7 @@ define(
         changes = {
           type: node.data.type,
           attr: val
-        }
+        };
         break;
 
       case 'ZestComment':
@@ -180,7 +184,7 @@ define(
         changes = {
           type: node.data.type,
           attr: val
-        }
+        };
         break;
 
       case 'ZestExpressionStatusCode':
@@ -190,21 +194,22 @@ define(
         changes = {
           type: node.data.type,
           code: node.data.statCode
-        }
+        };
         break;
 
       case 'ZestExpressionLength':
         node.data.selectedVar = val.selectedVar;
         node.data[val.selectedVar] = val.length;
         node.data.approx = val.approx;
-        title = 'Assert - Length (' + val.selectedVar + ' = ' + val.length + ' +/- ' + val.approx + '%)';
+        title = 'Assert - Length (' + val.selectedVar + ' = ' +
+                val.length + ' +/- ' + val.approx + '%)';
         node.setTitle(title);
         changes = {
           type: node.data.type,
           variableName: node.data.selectedVar,
           length: val.length,
           approx: node.data.approx
-        }
+        };
         break;
 
       case 'ZestExpressionRegex':
@@ -220,19 +225,20 @@ define(
           regex: node.data.regex,
           caseSense: node.data.caseSense,
           inverse: node.data.inverse
-        }
+        };
         break;
 
       default:
     }
 
     var data = {
-      nodeKey: node.data.isFolder ? parseInt(node.data.key) : parseInt(node.data.parentNodeKey),
+      nodeKey: node.data.isFolder ?
+               parseInt(node.data.key) : parseInt(node.data.parentNodeKey),
       treeId: parseInt(zestId),
       changes: changes
-    }
+    };
 
-    if (node.data.childId != undefined) {
+    if (node.data.childId !== undefined) {
       data.id = node.data.childId;
     }
 
@@ -242,7 +248,7 @@ define(
   function renameTree(initNum, start) {
     var num = initNum;
     start.data.key = num;
-    while(start = start.getNextSibling()) {
+    while(start == start.getNextSibling()) {
       num++;
       start.data.key = num;
     }
@@ -271,7 +277,7 @@ define(
 
   // Bind context menu to assertion elements
   function bindAssertContextMenu(span) {
-    $(span).contextMenu({menu: 'assertMenu'}, function(action, el, pos) {
+    $(span).contextMenu({menu: 'assertMenu'}, function(action, el, pos) { // jshint ignore:line
       var node = $.ui.dynatree.getNode(el);
       switch(action) {
         case 'edit':
@@ -290,21 +296,22 @@ define(
 
   // Open the respective assertion editor base on the type of node.
   function assertionEditor(node) {
+    var assets;
     if (node.data.type == 'ZestExpressionStatusCode') {
-      addAssertionStatusCode(node)
+      addAssertionStatusCode(node);
     }
     else if (node.data.type == 'ZestExpressionLength') {
-      var assets = {
+      assets = {
         title: 'Edit Assertion',
         button1: 'Save'
-      }
+      };
       addAssertionLength(node, assets);
     }
     else if (node.data.type == 'ZestExpressionRegex') {
-      var assets = {
+      assets = {
         title: 'Edit Assertion',
         button1: 'Save'
-      }
+      };
       addAssertionRegex(node, assets);
     }
     else {
@@ -347,7 +354,7 @@ define(
           }
         }
       ],
-      beforeClose: function(event, ui) {
+      beforeClose: function(event, ui) { // jshint ignore:line
         $('#zestDialog').empty();
       }
     });
@@ -411,7 +418,7 @@ define(
               selectedVar: selectedVar,
               length: len,
               approx: approx
-            }
+            };
             if (!assets.isNew) {
               updateNode('ZestExpressionLength', node, v);
             }
@@ -428,7 +435,7 @@ define(
           }
         }
       ],
-      beforeClose: function(event, ui) {
+      beforeClose: function(event, ui) { // jshint ignore:line
         $('#zestDialog').empty();
       }
     });
@@ -493,7 +500,7 @@ define(
               regex: regexString,
               caseSense: caseSense,
               inverse: inverse
-            }
+            };
             if (!assets.isNew) {
               updateNode('ZestExpressionRegex', node, v);
             }
@@ -510,7 +517,7 @@ define(
           }
         }
       ],
-      beforeClose: function(event, ui) {
+      beforeClose: function(event, ui) { // jshint ignore:line
         $('#zestDialog').empty();
       }
     });
@@ -524,13 +531,15 @@ define(
     var radioDiv = $('<div></div>');
 
     var radio;
-    for (var type of assets.types) {
-      radio = $('<input type="radio" name="' + assets.name + '" value="' + type + '"/>' + type + '<br>');
+    for (var typ of assets.types) {
+      radio = $('<input type="radio" name="' + assets.name +
+              '" value="' + typ + '"/>' + typ + '<br>');
       radioDiv.append(radio);
     }
 
     p0.append(radioDiv);
     $('#zestDialog').append(p0);
+    var data;
 
     $('#zestDialog').dialog({
       modal: true,
@@ -544,19 +553,19 @@ define(
             type = $('input[name="' + assets.name + '"]:checked').val();
             $(this).dialog('close');
             if (type == 'Length') {
-              var data = {
+              data = {
                 isNew: true,
                 title: 'Add Assertion',
                 button1: 'Add'
-              }
+              };
               addAssertionLength(node, data);
             }
             else if (type == 'Regex') {
-              var data = {
+              data = {
                 isNew: true,
                 title: 'Add Assertion',
                 button1: 'Add'
-              }
+              };
               addAssertionRegex(node, data);
             }
           }
@@ -568,7 +577,7 @@ define(
           }
         }
       ],
-      beforeClose: function(event, ui) {
+      beforeClose: function(event, ui) { // jshint ignore:line
         $('#zestDialog').empty();
       }
     });
@@ -609,12 +618,12 @@ define(
         tab1.append(tab1p1);
 
         var tab1p2 = $('<p id="reqInfo-header-para">Headers: </p>');
-        var x1 = $('<textarea id="reqInfo-header" rows="15" cols="50" wrap="hard">' + node.data['request.header'] + '</textarea>');
+        var x1 = $('<textarea id="reqInfo-header" rows="15" cols="50" wrap="hard">' + node.data['request.header'] + '</textarea>'); // jshint ignore:line
         tab1p2.append(x1);
         tab1.append(tab1p2);
 
         var tab1p3 = $('<p id="reqInfo-body-para">Body: </p>');
-        var x2 = $('<textarea id="reqInfo-body" rows="10" cols="50" wrap="hard">' + node.data['request.body'] + '</textarea>');
+        var x2 = $('<textarea id="reqInfo-body" rows="10" cols="50" wrap="hard">' + node.data['request.body'] + '</textarea>'); // jshint ignore:line
         tab1p3.append(x2);
         tab1.append(tab1p3);
 
@@ -638,12 +647,12 @@ define(
         tab2.append(tab2p1);
 
         var tab2p2 = $('<p id="resInfo-header-para">Headers: </p>');
-        var x3 = $('<textarea id="resInfo-header" rows="15" cols="50" wrap="hard">' + node.data['response.header'] + '</textarea>');
+        var x3 = $('<textarea id="resInfo-header" rows="15" cols="50" wrap="hard">' + node.data['response.header'] + '</textarea>'); // jshint ignore:line
         tab2p2.append(x3);
         tab2.append(tab2p2);
 
         var tab2p3 = $('<p id="resInfo-body-para">Body: </p>');
-        var x4 = $('<textarea id="resInfo-body" rows="10" cols="50" wrap="hard">' + node.data['response.body'] + '</textarea>');
+        var x4 = $('<textarea id="resInfo-body" rows="10" cols="50" wrap="hard">' + node.data['response.body'] + '</textarea>'); // jshint ignore:line
         tab2p3.append(x4);
         tab2.append(tab2p3);
 
@@ -681,7 +690,7 @@ define(
                   'response.time': resTime,
                   'response.header': resHeaders,
                   'response.body': resBody
-                }
+                };
 
                 updateNode(node.data.type, node, v);
                 $(this).dialog('close');
@@ -694,7 +703,7 @@ define(
               }
             }
           ],
-          beforeClose: function(event, ui) {
+          beforeClose: function(event, ui) { // jshint ignore:line
             $('#zestDialog').empty();
           }
         });
@@ -748,7 +757,7 @@ define(
                 comment: cmt,
                 index: nodeKey,
                 elementType: 'ZestComment'
-              }
+              };
               emitSignal('addParentElement', {
                 precedingNodeKey: parseInt(node.data.key),
                 treeId: parseInt(zestId),
@@ -769,7 +778,7 @@ define(
           }
         }
       ],
-      beforeClose: function(event, ui) {
+      beforeClose: function(event, ui) { // jshint ignore:line
         $('#zestDialog').empty();
       }
     });
@@ -779,7 +788,7 @@ define(
   // Initialize dynatree
   $(function(){
     $('#tree').dynatree({
-      onClick: function(node, event) {
+      onClick: function(node, event) { // jshint ignore:line
         node.activate();
         // Expand only when the expander is clicked
         if (node.getEventTargetType(event) == 'expander') {
@@ -791,7 +800,7 @@ define(
         }
         return false;
       },
-      onDblClick: function(node, event) {
+      onDblClick: function(node, event) { // jshint ignore:line
         if (node.data.isFolder) {
           requestInfo(node);
         }
@@ -818,14 +827,15 @@ define(
             return false;
           }
         },
-        onDragStop: function(node) {
+        onDragStop: function(node) { // jshint ignore:line
+
         },
         autoExpandMS: 1000,
         preventVoidMoves: true,
-        onDragEnter: function(node, sourceNode) {
+        onDragEnter: function(node, sourceNode) { // jshint ignore:line
           return true;
         },
-        onDragOver: function(node, sourceNode, hitMode) {
+        onDragOver: function(node, sourceNode, hitMode) { // jshint ignore:line
           // Prevent dropping a parent below it's own child.
           if (node.isDescendantOf(sourceNode)) {
             return false;
@@ -835,7 +845,8 @@ define(
             return false;
           }
         },
-        onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+        onDrop: function(node, sourceNode, hitMode, // jshint ignore:line
+                         ui, draggable) { // jshint ignore:line
           if (node.data.isFolder) {
             var first, num;
 
@@ -866,7 +877,7 @@ define(
             renameTree(num, first);
           }
         },
-        onDragLeave: function(node, sourceNode) {
+        onDragLeave: function(node, sourceNode) { // jshint ignore:line
         }
       }
     });
@@ -891,25 +902,30 @@ define(
       catch(e) {}
 
       var z = JSON.parse(currentZest);
-      var numOfReq = z.statements.length;
+      //var numOfReq = z.statements.length;
       var temp = null;
       var temp2 = null;
       for (var i of z.statements) {
-        temp2 = []
+        temp2 = [];
         try {
-          if (i.assertions[0].rootExpression.elementType == 'ZestExpressionStatusCode') {
+          if (i.assertions[0].rootExpression.elementType ==
+              'ZestExpressionStatusCode') {
             temp2.push({
-              title: 'Assert - Status Code (' + i.assertions[0].rootExpression.code + ')',
+              title: 'Assert - Status Code (' +
+                     i.assertions[0].rootExpression.code + ')',
               icon: 'assert.png',
               parentNodeKey: i.index,
               type: i.assertions[0].rootExpression.elementType,
               statCode: i.assertions[0].rootExpression.code,
               childId: 0
-            })
+            });
           }
-          if (i.assertions[1].rootExpression.elementType == 'ZestExpressionLength') {
+          if (i.assertions[1].rootExpression.elementType ==
+              'ZestExpressionLength') {
             temp2.push({
-              title: 'Assert - Length (response.body = ' + i.assertions[1].rootExpression.length + ' +/- ' + i.assertions[1].rootExpression.approx + '%)',
+              title: 'Assert - Length (response.body = ' +
+                     i.assertions[1].rootExpression.length + ' +/- ' +
+                     i.assertions[1].rootExpression.approx + '%)',
               icon: 'assert.png',
               parentNodeKey: i.index,
               type: i.assertions[1].rootExpression.elementType,
@@ -943,12 +959,12 @@ define(
           'response.header': i.response.headers,
           'response.body': i.response.body,
           childNodes: 2
-        }
+        };
         root.addChild(temp);
       }
 
     }
 
-  }
+  };
 
 });
