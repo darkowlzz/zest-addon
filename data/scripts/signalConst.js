@@ -1,3 +1,5 @@
+'use strict';
+
 define({
   SIG_LOCKTAB: 'LOCKTAB',
   SIG_RECORD_ON: 'RECORDON',

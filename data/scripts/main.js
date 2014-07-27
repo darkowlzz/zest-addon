@@ -1,3 +1,5 @@
+'use strict';
+
 define(['signalConst', 'labels', 'treeView', 'helper'],
        function(signal, label, tree, helper) {
 
