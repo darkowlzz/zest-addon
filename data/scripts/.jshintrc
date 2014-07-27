@@ -1,0 +1,12 @@
+{
+  "node": true,
+  "moz": true,
+  "esnext": true,
+  "unused": true,
+  "undef": true,
+  "predef": [ "requirejs", "addon", "define", "document" ],
+  "indent": 2,
+  "maxlen": 80,
+  "multistr": true,
+  "nonbsp": true
+}
