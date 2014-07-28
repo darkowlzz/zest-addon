@@ -718,8 +718,6 @@ define(
     var p0 = $('<p>Comment:</p>');
     var x0 = $('<textarea id="commentText" rows="7" cols="40"></textarea>');
     if (!isNew) {
-      console.log('Not NEW');
-      console.log(node.data.comment);
       x0.val(node.data.comment);
     }
     p0.append(x0);
@@ -764,7 +762,6 @@ define(
               });
             }
             else {
-              console.log('UPDATING OLD');
               updateNode(node.data.type, node, cmt);
             }
             $(this).dialog('close');
@@ -882,6 +879,76 @@ define(
     });
   });
 
+  // Extract and frame child objects for tree parent node.
+  function extractAsserts(assertions, parentReq) {
+    var childCount = 0;
+    var asserts = [];
+    try {
+      for (var assert of assertions) {
+        switch (assert.rootExpression.elementType) {
+          case 'ZestExpressionStatusCode':
+            asserts.push({
+              title: 'Assert - Status Code (' +
+                     assert.rootExpression.code + ')',
+              icon: 'assert.png',
+              parentNodeKey: parentReq.index,
+              type: assert.rootExpression.elementType,
+              statCode: assert.rootExpression.code,
+              childId: childCount
+            });
+            childCount++;
+            break;
+
+          case 'ZestExpressionLength':
+            asserts.push({
+              title: 'Assert - Length (response.body = ' +
+                     assert.rootExpression.length + ' +/- ' +
+                     assert.rootExpression.approx + '%)',
+              icon: 'assert.png',
+              parentNodeKey: parentReq.index,
+              type: assert.rootExpression.elementType,
+              selectedVar: assert.rootExpression.variableName,
+              approx: assert.rootExpression.approx,
+              'response.body': assert.rootExpression.length,
+              'response.url': parentReq.response.url.length,
+              'response.header': parentReq.response.headers.length,
+              'request.body': parentReq.data.length,
+              'request.header': parentReq.headers.length,
+              'request.method': parentReq.method.length,
+              'request.url': parentReq.url.length,
+              childId: childCount
+            });
+            childCount++;
+            break;
+
+          case 'ZestExpressionRegex':
+            asserts.push({
+              title: 'Assert - ' + assert.rootExpression.variableName +
+                     ' Regex (' + assert.rootExpression.regex + ')',
+              icon: 'assert.png',
+              parentNodeKey: parentReq.index,
+              type: assert.rootExpression.elementType,
+              selectedVar: assert.rootExpression.variableName,
+              regex: assert.rootExpression.regex,
+              caseSense: assert.rootExpression.caseExact,
+              inverse: assert.rootExpression.not,
+              childId: childCount
+            });
+            childCount++;
+            break;
+
+          default:
+
+        }
+      }
+    }
+    catch(e) {
+      console.log('ErRoR: ' + e);
+    }
+
+    return asserts;
+  }
+
   return {
     clear: function() {
       try {
@@ -901,69 +968,58 @@ define(
       catch(e) {}
 
       var z = JSON.parse(currentZest);
-      //var numOfReq = z.statements.length;
-      var temp = null;
-      var temp2 = null;
-      for (var i of z.statements) {
-        temp2 = [];
-        try {
-          if (i.assertions[0].rootExpression.elementType ==
-              'ZestExpressionStatusCode') {
-            temp2.push({
-              title: 'Assert - Status Code (' +
-                     i.assertions[0].rootExpression.code + ')',
-              icon: 'assert.png',
-              parentNodeKey: i.index,
-              type: i.assertions[0].rootExpression.elementType,
-              statCode: i.assertions[0].rootExpression.code,
-              childId: 0
-            });
-          }
-          if (i.assertions[1].rootExpression.elementType ==
-              'ZestExpressionLength') {
-            temp2.push({
-              title: 'Assert - Length (response.body = ' +
-                     i.assertions[1].rootExpression.length + ' +/- ' +
-                     i.assertions[1].rootExpression.approx + '%)',
-              icon: 'assert.png',
-              parentNodeKey: i.index,
-              type: i.assertions[1].rootExpression.elementType,
-              selectedVar: 'response.body',
-              approx: i.assertions[1].rootExpression.approx,
-              'response.body': i.assertions[1].rootExpression.length,
-              'response.url': i.response.url.length,
-              'response.header': i.response.headers.length,
-              'request.body': i.data.length,
-              'request.header': i.headers.length,
-              'request.method': i.method.length,
-              'request.url': i.url.length,
-              childId: 1
-            });
-          }
-        }
-        catch(e) {}
+      var temp;
+      var temp2;
+      var asserts;
+      for (var stmt of z.statements) {
+        switch(stmt.elementType) {
+          case 'ZestRequest':
+            temp2 = [];
+            asserts = extractAsserts(stmt.assertions, stmt);
 
-        temp = {
-          // All the req/res data is binded to node to reduce complexity in
-          // returning data.
-          title: (i.method + ' : ' + i.url), isFolder: true, key: i.index,
-          icon: 'request.png', children: temp2,
-          type: i.elementType,
-          'request.url': i.url,
-          'request.method': i.method,
-          'request.body': i.data,
-          'request.header': i.headers,
-          'response.statusCode': i.response.statusCode,
-          'response.time': i.response.responseTimeInMs,
-          'response.header': i.response.headers,
-          'response.body': i.response.body,
-          childNodes: 2
-        };
+            for (var assert of asserts) {
+              temp2.push(assert);
+            }
+
+            temp = {
+              // All the req/res data is binded to node to reduce complexity in
+              // returning data.
+              title: (stmt.method + ' : ' + stmt.url),
+              isFolder: true, key: stmt.index,
+              icon: 'request.png', children: temp2,
+              type: stmt.elementType,
+              'request.url': stmt.url,
+              'request.method': stmt.method,
+              'request.body': stmt.data,
+              'request.header': stmt.headers,
+              'response.statusCode': stmt.response.statusCode,
+              'response.time': stmt.response.responseTimeInMs,
+              'response.header': stmt.response.headers,
+              'response.body': stmt.response.body,
+              childNodes: asserts.length
+            };
+            break;
+
+          case 'ZestComment':
+            temp = {
+              title: 'Comment: ' + stmt.comment,
+              isFolder: true, key: stmt.index,
+              icon: 'comment.png',
+              type: stmt.elementType,
+              comment: stmt.comment,
+              chidNodes: 0
+            };
+            break;
+
+          default:
+            temp = {
+              title: 'Unknown',
+              isFolder: true
+            }
+
+        }
         root.addChild(temp);
       }
-
     }
-
   };
-
 });
