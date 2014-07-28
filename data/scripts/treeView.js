@@ -1,7 +1,5 @@
 /* global CustomEvent, $ */
 
-'use strict';
-
 define(
   [
     'dynatree/jquery/jquery',
@@ -10,6 +8,7 @@ define(
     'dynatree/doc/contextmenu/jquery.contextMenu-custom'
   ],
   function(_){ // jshint ignore:line
+  'use strict';
 
   var currentZest;
   var zestId;

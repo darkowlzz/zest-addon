@@ -1,8 +1,7 @@
 /* global zestText */
 
-'use strict';
-
 define(function() {
+  'use strict';
 
   function renderZestTextAs(z) {
     var zestText = document.getElementById('zestText');
