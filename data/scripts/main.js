@@ -1,9 +1,9 @@
 /* global alert, prompt */
 
-'use strict';
 
 define(['signalConst', 'labels', 'treeView', 'helper'],
        function(signal, label, tree, helper) {
+  'use strict';
 
   return {
     start: function(addon) {
