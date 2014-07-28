@@ -45,7 +45,7 @@ define(
         case 'addAssertion':
           var assets = {
             name: 'assertion',
-            types: ['Length', 'Regex'],
+            types: ['Status Code', 'Length', 'Regex'],
           };
           addElement(node, assets);
           break;
@@ -89,6 +89,22 @@ define(
     var ele;
     node.data.childNodes++;
     switch (attr) {
+      case 'ZestExpressionStatusCode':
+        node.addChild({
+          title: 'Assert - Status Code (' + val + ')',
+          icon: 'assert.png',
+          parentNodeKey: node.data.key,
+          type: attr,
+          statCode: val,
+          childId: (node.data.childNodes - 1)
+        });
+
+        ele = {
+          type: attr,
+          statusCode: val
+        };
+        break;
+
       case 'ZestExpressionLength':
         var child = {
           title: 'Assert - Length (' + val.selectedVar + ' = ' +
@@ -295,22 +311,17 @@ define(
 
   // Open the respective assertion editor base on the type of node.
   function assertionEditor(node) {
-    var assets;
+    var assets = {
+      title: 'Edit Assertion',
+      button1: 'Save'
+    };
     if (node.data.type == 'ZestExpressionStatusCode') {
-      addAssertionStatusCode(node);
+      addAssertionStatusCode(node, assets);
     }
     else if (node.data.type == 'ZestExpressionLength') {
-      assets = {
-        title: 'Edit Assertion',
-        button1: 'Save'
-      };
       addAssertionLength(node, assets);
     }
     else if (node.data.type == 'ZestExpressionRegex') {
-      assets = {
-        title: 'Edit Assertion',
-        button1: 'Save'
-      };
       addAssertionRegex(node, assets);
     }
     else {
@@ -318,13 +329,15 @@ define(
     }
   }
 
-  function addAssertionStatusCode(node) {
+  function addAssertionStatusCode(node, assets) {
     var p = $('<p id="statPara">Status Code: </p>');
     var x = $('<select></select>');
     var tmp;
     for (var c of statusCodeList) {
       tmp = $('<option value="' + c + '">' + c + '</option>');
-      if (c == node.data.statCode) {
+      if (!assets.isNew && c == node.data.statCode) {
+        console.log('we got ');
+        console.log(node.data.statCode);
         tmp.attr('selected', 'selected');
       }
       x.append(tmp);
@@ -342,7 +355,12 @@ define(
           text: 'Save',
           click: function() {
             var v = $('#statPara :selected').text();
-            updateNode('ZestExpressionStatusCode', node, parseInt(v));
+            if (!assets.isNew) {
+              updateNode('ZestExpressionStatusCode', node, parseInt(v));
+            }
+            else {
+              addElementToReq('ZestExpressionStatusCode', node, parseInt(v));
+            }
             $(this).dialog('close');
           }
         },
@@ -551,21 +569,35 @@ define(
           click: function() {
             type = $('input[name="' + assets.name + '"]:checked').val();
             $(this).dialog('close');
-            if (type == 'Length') {
-              data = {
-                isNew: true,
-                title: 'Add Assertion',
-                button1: 'Add'
-              };
-              addAssertionLength(node, data);
-            }
-            else if (type == 'Regex') {
-              data = {
-                isNew: true,
-                title: 'Add Assertion',
-                button1: 'Add'
-              };
-              addAssertionRegex(node, data);
+            switch (type) {
+              case 'Status Code':
+                data = {
+                  isNew: true,
+                  title: 'Add Assertion',
+                  button1: 'Add'
+                }
+                addAssertionStatusCode(node, data);
+                break;
+
+              case 'Length':
+                data = {
+                  isNew: true,
+                  title: 'Add Assertion',
+                  button1: 'Add'
+                };
+                addAssertionLength(node, data);
+                break;
+
+              case 'Regex':
+                data = {
+                  isNew: true,
+                  title: 'Add Assertion',
+                  button1: 'Add'
+                };
+                addAssertionRegex(node, data);
+                break;
+
+              default:
             }
           }
         },
