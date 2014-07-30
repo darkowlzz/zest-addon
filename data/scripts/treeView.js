@@ -27,6 +27,7 @@ define(
   }
 
   function bindRequestContextMenu(span) {
+    var assets;
     $(span).contextMenu({menu: 'nodeMenu'}, function(action, el, pos) { // jshint ignore:line
       var node = $.ui.dynatree.getNode(el);
       switch(action) {
@@ -43,7 +44,7 @@ define(
           break;
 
         case 'addAssertion':
-          var assets = {
+          assets = {
             name: 'assertion',
             types: ['Status Code', 'Length', 'Regex'],
           };
@@ -51,8 +52,16 @@ define(
           break;
 
         case 'addComment':
-          var isNew = true;
-          addComment(node, isNew);
+          addComment(node, true);
+          break;
+
+        case 'addCondition':
+          assets = {
+            name: 'condition',
+            types: ['Regex', 'Equals', 'Length', 'Status Code',
+                    'Response Time', 'URL', 'Empty AND', 'Empty OR']
+          };
+          addElement(node, assets);
           break;
 
         default:
@@ -101,7 +110,7 @@ define(
 
         ele = {
           type: attr,
-          statusCode: val
+          statusCode: val,
         };
         break;
 
@@ -155,8 +164,8 @@ define(
           type: attr,
           regex: val.regex,
           varName: val.selectedVar,
-          caseExact: val.caseSense,
-          not: val.inverse,
+          caseSense: val.caseSense,
+          inverse: val.inverse,
         };
         break;
 
@@ -164,6 +173,7 @@ define(
 
     }
 
+    console.log(JSON.stringify(ele));
     emitSignal('addElement', {
       nodeKey: node.data.key,
       treeId: parseInt(zestId),
@@ -309,6 +319,47 @@ define(
     });
   }
 
+  function addAssertion(type, node) {
+    var data = {
+      isNew: true,
+      title: 'Add Assertion',
+      button1: 'Add'
+    };
+    switch (type) {
+      case 'Status Code':
+        addAssertionStatusCode(node, data);
+        break;
+
+      case 'Length':
+        addAssertionLength(node, data);
+        break;
+
+      case 'Regex':
+        addAssertionRegex(node, data);
+        break;
+
+      default:
+    }
+  }
+
+  function addCondition(type, node) { //jshint ignore:line
+    $('#zestDialog').load('dialog.html #condition').dialog({
+      modal: true,
+      height: 200,
+      width: 350,
+      title: 'Edit Condition',
+      buttons: [
+        {
+          text: 'Close',
+          click: function() {
+            $(this).dialog('close');
+            $('#zestDialog').empty();
+          }
+        }
+      ]
+    });
+  }
+
   // Open the respective assertion editor base on the type of node.
   function assertionEditor(node) {
     var assets = {
@@ -330,22 +381,17 @@ define(
   }
 
   function addAssertionStatusCode(node, assets) {
-    var p = $('<p id="statPara">Status Code: </p>');
-    var x = $('<select></select>');
     var tmp;
-    for (var c of statusCodeList) {
-      tmp = $('<option value="' + c + '">' + c + '</option>');
-      if (!assets.isNew && c == node.data.statCode) {
-        console.log('we got ');
-        console.log(node.data.statCode);
-        tmp.attr('selected', 'selected');
-      }
-      x.append(tmp);
-    }
-    p.append(x);
 
-    $('#zestDialog').append(p);
-    $('#zestDialog').dialog({
+    $('#zestDialog').load('dialog.html #expStatus', function() {
+      for (var c of statusCodeList) {
+        tmp = $('<option value="' + c + '">' + c + '</option>');
+        if (!assets.isNew && c == node.data.statCode) {
+          tmp.attr('selected', 'selected');
+        }
+        $('#statCode').append(tmp);
+      }
+    }).dialog({
       modal: true,
       height: 200,
       width: 350,
@@ -354,7 +400,7 @@ define(
         {
           text: 'Save',
           click: function() {
-            var v = $('#statPara :selected').text();
+            var v = $('#statCode :selected').text();
             if (!assets.isNew) {
               updateNode('ZestExpressionStatusCode', node, parseInt(v));
             }
@@ -378,48 +424,34 @@ define(
   }
 
   function addAssertionLength(node, assets) {
-    var p0 = $('<p>Variable Name: </p>');
-    var x0 = $('<select id="varName"></select>');
     var tmp;
     var selectedVar = node.data.selectedVar;
-    for (var v of varExpList) {
-      tmp = $('<option value="' + v + '">' + v + '</option>');
-      if (!assets.isNew && v == selectedVar) {
-        tmp.attr('selected', 'selected');
+
+    $('#zestDialog').load('dialog.html #expLength', function() {
+      console.log('loading length');
+      for (var v of varExpList) {
+        tmp = $('<option value="' + v + '">' + v + '</option>');
+        if (!assets.isNew && v == selectedVar) {
+          tmp.attr('selected', 'selected');
+        }
+        $('#varName').append(tmp);
       }
-      x0.append(tmp);
-    }
-    p0.append(x0);
-    $('#zestDialog').append(p0);
 
-    var p1 = $('<p>Length: </p>');
-    var x1 = $('<input id="length" type="number" value="0">');
-    if (!assets.isNew) {
-      x1.val(node.data[selectedVar]);
-    }
-
-    p1.append(x1);
-    $('#zestDialog').append(p1);
-
-    var p2 = $('<p>Plus/minus %: </p>');
-    var x2 = $('<input id="approx" type="number" min="0" max="100" value="0">');
-    if (!assets.isNew) {
-      x2.val(node.data.approx);
-    }
-    p2.append(x2);
-    $('#zestDialog').append(p2);
-
-    $('#varName').on('change', function() {
-      if (assets.isNew) {
-        var newSel = $('#varName :selected').text();
-        $('#length').val(node.data[newSel].length);
+      if (!assets.isNew) {
+        $('#length').val(node.data[selectedVar]);
+        $('#approx').val(node.data.approx);
       }
-      else {
-        console.log('failed to register');
-      }
-    });
 
-    $('#zestDialog').dialog({
+      $('#varName').on('change', function() {
+        if (assets.isNew) {
+          var newSel = $('#varName :selected').text();
+          $('#length').val(node.data[newSel].length);
+        }
+        else {
+          console.log('failed to register');
+        }
+      });
+    }).dialog({
       modal: true,
       height: 200,
       width: 350,
@@ -459,47 +491,25 @@ define(
   }
 
   function addAssertionRegex(node, assets) {
-    var p0 = $('<p>Variable Name: </p>');
-    var x0 = $('<select id="varName"></select>');
     var tmp;
     var selectedVar = node.data.selectedVar;
 
-    for (var v of varExpList) {
-      tmp = $('<option value="' + v + '">' + v + '</option>');
-      if (!assets.isNew && v == selectedVar) {
-        tmp.attr('selected', 'selected');
+    $('#zestDialog').load('dialog.html #expRegex', function() {
+      console.log('loading regex');
+      for (var v of varExpList) {
+        tmp = $('<option value="' + v + '">' + v + '</option>');
+        if (!assets.isNew && v == selectedVar) {
+          tmp.attr('selected', 'selected');
+        }
+        $('#varName').append(tmp);
       }
-      x0.append(tmp);
-    }
-    p0.append(x0);
-    $('#zestDialog').append(p0);
 
-    var p1 = $('<p>Regex: </p>');
-    var x1 = $('<input id="regexString" type="text">');
-    if (!assets.isNew) {
-      x1.val(node.data.regex);
-    }
-    p1.append(x1);
-    $('#zestDialog').append(p1);
-
-    var p2 = $('<p>Case Exact: </p>');
-    var x2 = $('<input id="caseSense" type="checkbox">');
-    if (!assets.isNew) {
-      x2.prop('checked', node.data.caseSense);
-    }
-    p2.append(x2);
-    $('#zestDialog').append(p2);
-
-    var p3 = $('<p>Inverse: </p>');
-    var x3 = $('<input id="inverse" type="checkbox">');
-    if (!assets.isNew) {
-      x3.prop('checked', node.data.inverse);
-    }
-    p3.append(x3);
-    $('#zestDialog').append(p3);
-
-
-    $('#zestDialog').dialog({
+      if (!assets.isNew) {
+        $('#regexString').val(node.data.regex);
+        $('#caseSense').prop('checked', node.data.caseSense);
+        $('#inverse').prop('checked', node.data.inverse);
+      }
+    }).dialog({
       modal: true,
       height: 300,
       width: 350,
@@ -509,6 +519,7 @@ define(
           text: assets.button1,
           click: function() {
             selectedVar = $('#varName :selected').text();
+            console.log('Selected var: ' + selectedVar);
             var regexString = $('#regexString').val();
             var caseSense = $('#caseSense').is(':checked');
             var inverse = $('#inverse').is(':checked');
@@ -556,7 +567,6 @@ define(
 
     p0.append(radioDiv);
     $('#zestDialog').append(p0);
-    var data;
 
     $('#zestDialog').dialog({
       modal: true,
@@ -569,32 +579,13 @@ define(
           click: function() {
             type = $('input[name="' + assets.name + '"]:checked').val();
             $(this).dialog('close');
-            switch (type) {
-              case 'Status Code':
-                data = {
-                  isNew: true,
-                  title: 'Add Assertion',
-                  button1: 'Add'
-                }
-                addAssertionStatusCode(node, data);
+            switch (assets.name) {
+              case 'assertion':
+                addAssertion(type, node);
                 break;
 
-              case 'Length':
-                data = {
-                  isNew: true,
-                  title: 'Add Assertion',
-                  button1: 'Add'
-                };
-                addAssertionLength(node, data);
-                break;
-
-              case 'Regex':
-                data = {
-                  isNew: true,
-                  title: 'Add Assertion',
-                  button1: 'Add'
-                };
-                addAssertionRegex(node, data);
+              case 'condition':
+                addCondition(type, node);
                 break;
 
               default:
@@ -618,82 +609,35 @@ define(
   function requestInfo(node) {
     switch (node.data.type) {
       case 'ZestRequest':
-        var tabDiv = $('<div id="tabs">' + 
-                       '<ul>' +
-                         '<li><a href="#tabs-1">Request</a></li>' +
-                         '<li><a href="#tabs-2">Response</a></li>' +
-                       '</ul>' +
-                       '</div>');
-        var tab1 = $('<div id="tabs-1"></div>');
-        var tab2 = $('<div id="tabs-2"></div>');
+        $('#zestDialog').load('dialog.html #requestInfo', function() {
+          console.log('loading tabs');
+          var tmp;
+          $('#tabs').tabs();
 
-        /** Creating request tab content **/
-        var tab1p0 = $('<p id="reqInfo-url-para">URL: <input type="url"' + 
-                       'id="reqInfo-url" value="' + node.data['request.url'] + 
-                       '"></p>');
-        tab1.append(tab1p0);
-
-        var tab1p1 = $('<p id="reqInfo-method-para">Method: </p>');
-        var x0 = $('<select id="reqInfo-method"></select>');
-        var methodList = ['GET', 'POST'];
-        var selectedMethod = node.data['request.method'];
-        var tmp;
-        for (var m of methodList) {
-          tmp = $('<option value="' + m + '">' + m + '</option>');
-          if (m == selectedMethod) {
-            tmp.attr('selected', 'selected');
+          $('#reqInfo-url').val(node.data['request.url']);
+          var methodList = ['GET', 'POST'];
+          for (var m of methodList) {
+            tmp = $('<option value="' + m + '">' + m + '</option>');
+            if (m == node.data['request.method']) {
+              tmp.attr('selected', 'selected');
+            }
+            $('#reqInfo-method').append(tmp);
           }
-          x0.append(tmp);
-        }
-        tab1p1.append(x0);
-        tab1.append(tab1p1);
 
-        var tab1p2 = $('<p id="reqInfo-header-para">Headers: </p>');
-        var x1 = $('<textarea id="reqInfo-header" rows="15" cols="50" wrap="hard">' + node.data['request.header'] + '</textarea>'); // jshint ignore:line
-        tab1p2.append(x1);
-        tab1.append(tab1p2);
-
-        var tab1p3 = $('<p id="reqInfo-body-para">Body: </p>');
-        var x2 = $('<textarea id="reqInfo-body" rows="10" cols="50" wrap="hard">' + node.data['request.body'] + '</textarea>'); // jshint ignore:line
-        tab1p3.append(x2);
-        tab1.append(tab1p3);
-
-        /** Creating response tab content **/
-        var tab2p0 = $('<p id="resInfo-status-para">' + 
-                       'Status Code: </p>');
-        var xn = $('<select id="resInfo-status"></select>');
-        for (var c of statusCodeList) {
-          tmp = $('<option value="' + c + '">' + c + '</option>');
-          if (c == node.data['response.statusCode']) {
-            tmp.attr('selected', 'selected');
+          $('#reqInfo-method [name=options]').val(node.data['request.method']);
+          $('#reqInfo-header').val(node.data['request.header']);
+          $('#reqInfo-body').val(node.data['request.body']);
+          for (var c of statusCodeList) {
+            tmp = $('<option value="' + c + '">' + c + '</option>');
+            if (c == node.data['response.statusCode']) {
+              tmp.attr('selected', 'selected');
+            }
+            $('#resInfo-status').append(tmp);
           }
-          xn.append(tmp);
-        }
-        tab2p0.append(xn);
-        tab2.append(tab2p0);
-
-        var tab2p1 = $('<p id="resInfo-time-para">' + 
-                       'Time in ms: <input type="number" id="resInfo-time" ' +
-                       'value="' + node.data['response.time'] + '"></p>');
-        tab2.append(tab2p1);
-
-        var tab2p2 = $('<p id="resInfo-header-para">Headers: </p>');
-        var x3 = $('<textarea id="resInfo-header" rows="15" cols="50" wrap="hard">' + node.data['response.header'] + '</textarea>'); // jshint ignore:line
-        tab2p2.append(x3);
-        tab2.append(tab2p2);
-
-        var tab2p3 = $('<p id="resInfo-body-para">Body: </p>');
-        var x4 = $('<textarea id="resInfo-body" rows="10" cols="50" wrap="hard">' + node.data['response.body'] + '</textarea>'); // jshint ignore:line
-        tab2p3.append(x4);
-        tab2.append(tab2p3);
-
-        tabDiv.append(tab1);
-        tabDiv.append(tab2);
-
-        tabDiv.tabs();
-
-        $('#zestDialog').append(tabDiv);
-        $('#zestDialog').dialog({
+          $('#resInfo-time').val(node.data['response.time']);
+          $('#resInfo-header').val(node.data['response.header']);
+          $('#resInfo-body').val(node.data['response.body']);
+        }).dialog({
           modal: true,
           height: 700,
           width: 350,
@@ -1047,8 +991,7 @@ define(
             temp = {
               title: 'Unknown',
               isFolder: true
-            }
-
+            };
         }
         root.addChild(temp);
       }

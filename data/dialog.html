@@ -1,0 +1,76 @@
+<div id="expStatus">
+  <p>Status Code:
+    <select id="statCode"></select>
+  </p>
+</div>
+
+<div id="expLength">
+  <p>Variable Name:
+    <select id="varName"></select>
+  </p>
+
+  <p>Length:
+    <input id="length" type="number" value="0">
+  </p>
+
+  <p>Plus/minus %:
+    <input id="approx" type="number" min="0" max="100" value="0">
+  </p>
+</div>
+
+<div id="expRegex">
+  <p>Variable Name:
+    <select id="varName"></select>
+  </p>
+
+  <p>Regex:
+    <input id="regexString" type="text">
+  </p>
+
+  <p>Case Exact:
+    <input id="caseSense" type="checkbox">
+  </p>
+
+  <p>Inverse:
+    <input id="inverse" type="checkbox">
+  </p>
+</div>
+
+<div id="requestInfo">
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">Request</a></li>
+      <li><a href="#tabs-2">Response</a></li>
+    </ul>
+    <div id="tabs-1">
+      <p id="reqInfo-url-para">URL:
+        <input type="url" id="reqInfo-url" value="">
+      </p>
+      <p id="reqInfo-method-para">Method:
+        <select id="reqInfo-method">
+        </select>
+      </p>
+      <p id="reqInfo-header-para">Headers:
+        <textarea id="reqInfo-header" rows="15" cols="50" wrap="hard"></textarea>
+      </p>
+      <p id="reqInfo-body-para">Body:
+        <textarea id="reqInfo-body" rows="10" cols="50" wrap="hard"></textarea>
+      </p>
+    </div>
+    <div id="tabs-2">
+      <p id="resInfo-status-para">Status Code:
+        <select id="resInfo-status">
+        </select>
+      </p>
+      <p id="resInfo-time-para">Time in ms:
+        <input type="number" id="resInfo-time" value="">
+      </p>
+      <p id="resInfo-header-para">Headers:
+        <textarea id="resInfo-header" rows="15" cols="50" wrap="hard"></textarea>
+      </p>
+      <p id="resInfo-body-para">Body:
+        <textarea id="resInfo-body" rows="10" cols="50" wrap="hard"></textarea>
+      </p>
+    </div>
+  </div>
+</div>
