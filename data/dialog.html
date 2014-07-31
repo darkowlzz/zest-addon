@@ -1,41 +1,47 @@
+<!-- Add Element dialog box -->
+<div id="addElement">
+  <p id="dialogTitle"></p>
+  <div id="typesRadio">
+  </div>
+</div>
+
+<!-- Assertion Status Code dialog box-->
 <div id="expStatus">
   <p>Status Code:
     <select id="statCode"></select>
   </p>
 </div>
 
+<!-- Assertion Expression Length dialog box -->
 <div id="expLength">
   <p>Variable Name:
     <select id="varName"></select>
   </p>
-
   <p>Length:
     <input id="length" type="number" value="0">
   </p>
-
   <p>Plus/minus %:
     <input id="approx" type="number" min="0" max="100" value="0">
   </p>
 </div>
 
+<!-- Assertion Regex dialog box -->
 <div id="expRegex">
   <p>Variable Name:
     <select id="varName"></select>
   </p>
-
   <p>Regex:
     <input id="regexString" type="text">
   </p>
-
   <p>Case Exact:
     <input id="caseSense" type="checkbox">
   </p>
-
   <p>Inverse:
     <input id="inverse" type="checkbox">
   </p>
 </div>
 
+<!-- RequestInfo dialog box -->
 <div id="requestInfo">
   <div id="tabs">
     <ul>
@@ -73,4 +79,11 @@
       </p>
     </div>
   </div>
+</div>
+
+<!-- Add Comment dialog box -->
+<div id="addComment">
+  <p>Comment:
+    <textarea id="commentText" rows="7" cols="40"></textarea>
+  </p>
 </div>
