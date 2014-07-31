@@ -1,4 +1,4 @@
-/* global CustomEvent, $ */
+/* global $ */
 
 define(
   [

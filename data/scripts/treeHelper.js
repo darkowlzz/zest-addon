@@ -1,3 +1,5 @@
+/* global CustomEvent, $ */
+
 define(function() {
   'use strict';
   var currentZest;
@@ -648,5 +650,5 @@ define(function() {
     assertionEditor: assertionEditor,
     setCurrentZest: setCurrentZest,
     setZestId: setZestId
-  }
+  };
 });
