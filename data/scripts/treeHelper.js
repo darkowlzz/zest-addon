@@ -2,6 +2,7 @@
 
 define(function() {
   'use strict';
+
   var currentZest;
   var zestId;
   var statusCodeList = [100, 101, 200, 201, 202, 203, 204, 205, 206, 300,
@@ -230,9 +231,11 @@ define(function() {
 
   // Get the type of element to be inserted and call the appropriate method.
   function addElement(node, assets) {
-    var type, height = 200;
+    var type, height = 200,
+        title = 'Type of Assertion';
     if (assets.name == 'condition') {
       height = 300;
+      title: 'Type of Condition'
     }
     var eleName = assets.name.charAt(0).toUpperCase() + assets.name.slice(1);
     $('#zestDialog').load('dialog.html #addElement', function () {
@@ -247,7 +250,7 @@ define(function() {
       modal: true,
       height: height,
       width: 350,
-      title: 'Type of Assertion',
+      title: title,
       buttons: [
         {
           text: 'Next',
@@ -284,28 +287,103 @@ define(function() {
     var data = {
       isNew: true,
       title: 'Add Assertion',
-      button1: 'Add'
+      button1: 'Add',
+      type: 'assertion'
     };
     switch (type) {
       case 'Status Code':
-        addAssertionStatusCode(node, data);
+        addStatusCodeDialog(node, data);
         break;
       case 'Length':
-        addAssertionLength(node, data);
+        addLengthDialog(node, data);
         break;
       case 'Regex':
-        addAssertionRegex(node, data);
+        addRegexDialog(node, data);
         break;
       default:
     }
   }
 
   function addCondition(type, node) { //jshint ignore:line
+    var data = {
+      title: 'Add Zest Condition',
+      type: 'condition'
+    };
+    switch (type) {
+      case 'Regex':
+        addRegexDialog(node, data);
+        break;
+      case 'Equals':
+        break;
+      case 'Length':
+        addLengthDialog(node, data);
+        break;
+      case 'Status Code':
+        addStatusCodeDialog(node, data);
+        break;
+      case 'Response Time':
+        break;
+      case 'URL':
+        break;
+      case 'Empty AND':
+        break;
+      case 'Empty OR':
+        break;
+      default:
+    }
     //addConditionStatusCode(type, node);
   }
 
-  function addAssertionStatusCode(node, assets) {
-    var tmp;
+  function insertCondition(attr, node, value) {
+    // XXX INCOMPLETE
+    /*
+    var ele, childIF, childTHEN, childELSE;
+    var root = node.getParent();
+    var index = root.getChildren().length + 1;
+
+    switch (attr) {
+      case 'ZestExpressionStatusCode':
+        childIF = {
+          title: 'IF : Status Code',
+          isFolder: true,
+          key: index,
+          icon: 'foo.png',
+          type: 'ZestConditional'
+        }
+        childTHEN = {
+          title: 'THEN',
+          isFilder: true,
+          key: index + 1,
+          icon: 'foo.png',
+          type: ''
+        }
+        childELSE = {
+          title: 'ELSE'
+        }
+        break;
+      case 'ZestExpressionRegex':
+        break;
+      case 'ZestExpressionLength':
+        break;
+      default:
+    }
+    */
+  }
+
+  function addStatusCodeDialog(node, assets) {
+    var tmp, title;
+    if (assets.type == 'assertion') {
+      if (!assets.isNew) {
+        title = 'Edit Assertion';
+      }
+      else {
+        title = 'Add Zest Assertion';
+      }
+    }
+    else if (assets.type == 'condition') {
+      title = 'Add Zest Condition'
+    }
+
     $('#zestDialog').load('dialog.html #expStatus', function() {
       for (var c of statusCodeList) {
         tmp = $('<option value="' + c + '">' + c + '</option>');
@@ -318,19 +396,24 @@ define(function() {
       modal: true,
       height: 200,
       width: 350,
-      title: 'Edit Assertion',
+      title: title,
       buttons: [
         {
           text: 'Save',
           click: function() {
             var v = $('#statCode :selected').text();
-            if (!assets.isNew) {
-              updateNode('ZestExpressionStatusCode', node, parseInt(v));
-            }
-            else {
-              addElementToReq('ZestExpressionStatusCode', node, parseInt(v));
-            }
             $(this).dialog('close');
+            if (assets.type == 'assertion') {
+              if (!assets.isNew) {
+                updateNode('ZestExpressionStatusCode', node, parseInt(v));
+              }
+              else {
+                addElementToReq('ZestExpressionStatusCode', node, parseInt(v));
+              }
+            }
+            else if (assets.type == 'condition') {
+              insertCondition('ZestExpressionStatusCode', node, parseInt(v));
+            }
           }
         },
         {
@@ -346,7 +429,7 @@ define(function() {
     });
   }
 
-  function addAssertionLength(node, assets) {
+  function addLengthDialog(node, assets) {
     var tmp;
     var selectedVar = node.data.selectedVar;
     $('#zestDialog').load('dialog.html #expLength', function() {
@@ -387,13 +470,18 @@ define(function() {
               length: len,
               approx: approx
             };
-            if (!assets.isNew) {
-              updateNode('ZestExpressionLength', node, v);
-            }
-            else {
-              addElementToReq('ZestExpressionLength', node, v);
-            }
             $(this).dialog('close');
+            if (assets.type == 'assertion') {
+              if (!assets.isNew) {
+                updateNode('ZestExpressionLength', node, v);
+              }
+              else {
+                addElementToReq('ZestExpressionLength', node, v);
+              }
+            }
+            else if (assets.type == 'condition') {
+              insertCondition('ZestExpressionLength', node, parseInt(v));
+            }
           }
         },
         {
@@ -409,7 +497,7 @@ define(function() {
     });
   }
 
-  function addAssertionRegex(node, assets) {
+  function addRegexDialog(node, assets) {
     var tmp;
     var selectedVar = node.data.selectedVar;
     $('#zestDialog').load('dialog.html #expRegex', function() {
@@ -444,13 +532,18 @@ define(function() {
               caseSense: caseSense,
               inverse: inverse
             };
-            if (!assets.isNew) {
-              updateNode('ZestExpressionRegex', node, v);
-            }
-            else {
-              addElementToReq('ZestExpressionRegex', node, v);
-            }
             $(this).dialog('close');
+            if (assets.type == 'assertion') {
+              if (!assets.isNew) {
+                updateNode('ZestExpressionRegex', node, v);
+              }
+              else {
+                addElementToReq('ZestExpressionRegex', node, v);
+              }
+            }
+            else if (assets.type == 'condition') {
+              insertCondition('ZestExpressionRegex', node, v);
+            }
           }
         },
         {
@@ -614,16 +707,17 @@ define(function() {
   function assertionEditor(node) {
     var assets = {
       title: 'Edit Assertion',
-      button1: 'Save'
+      button1: 'Save',
+      type: 'assertion'
     };
     if (node.data.type == 'ZestExpressionStatusCode') {
-      addAssertionStatusCode(node, assets);
+      addStatusCodeDialog(node, assets);
     }
     else if (node.data.type == 'ZestExpressionLength') {
-      addAssertionLength(node, assets);
+      addLengthDialog(node, assets);
     }
     else if (node.data.type == 'ZestExpressionRegex') {
-      addAssertionRegex(node, assets);
+      addRegexDialog(node, assets);
     }
     else {
       console.log('ME NO KNOW NODE');
