@@ -3,7 +3,6 @@
 define(function() {
   'use strict';
 
-  var currentZest;
   var zestId;
   var statusCodeList = [100, 101, 200, 201, 202, 203, 204, 205, 206, 300,
                         301, 302, 303, 304, 305, 306, 400, 401, 402, 403,
@@ -18,6 +17,7 @@ define(function() {
     document.dispatchEvent(evt);
   }
 
+  // Pass the given node to the runner
   function runNode(node) {
     emitSignal('runNode', {
       nodeKey: parseInt(node.data.key),
@@ -25,6 +25,8 @@ define(function() {
     });
   }
 
+  // Delete the given node from the tree and also emits 'deleteNode'
+  // to delete the same node from the data store.
   function deleteNode(node) {
     var newNode;
     if (node.isLastSibling()) {
@@ -61,6 +63,8 @@ define(function() {
     catch(e) {}
   }
 
+  // Rename a given tree from a given starting node till the end with
+  // a provided initial number.
   function renameTree(initNum, start) {
     var num = initNum;
     start.data.key = num;
@@ -724,12 +728,12 @@ define(function() {
     }
   }
 
-  function setCurrentZest(curZst) {
-    currentZest = curZst;
-  }
-
   function setZestId(zId) {
     zestId = zId;
+  }
+
+  function getZestId() {
+    return zestId;
   }
 
   return {
@@ -742,7 +746,7 @@ define(function() {
     addComment: addComment,
     requestInfo: requestInfo,
     assertionEditor: assertionEditor,
-    setCurrentZest: setCurrentZest,
-    setZestId: setZestId
+    setZestId: setZestId,
+    getZestId: getZestId
   };
 });

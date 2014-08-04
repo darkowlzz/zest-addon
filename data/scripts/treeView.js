@@ -2,13 +2,13 @@
 
 define(
   [
-    'dynatree/jquery/jquery',
-    'dynatree/jquery/jquery-ui.custom',
-    'dynatree/src/jquery.dynatree',
-    'dynatree/doc/contextmenu/jquery.contextMenu-custom',
+    'jquery',
+    'jqueryUi',
+    'dynatree',
+    'contextMenu',
     'treeHelper'
   ],
-  function(_, __, ___, ____, helper){ // jshint ignore:line
+  function($, ui, dynatree, cm, helper){ // jshint ignore:line
   'use strict';
 
   var currentZest;
@@ -255,7 +255,6 @@ define(
 
     createTree: function(importedZest) {
       currentZest = importedZest.zest;
-      helper.setCurrentZest(currentZest);
       zestId = importedZest.id;
       helper.setZestId(zestId);
 
