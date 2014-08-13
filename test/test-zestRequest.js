@@ -2,9 +2,9 @@ const { ZestRequest } = require('./Zest/core/zestRequest');
 const { ZestAssertion } = require('./Zest/core/zestAssertion');
 const { goodRequest } = require('dataSet');
 
-exports['test zestRequest'] = function (assert) {
+exports['test zestRequest new'] = function (assert) {
   let opts = {
-    type: 'raw',
+    type: 'new',
     index: 3,
     request: {
       url: 'example.com',
@@ -44,5 +44,13 @@ exports['test zestRequest'] = function (assert) {
   zr.headers = 'xxyyzz';
   assert.equal(zr.headers, 'xxyyzz', 'returns correct headers');
 }
+
+/*
+exports['test zestRequest existing'] = function (assert) {
+  let opts = {
+    type: 'existing',
+  }
+}
+*/
 
 require('sdk/test').run(exports);

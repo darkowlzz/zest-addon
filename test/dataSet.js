@@ -161,6 +161,7 @@ let sampleResponse = {
 }
 exports.sampleResponse = sampleResponse;
 
+// Tiny dummy zest
 let tinyZest = {
   author: 'John Doe',
   generatedBy: 'firefox',
@@ -203,6 +204,11 @@ let tinyZest = {
       followRedirect: '',
       index: 1,
       elementType: 'ZestRequest'
+    },
+    {
+      comment: 'ssss',
+      index: 2,
+      elementType: 'ZestComment'
     }
   ],
   authentication: [],
@@ -249,3 +255,72 @@ let goodRequest = {
   elementType: 'ZestRequest'
 };
 exports.goodRequest = goodRequest;
+
+let tinyRealZest = {
+  "about": "This is a Zest script. For more details about Zest visit https://developer.mozilla.org/en-US/docs/Zest",
+  "zestVersion": "0.3",
+  "title": "gmail",
+  "description": "sample description",
+  "prefix": "",
+  "author": "anon",
+  "generatedBy": "zest-addon for firefox",
+  "parameters": {
+    "tokenStart": "{{",
+    "tokenEnd": "}}",
+    "tokens": {},
+    "elementType": "ZestVariables"
+  },
+  "statements": [
+    {
+      "url": "http://gmail.com/",
+      "data": "",
+      "method": "GET",
+      "headers": "Host: gmail.com\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:30.0) Gecko/20100101 Firefox/30.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\n",
+      "response": {
+        "url": "http://gmail.com/",
+        "headers": "",
+        "body": "",
+        "statusCode": "200",
+        "responseTimeInMs": "306",
+        "elementType": "ZestResponse"
+      },
+      "assertions": [
+        {
+          "rootExpression": {
+            "code": 200,
+            "not": false,
+            "elementType": "ZestExpressionStatusCode"
+          },
+          "elementType": "ZestAssertion"
+        },
+        {
+          "rootExpression": {
+            "length": "17",
+            "approx": "1",
+            "variableName": "response.url",
+            "not": false,
+            "elementType": "ZestExpressionLength"
+          },
+          "elementType": "ZestAssertion"
+        },
+        {
+          "rootExpression": {
+            "regex": "com",
+            "variableName": "response.url",
+            "caseExact": false,
+            "not": false,
+            "elementType": "ZestExpressionRegex"
+          },
+          "elementType": "ZestAssertion"
+        }
+      ],
+      "followRedirect": "",
+      "index": 1,
+      "elementType": "ZestRequest"
+    }
+  ],
+  "authentication": [],
+  "index": 1,
+  "elementType": "ZestScript"
+};
+exports.tinyRealZest = tinyRealZest;
