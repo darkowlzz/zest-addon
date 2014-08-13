@@ -4,21 +4,21 @@ const { ZestExpressionLength } = require('./Zest/core/zestExpressionLength');
 
 exports['test zestExpressionLength'] = function (assert) {
   let zel = new ZestExpressionLength('foo', 1000, 5);
-  assert.equal(zel.getVariableName(), 'foo', 'returns correct variable name');
-  assert.equal(zel.getLength(), 1000, 'returns correct length');
-  assert.equal(zel.getApprox(), 5, 'returns correct approx');
-  assert.equal(zel.getNot(), false, 'returns correct not');
-  assert.equal(zel.getElementType(), 'ZestExpressionLength',
+  assert.equal(zel.variableName, 'foo', 'returns correct variable name');
+  assert.equal(zel.length, 1000, 'returns correct length');
+  assert.equal(zel.approx, 5, 'returns correct approx');
+  assert.equal(zel.not, false, 'returns correct not');
+  assert.equal(zel.elementType, 'ZestExpressionLength',
                'return correct type');
 
-  zel.setVariableName('bar');
-  assert.equal(zel.getVariableName(), 'bar', 'returns correct variable name');
-  zel.setLength(999);
-  assert.equal(zel.getLength(), 999, 'returns correct length');
-  zel.setApprox(10);
-  assert.equal(zel.getApprox(), 10, 'returns correct approx');
-  zel.setNot(true);
-  assert.equal(zel.getNot(), true, 'returns correct not');
+  zel.variableName = 'bar';
+  assert.equal(zel.variableName, 'bar', 'returns correct variable name');
+  zel.length = 999;
+  assert.equal(zel.length, 999, 'returns correct length');
+  zel.approx = 10;
+  assert.equal(zel.approx, 10, 'returns correct approx');
+  zel.not = true;
+  assert.equal(zel.not, true, 'returns correct not');
 
   let x = {
     length: 999,

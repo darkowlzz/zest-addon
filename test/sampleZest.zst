@@ -1,0 +1,109 @@
+{
+  "about": "This is a Zest script. For more details about Zest visit https://developer.mozilla.org/en-US/docs/Zest",
+  "zestVersion": "0.3",
+  "title": "gmail",
+  "description": "sample description",
+  "prefix": "",
+  "author": "anon",
+  "generatedBy": "zest-addon for firefox",
+  "parameters": {
+    "tokenStart": "{{",
+    "tokenEnd": "}}",
+    "tokens": {},
+    "elementType": "ZestVariables"
+  },
+  "statements": [
+    {
+      "url": "http://gmail.com/",
+      "data": "",
+      "method": "GET",
+      "headers": "Host: gmail.com\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:30.0) Gecko/20100101 Firefox/30.0\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\nAccept-Language: en-US,en;q=0.5\nAccept-Encoding: gzip, deflate\n",
+      "response": {
+        "url": "http://gmail.com/",
+        "headers": "",
+        "body": "",
+        "statusCode": "301",
+        "responseTimeInMs": "306",
+        "elementType": "ZestResponse"
+      },
+      "assertions": [
+        {
+          "rootExpression": {
+            "code": 200,
+            "not": false,
+            "elementType": "ZestExpressionStatusCode"
+          },
+          "elementType": "ZestAssertion"
+        },
+        {
+          "rootExpression": {
+            "length": "68120",
+            "approx": "1",
+            "variableName": "response.body",
+            "not": false,
+            "elementType": "ZestExpressionLength"
+          },
+          "elementType": "ZestAssertion"
+        },
+        {
+          "rootExpression": {
+            "regex": "Mozilla",
+            "variableName": "response.header",
+            "caseExact": false,
+            "not": false,
+            "elementType": "ZestExpressionRegex"
+          },
+          "elementType": "ZestAssertion"
+        }
+      ],
+      "followRedirect": "",
+      "index": 1,
+      "elementType": "ZestRequest"
+    },
+    {
+      "comment": "Redirects from gmail",
+      "index": 2,
+      "elementType": "ZestComment"
+    },
+    {
+      "url": "http://gmail.com/",
+      "data": "",
+      "method": "GET",
+      "headers": "Host: mail.google.com\r\nUser-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:30.0) Gecko/20100101 Firefox/30.0\r\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\nAccept-Language: en-US,en;q=0.5\r\nAccept-Encoding: gzip, deflate\r\n",
+      "response": {
+        "url": "http://gmail.com/",
+        "headers": "HTTP/1.1 302 Moved Temporarily\r\nAlternate-Protocol: 443:quic\r\nCache-Control: no-cache, no-store, max-age=0, must-revalidate\r\nContent-Encoding: gzip\r\nContent-Length: 260\r\nContent-Type: text/html; charset=UTF-8\r\nDate: Sun, 20 Jul 2014 06:53:29 GMT\r\nExpires: Fri, 01 Jan 1990 00:00:00 GMT\r\nLocation: https://accounts.google.com/ServiceLogin?service=mail&passive=true&rm=false&continue=https://mail.google.com/mail/&ss=1&scc=1&ltmpl=default&ltmplcache=2&emr=1\r\nPragma: no-cache\r\nServer: GSE\r\nX-Content-Type-Options: nosniff\r\nX-Frame-Options: SAMEORIGIN\r\nX-XSS-Protection: 1; mode=block\r\nX-Firefox-Spdy: 3.1\r\n",
+        "body": "",
+        "statusCode": 302,
+        "responseTimeInMs": 993,
+        "elementType": "ZestResponse"
+      },
+      "assertions": [
+        {
+          "rootExpression": {
+            "code": 302,
+            "not": false,
+            "elementType": "ZestExpressionStatusCode"
+          },
+          "elementType": "ZestAssertion"
+        },
+        {
+          "rootExpression": {
+            "length": 68116,
+            "approx": 1,
+            "variableName": "response.body",
+            "not": false,
+            "elementType": "ZestExpressionLength"
+          },
+          "elementType": "ZestAssertion"
+        }
+      ],
+      "followRedirect": "",
+      "index": 3,
+      "elementType": "ZestRequest"
+    }
+  ],
+  "authentication": [],
+  "index": 1,
+  "elementType": "ZestScript"
+}

@@ -264,7 +264,6 @@ define(
       }
       catch(e) {}
 
-      console.log(currentZest);
       var z = JSON.parse(currentZest);
       var temp;
       var temp2;
