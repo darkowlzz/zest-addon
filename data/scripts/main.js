@@ -198,14 +198,17 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         respCode.textContent = result.respCode;
         respLength.textContent = result.length;
         respTime.textContent = result.time;
-        if (result.result === true) {
+        
+        for (var r of result.result) {
+          if (r.passed == false) {
+            rslt.textContent = 'FAIL';
+            rslt.title += r.failReason + ' ';
+            rslt.classList.add('tableCellFail');
+          }
+        }
+        if (rslt.textContent != 'FAIL') {
           rslt.textContent = 'PASS';
           rslt.classList.add('tableCellPass');
-        }
-        else {
-          rslt.textContent = 'FAIL';
-          rslt.title = result.resultDesc;
-          rslt.classList.add('tableCellFail');
         }
 
         row.classList.add('tableRow');
