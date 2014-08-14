@@ -29,9 +29,9 @@ exports['test send and setStandardRes/ReqVariables'] = function (assert, done) {
     let result = yield send(opts);
     return result;
   }).then((result) => {
-    assert.equal(result.resp.status, 200, 'response status correct');
+    assert.equal(result.status, 200, 'response status correct');
 
-    let resVar = setStandardResVariables(result.resp);
+    let resVar = setStandardResVariables(result);
     resVar.set('response.url', stmt.url);
 
     assert.equal(resVar.get('response.url'), 'http://gmail.com/',
