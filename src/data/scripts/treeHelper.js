@@ -239,7 +239,7 @@ define(function() {
         title = 'Type of Assertion';
     if (assets.name == 'condition') {
       height = 300;
-      title: 'Type of Condition'
+      title = 'Type of Condition';
     }
     var eleName = assets.name.charAt(0).toUpperCase() + assets.name.slice(1);
     $('#zestDialog').load('dialog.html #addElement', function () {
@@ -338,7 +338,7 @@ define(function() {
     //addConditionStatusCode(type, node);
   }
 
-  function insertCondition(attr, node, value) {
+  function insertCondition(attr, node, value) { // jshint ignore:line
     // XXX INCOMPLETE
     /*
     var ele, childIF, childTHEN, childELSE;
@@ -385,7 +385,7 @@ define(function() {
       }
     }
     else if (assets.type == 'condition') {
-      title = 'Add Zest Condition'
+      title = 'Add Zest Condition';
     }
 
     $('#zestDialog').load('dialog.html #expStatus', function() {

@@ -1,0 +1,6 @@
+src/data/scripts/dynatree/**
+src/data/scripts/require.js
+src/data/test/qunit.js
+node_modules/**
+src/test/dataSet.js
+src/test/template.js

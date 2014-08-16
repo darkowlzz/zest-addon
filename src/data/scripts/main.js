@@ -1,6 +1,5 @@
 /* global alert, prompt */
 
-
 define(['signalConst', 'labels', 'treeView', 'helper'],
        function(signal, label, tree, helper) {
   'use strict';
@@ -200,7 +199,7 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         respTime.textContent = result.time;
         
         for (var r of result.result) {
-          if (r.passed == false) {
+          if (r.passed === false) {
             rslt.textContent = 'FAIL';
             rslt.title += r.failReason + ' ';
             rslt.classList.add('tableCellFail');

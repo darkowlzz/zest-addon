@@ -1,6 +1,6 @@
 'use strict';
 
-const { add, addToId, remove, clearAll, getLogById,
+const { add, addToId, clearAll, getLogById,
         getStringLogById, getLogCount } = require('zestLog');
 const { fullZest, tinyZest } = require('dataSet');
 

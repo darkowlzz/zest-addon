@@ -1,5 +1,4 @@
 const { ZestScript } = require('./Zest/core/zestScript');
-const { zest } = require('dataSet');
 
 exports['test zestScript with raw data'] = function (assert) {
   let opts = {
@@ -8,7 +7,7 @@ exports['test zestScript with raw data'] = function (assert) {
     generatedBy: 'foo',
     title: 'bar',
     description: 'a zest script'
-  }
+  };
   let zs = new ZestScript(opts);
   assert.equal(zs.zestVersion, '0.3', 'returns correct version');
   assert.equal(zs.author, 'anon', 'returns correct author');
@@ -59,6 +58,6 @@ exports['test zestScript with raw data'] = function (assert) {
   temp = JSON.stringify(zs.getStatements());
   s = JSON.stringify(temp1);
   assert.equal(s, temp, 'sets correct statement');
-}
+};
 
 require('sdk/test').run(exports);

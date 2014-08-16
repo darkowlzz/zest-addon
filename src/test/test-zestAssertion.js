@@ -17,7 +17,7 @@ for (let i of exp) {
   let tmp = {
     'rootExpression': i.toZest(),
     'elementType': 'ZestAssertion'
-  }
+  };
   e.push(tmp);
 }
 let t0 = JSON.stringify(e);
@@ -29,7 +29,7 @@ for (let i of exp) {
   let tmp = {
     'rootExpression': i.toZest(),
     'elementType': 'ZestAssertion'
-  }
+  };
   e.push(tmp);
 }
 let tx = JSON.stringify(e);
@@ -43,16 +43,15 @@ exports['test zestAssertion new request'] = function (assert) {
       body: '<html></html>',
       statusCode: 300
     }
-  }
+  };
   let za = new ZestAssertion(opts);
   console.log(za.elementType);
   let t = za.toZest();
   t = JSON.stringify(t);
 
   assert.equal(t, t0, 'returns correct zest assertion');
-}
+};
 
-/*
 exports['test zestAssertion existing assertions'] = function (assert) {
   let opts = {
     type: 'existing',
@@ -86,13 +85,12 @@ exports['test zestAssertion existing assertions'] = function (assert) {
         elementType: 'ZestAssertion'
       }
     ]
-  }
+  };
   let za = new ZestAssertion(opts);
   let t1 = za.toZest();
   t1 = JSON.stringify(t1);
 
   assert.equal(t1, tx, 'returns correct zest assertion');
-}
-*/
+};
 
 require('sdk/test').run(exports);

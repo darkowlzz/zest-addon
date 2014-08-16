@@ -6,7 +6,7 @@ exports['test zestObject with new data'] = function (assert) {
     type: 'new',
     requests: [ goodRequest ],
     withRespBody: true
-  }
+  };
 
   let s = new ZestObject(opts1);
   assert.equal(s.author, 'anon', 'returns correct author');
@@ -38,7 +38,7 @@ exports['test zestObject with new data'] = function (assert) {
   assert.equal(assert2.not, false, 'correct not');
   assert.equal(assert2.elementType, 'ZestExpressionLength',
                'expression length type');
-}
+};
 
 exports['test zestObject with existing data'] = function (assert) {
   let opts1 = {
@@ -83,6 +83,6 @@ exports['test zestObject with existing data'] = function (assert) {
   assert.equal(stmt.comment, 'ssss', 'returns correct comment');
   assert.equal(stmt.index, 2, 'returns correct index');
   assert.equal(stmt.elementType, 'ZestComment', 'returns correct type');
-}
+};
 
 require('sdk/test').run(exports);

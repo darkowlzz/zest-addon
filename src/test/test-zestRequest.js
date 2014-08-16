@@ -1,5 +1,4 @@
 const { ZestRequest } = require('./Zest/core/zestRequest');
-const { ZestAssertion } = require('./Zest/core/zestAssertion');
 const { goodRequest } = require('dataSet');
 
 exports['test zestRequest new'] = function (assert) {
@@ -20,7 +19,7 @@ exports['test zestRequest new'] = function (assert) {
       }
     },
     withRespBody: true
-  }
+  };
   let zr = new ZestRequest(opts);
   assert.equal(zr.index, 3, 'returns correct index');
   assert.equal(zr.url, 'example.com', 'returns correct url');
@@ -43,7 +42,7 @@ exports['test zestRequest new'] = function (assert) {
   assert.equal(zr.method, 'POST', 'returns correct method');
   zr.headers = 'xxyyzz';
   assert.equal(zr.headers, 'xxyyzz', 'returns correct headers');
-}
+};
 
 /*
 exports['test zestRequest existing'] = function (assert) {

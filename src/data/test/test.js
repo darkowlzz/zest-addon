@@ -1,3 +1,5 @@
+/* global QUnit */
+
 'use strict';
 
 require.config({
@@ -32,7 +34,7 @@ require.config({
 var testList = [
   '../test/test-treeHelper',
   '../test/test-treeView'
-]
+];
 
 require(['QUnit', ...testList], function(QUnit, ...tests) {
     for (var test of tests) {

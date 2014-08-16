@@ -7,8 +7,8 @@ exports['test zestResponse'] = function (assert) {
     type: 'raw',
     response: response,
     withRespBody: true
-  }
-  zr = new ZestResponse(opts);
+  };
+  let zr = new ZestResponse(opts);
   assert.equal(zr.url, 'example.com', 'returns correct url');
   assert.equal(zr.headers, 'xxxxyyyzzzz', 'returns correct headers');
   assert.equal(zr.body, 'aaabbbccc', 'returns correct body');

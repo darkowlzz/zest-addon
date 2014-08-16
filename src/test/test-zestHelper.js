@@ -15,6 +15,6 @@ exports['test beautify'] = function (assert) {
   assert.equal(req.response.statusCode, 200, 'returns correct statusCode');
   assert.equal(req.response.responseTimeInMs, 20, 'returns correct time');
   assert.equal(req.response.elementType, 'ZestResponse', 'correct type');
-}
+};
 
 require('sdk/test').run(exports);

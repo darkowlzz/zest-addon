@@ -35,6 +35,7 @@ define(['treeView'],
               'Request url do not match');
         equal(node.data['request.method'], 'GET', 'Methods do not match');
         equal(node.data['request.body'], '', 'Body do not match');
+        /* jshint ignore:start */
         equal(node.data['request.header'], head,
               'Request Headers do not match');
         equal(node.data['response.statusCode'], '301',
@@ -45,6 +46,7 @@ define(['treeView'],
               'Response Headers do not match']);
         equal(node.data['response.body'], '',
               'Response Body do not match');
+        /* jshint ignore:end */
         equal(node.data.childNodes, 3, 'Child node count do not match');
       });
 
@@ -274,4 +276,4 @@ var x = {
 /* jshint ignore:end */
 
 z.id = 1;
-z.zest = JSON.stringify(x);
+z.zest = JSON.stringify(x); // jshint ignore:line

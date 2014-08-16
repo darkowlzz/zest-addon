@@ -1,3 +1,5 @@
+/* global define, equal, test */
+
 'use strict';
 
 define(['jquery', 'jqueryUi', '../scripts/treeHelper'],
@@ -9,6 +11,6 @@ define(['jquery', 'jqueryUi', '../scripts/treeHelper'],
         equal(help.getZestId(), 7, 'id is incorrect');
       });
     };
-    return {run: run}
+    return {run: run};
   }
 );

@@ -9,7 +9,7 @@ exports['test zestComment'] = function (assert) {
       index: 5,
       elementType: 'ZestComment'
     }
-  }
+  };
   let zc = new ZestComment(opts1);
   assert.equal(zc.comment, 'a comment', 'returns correct comment');
   assert.equal(zc.index, 5, 'returns correct index');
