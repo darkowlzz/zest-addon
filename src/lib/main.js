@@ -193,6 +193,7 @@ let sidebar = Sidebar({ // jshint ignore:line
     });
   }
 });
+sidebar.show();
 
 // Sidebar hotkey
 new Hotkey({ // jshint ignore:line

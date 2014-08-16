@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
 
   grunt.initConfig({
     jshint: {
@@ -16,6 +17,82 @@ module.exports = function(grunt) {
         tasks: ['jshint:all'],
         files: ['src/**/*.js']
       }
+    },
+
+    'mozilla-addon-sdk': {
+      '1_16': {
+        options: {
+          revision: '1.16'
+        }
+      },
+      'master': {
+        options: {
+          revision: 'master',
+          github: true
+        }
+      }
+    },
+    'mozilla-cfx-xpi': {
+      'stable': {
+        options: {
+          'mozilla-addon-sdk': '1_16',
+          extension_dir: 'src',
+          dist_dir: 'tmp/dist-stable'
+        }
+      },
+      'experimental': {
+        options: {
+          'mozilla-addon-sdk': 'master',
+          extension_dir: 'src',
+          dist_dir: 'tmp/dist-experimental'
+        }
+      }
+    },
+    'mozilla-cfx': {
+      'run_stable': {
+        options: {
+          'mozilla-addon-sdk': '1_16',
+          extension_dir: 'src',
+          command: 'run'
+        }
+      },
+      'run_experimental': {
+        options: {
+          'mozilla-addon-sdk': 'master',
+          extension_dir: 'src',
+          command: 'run'
+        }
+      },
+      'run_test': {
+        options: {
+          'mozilla-addon-sdk': '1_16',
+          extension_dir: 'src',
+          command: 'test'
+        }
+      },
+      'run_test_experimental': {
+        options: {
+          'mozilla-addon-sdk': 'master',
+          extension_dir: 'src',
+          command: 'test'
+        }
+      }
     }
   });
+
+  grunt.registerTask('default', ['jshint:all', 'watch']);
+
+  grunt.registerTask('build', ['mozilla-addon-sdk:1_16',
+                               'mozilla-cfx-xpi:stable']);
+
+  grunt.registerTask('run', ['mozilla-cfx:run_stable']);
+  grunt.registerTask('run:experimental',
+                    ['mozilla-cfx:run_experimental']);
+
+  grunt.registerTask('release', ['mozilla-cfx-xpi:stable']);
+  grunt.registerTask('release:experimental',
+                    ['mozilla-cfx-xpi:experimental']);
+  grunt.registerTask('test', ['mozilla-cfx:run_test']);
+  grunt.registerTask('test:experimental',
+                    ['mozilla-cfx:run_test_experimental']);
 };
