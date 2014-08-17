@@ -20,6 +20,11 @@ exports['test zestComment'] = function (assert) {
   let zz = zc.toZest();
   zz = JSON.stringify(zz);
   assert.equal(zz, opts1, 'returns correct zest form');
+
+  zc.comment = 'foo';
+  assert.equal(zc.comment, 'foo', 'correct changed comment');
+  zc.index = 4;
+  assert.equal(zc.index, 4, 'correct changed index');
 };
 
 require('sdk/test').run(exports);

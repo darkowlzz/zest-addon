@@ -18,6 +18,10 @@ function ZestComment(opts) {
     return _index;
   });
 
+  this.__defineSetter__('index', function(val) {
+    _index = val;
+  });
+
   this.__defineGetter__('elementType', function() {
     return _elementType;
   });

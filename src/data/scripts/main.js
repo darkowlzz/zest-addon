@@ -101,8 +101,8 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
         var list = document.getElementById('recordList');
         var ele = document.createElement('div');
         ele.classList.add('logElement');
-        var url = zst.url;
-        ele.title = url;
+        var zName = zst.title;
+        ele.title = zName;
 
         // close button
         var close = document.createElement('span');
@@ -115,10 +115,10 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
         var title = document.createElement('span');
         // slice the url if they are too long
-        if (url.length > LETTERS_LIMIT) {
-          url = url.slice(0, LETTERS_LIMIT) + '...';
+        if (zName.length > LETTERS_LIMIT) {
+          zName = zName.slice(0, LETTERS_LIMIT) + '...';
         }
-        title.textContent = url;
+        title.textContent = zName;
 
         ele.onclick = function() {
           if (ZestRecorderStatus) {

@@ -56,6 +56,7 @@ exports.remove = remove;
 // Clear the log store.
 function clearAll() {
   logs = [];
+  count = 0;
 }
 exports.clearAll = clearAll;
 
