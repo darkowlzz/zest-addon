@@ -7,7 +7,7 @@ const { ZestObject } = require('zestObject');
 const { Cu } = require('chrome');
 const { Task } = Cu.import('resource://gre/modules/Task.jsm', {});
 
-exports['test send and setStandardRes/ReqVariables'] = function (assert, done) {
+exports['test send and setStandardResVariables'] = function (assert, done) {
   let opts = {
     url: 'http://example.com',
     content: '',
