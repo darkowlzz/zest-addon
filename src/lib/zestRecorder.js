@@ -40,10 +40,7 @@ function ZestRecorder(worker) {
   this.Requests = [];
   this.PendingRequests = [];
   this.Observer = new ZestObserver(this);
-  //this.reqCount = 0;
-  //this.gReqCount = 0;
   this.sidebarWorker = worker;
-  //this.gRequests = [];
   this.isLogged = false;
 
   // Observe when a tab change happens
