@@ -72,60 +72,13 @@ function ZestRecorder(worker) {
     this.sidebarWorker.port.emit(SIG_RCV_JSON, b);
   });
 
-  /*
-  this.sidebarWorker.port.on('TREE_CHANGED', (tree) => {
-    let b = ZestLog.getLogById(tree.id);
-    console.log(JSON.stringify(b));
-
-    let z = b.zest;
-    let stmts = z.statements;
-
-    for (let stmt of stmts) {
-      if (stmt.index == tree.src) {
-        stmt.index = parseInt(tree.dst) + 1;
-        stmts.splice(tree.src - 1, 1); // remove the source element
-        // To avoid messing up arrangement due to deletion of above
-        // array element
-        if (tree.src < tree.dst) {
-          stmts.splice(tree.dst-1, 0, stmt);
-        }
-        else {
-          stmts.splice(tree.dst, 0, stmt); // add the source element
-        }
-        break;
-      }
-    }
-
-    // rename the index of statements
-    if (tree.src > tree.dst) {
-      for (let j = (tree.dst + 1); j < tree.src; j++) {
-        stmts[j].index = j + 1;
-      }
-    }
-    else {
-      for (let j = (tree.src - 1); j < tree.dst; j++) {
-        stmts[j].index = j + 1;
-      }
-    }
-
-    z.statements = stmts;
-    z = JSON.stringify(z, undefined, 2);
-
-    ZestLog.addToId(tree.id, z);
-    this.sidebarWorker.port.emit('UPDATE_TEXT_VIEW', z); // update zest text
-  });
-  */
-
   this.sidebarWorker.port.on('RUN_NODE', (node) => {
     let target = node.nodeKey - 1;
-
     let b = ZestLog.getLogById(node.treeId);
     let z = b.zest;
     let stmt = z.statements[target];
     stmt = JSON.stringify(stmt);
-
     ZestRunner.run(stmt, 'req', this.sidebarWorker);
-
   });
 
   this.sidebarWorker.port.on('CHANGE_ATTR', (node) => {
@@ -351,7 +304,7 @@ ZestRecorder.prototype = {
   // Send record to sidebar
   logToSidebar: function(name, id) {
     try {
-      this.sidebarWorker.port.emit(SIG_LOG_REQUEST, { url: name, id: id });
+      this.sidebarWorker.port.emit(SIG_LOG_REQUEST, { title: name, id: id });
     }
     catch (e) {}
   },
@@ -470,7 +423,7 @@ ZestObserver.prototype = {
 
       // log to sidebar only when it's the first request of a recording session
       if (!this.ZestRecorder.isLogged) {
-        this.ZestRecorder.id = ZestLog.add('');
+        this.ZestRecorder.id = ZestLog.add({}); // create an empty instance
         let time = new Date();
         let name = 'Zest-' + time.getHours().toString() + ':' +
                    time.getMinutes().toString() + ':' +
@@ -967,13 +920,12 @@ GroupedRequests.prototype = {
   getZest: function() {
     let cleanReqs = beautify(this.requests);
     let opts = {
-      type: 'raw',
+      type: 'new',
       requests: cleanReqs,
       withRespBody: this.ZestRecorder.withRespBody
     };
     this.zest = new ZestObject(opts);
-    console.log('GROUPED STRING: ' + this.zest.getString());
-    return this.zest.getJSON();
+    return this.zest.getZestJSON();
   }
 };
 

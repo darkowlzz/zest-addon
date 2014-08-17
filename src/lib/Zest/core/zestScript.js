@@ -102,25 +102,23 @@ function ZestScript(opts) {
 }
 
 ZestScript.prototype.moveStatement = function (src, dst) {
-  console.log('MOVE STMT');
   let stmts = this.getStatements();
-  console.log(JSON.stringify(stmts));
 
   let tempSrc = this.getStatement(src - 1);
   if (src > dst) {
-    stmts.splice(dst - 1, 0, tempSrc);
-    stmts.splice(src - 1, 1);
-    for (let i = dst; i < stmts.length; i++) {
-      stmts[i].index = i;
+    stmts.splice(dst, 0, tempSrc);
+    stmts.splice(src, 1);
+    for (let i = (dst - 1); i < stmts.length; i++) {
+      stmts[i].index = i + 1;
     }
   }
   else if (dst > src) {
     stmts.splice(dst - 1, 0, tempSrc);
     stmts.splice(src - 1, 1);
-    for (let i = src ; i < stmts.length; i++) {
-      stmts[i].index = 1;
+    for (let i = (src - 1); i < stmts.length; i++) {
+      stmts[i].index = i + 1;
     }
-  }
+ }
   this.setStatements(stmts);
 };
 

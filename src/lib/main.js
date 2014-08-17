@@ -10,7 +10,7 @@ const fileIO = require('sdk/io/file');
 const pref = require('sdk/preferences/service');
 
 let { ZestRecorder } = require('zestRecorder');
-let { ZestImport } = require('zestImport');
+let { importZest } = require('zestImport');
 let { ZestObject } = require('zestObject');
 let ZestLog = require('zestLog');
 let { run } = require('zestRunner');
@@ -62,7 +62,6 @@ let sidebar = Sidebar({ // jshint ignore:line
   url: data.url('sidebar.html'),
   onAttach: function (worker) {
     let zRec = new ZestRecorder(worker);
-    let zImport = new ZestImport();
 
     // Listen to control buttons
     worker.port.on(SIG_RECORD_ON, function() {
@@ -113,21 +112,12 @@ let sidebar = Sidebar({ // jshint ignore:line
       let rv = fp.show();
       if (rv == nsIFilePicker.returnOK) {
         let path = fp.file.path;
-        let importedZest = zImport.importZest(path);
-        /*
-        let opts = {
-          type: 'existing',
-          zest: importedZest.zest,
-          withRespBody: false
-        };
-        */
-        //let script = new ZestObject(opts);
+        let importedZest = importZest(path);
 
-        let id = ZestLog.add(importedZest.zest);
         let z = {
           zest: JSON.stringify(importedZest.zest, undefined, 2),
-          url: importedZest.url,
-          id: id
+          title: importedZest.title,
+          id: importedZest.id
         };
         // XXX Might wanna use sometime in future to list imports
         // worker.port.emit(SIG_LOG_IMPORT, importedZest);
@@ -149,47 +139,11 @@ let sidebar = Sidebar({ // jshint ignore:line
 
     worker.port.on('TREE_CHANGED', (tree) => {
       let b = ZestLog.getLogById(tree.id);
-      //console.log(JSON.stringify(b));
-
       let z = b.zest;
       z.moveStatement(tree.src, tree.dst);
-      /*
-      let stmts = z.statements;
-
-      for (let stmt of stmts) {
-        if (stmt.index == tree.src) {
-          stmt.index = parseInt(tree.dst) + 1;
-          stmts.splice(tree.src - 1, 1); // remove the source element
-          // To avoid messing up arrangement due to deletion of above
-          // array element
-          if (tree.src < tree.dst) {
-            stmts.splice(tree.dst-1, 0, stmt);
-          }
-          else {
-            stmts.splice(tree.dst, 0, stmt); // add the source element
-          }
-          break;
-        }
-      }
-
-      // rename the index of statements
-      if (tree.src > tree.dst) {
-        for (let j = (tree.dst + 1); j < tree.src; j++) {
-          stmts[j].index = j + 1;
-        }
-      }
-      else {
-        for (let j = (tree.src - 1); j < tree.dst; j++) {
-          stmts[j].index = j + 1;
-        }
-      }
-
-      z.statements = stmts;
-      z = JSON.stringify(z, undefined, 2);
-
       ZestLog.addToId(tree.id, z);
-      worker.port.emit('UPDATE_TEXT_VIEW', z); // update zest text
-      */
+      // update zest text
+      worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
     });
   }
 });
