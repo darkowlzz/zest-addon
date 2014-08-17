@@ -27,7 +27,7 @@ function ZestExpressionStatusCode(code) {
 }
 
 ZestExpressionStatusCode.prototype.isTrue = function(response) {
-  let toReturn = this.code == response.get('status');
+  let toReturn = this.code == response.get('response.status');
   let reason = null;
   if (!toReturn) {
     reason = 'Status Code: expected ' + this.code + ' got ' +
