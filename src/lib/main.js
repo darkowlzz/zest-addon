@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 'use strict';
 
 /* Library imports */
@@ -8,7 +13,7 @@ const { Hotkey } = require('sdk/hotkeys');
 let { ZestRecorder } = require('zestRecorder');
 let { runThis, runNode, treeChange, importFile, saveZest, changeAttr,
       disableCache, setUserCachePref, deleteAssertion, addAssertion,
-      deleteNode } = require('zestHelper');
+      deleteNode, addParentElement } = require('zestHelper');
 let { getStringLogById } = require('zestLog');
 
 /* Receive signal constants */
@@ -87,6 +92,10 @@ let sidebar = Sidebar({ // jshint ignore:line
 
     worker.port.on('ADD_ASSERTION', (node) => {
       addAssertion(node, worker);
+    });
+
+    worker.port.on('ADD_PARENT_ELEMENT', (node) => {
+      addParentElement(node, worker);
     });
 
     worker.port.on('TREE_CHANGED', (tree) => {
