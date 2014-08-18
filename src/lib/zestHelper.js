@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 'use strict';
 
 const utils = require('sdk/window/utils');
@@ -13,6 +18,7 @@ const { ZestExpressionStatusCode } =
   require('./Zest/core/zestExpressionStatusCode');
 const { ZestExpressionLength } = require('./Zest/core/zestExpressionLength');
 const { ZestExpressionRegex } = require('./Zest/core/zestExpressionRegex');
+const { ZestComment } = require('./Zest/core/zestComment');
 
 const nsIFilePicker = Ci.nsIFilePicker;
 
@@ -173,7 +179,6 @@ exports.deleteAssertion = deleteAssertion;
 
 // Inserts new assertion element in the stored zest.
 function addAssertion(node, worker) {
-  console.log('ADDING ASSERTION');
   let target = node.nodeKey - 1;
   let b = getLogById(node.treeId);
   let z = b.zest;
@@ -199,6 +204,29 @@ function addAssertion(node, worker) {
   worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
 }
 exports.addAssertion = addAssertion;
+
+// Insert a statement in the stored zest.
+function addParentElement(node, worker) {
+  let b = getLogById(node.treeId);
+  let z = b.zest;
+  let stmts = z.getStatements();
+  let opts = {
+    comment: {
+      comment: node.element.comment,
+      index: node.element.index
+    }
+  };
+  let ele = new ZestComment(opts);
+  stmts.splice(node.precedingNodeKey, 0, ele);
+  let i = node.precedingNodeKey;
+  while (stmts[i]) {
+    stmts[i].index = i + 1;
+    i++;
+  }
+  addToId(node.treeId, z);
+  worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
+}
+exports.addParentElement = addParentElement;
 
 // Imports a file and returns it's content.
 function importFile() {

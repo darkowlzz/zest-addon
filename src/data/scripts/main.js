@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 /* global alert, prompt */
 
 define(['signalConst', 'labels', 'treeView', 'helper'],
@@ -12,9 +17,6 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
 
       /* Globals */
       var ZestRecorderStatus = false;
-      //var ZestGUIView = true;
-      //var RunView = false;
-      //var logView = true;
       var currentZest = '';
 
       /**** Sidebar first row buttons ****/

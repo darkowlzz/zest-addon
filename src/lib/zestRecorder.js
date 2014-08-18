@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 'use strict';
 
 /* Library imports */
@@ -54,27 +59,6 @@ function ZestRecorder(worker) {
     }
     // Update the monitor signal
     this.sidebarWorker.port.emit(SIG_MONITOR_SIGNAL, this.tab._monitor);
-  });
-
-  // Add a parent node, like a comment, to the tree.
-  this.sidebarWorker.port.on('ADD_PARENT_ELEMENT', (node) => {
-    let b = ZestLog.getLogById(node.treeId);
-    let z = b.zest;
-    let stmts = z.statements;
-    stmts.splice(node.precedingNodeKey, 0, node.element);
-
-    let i = node.precedingNodeKey;
-    while (stmts[i]) {
-      stmts[i].index = i + 1;
-      i++;
-    }
-
-    JSON.stringify(stmts);
-    z.statements = stmts;
-    z = JSON.stringify(z, undefined, 2);
-
-    ZestLog.addToId(node.treeId, z);
-    this.sidebarWorker.port.emit('UPDATE_TEXT_VIEW', z);
   });
 
   // Clear everything recorded by the recorder
@@ -135,7 +119,6 @@ ZestRecorder.prototype = {
   },
 
   cleargRequests: function() {
-    //this.gRequests = [];
     ZestLog.clearAll();
   },
 
@@ -149,7 +132,6 @@ ZestRecorder.prototype = {
         return i;
       }
     }
-
     return -1;
   },
 
@@ -163,17 +145,6 @@ ZestRecorder.prototype = {
   }
 
 };
-
-
-// WebProgressListener states
-/*
-let wplFlag = {
-  STATE_START: Ci.nsIWebProgressListener.STATE_START,
-  STATE_STOP: Ci.nsIWebProgressListener.STATE_STOP,
-  STATE_REDIRECTING: Ci.nsIWebProgressListener.STATE_REDIRECTING
-}
-*/
-
 
 /**
  * ZestObserver class to observe the req/res events.
@@ -297,16 +268,6 @@ ZestObserver.prototype = {
     catch(e) {}
     return null;
   },
-
-  /*
-  onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) {
-
-    if (aFlag & wplFlag.STATE_START) {
-      console.log('STATE_START');
-    }
-
-  },
-  */
 
   QueryInterface: XPCOMUtils.generateQI(
     [
@@ -485,22 +446,18 @@ PostDataHandler.prototype = {
   },
 
   getPostData: function() {
-
     // Position the stream to the start of the body
     if (this.body < 0 || this.seekablestream.tell() != this.body) {
       this.getPostHeaders();
     }
-
     let size = this.stream.available();
     if (size === 0 && this.body !== 0) {
       this.rewind();
       this.clearPostHeaders();
       size = this.stream.available();
     }
-
     // read post body (only if non-binary/too big)
     let postString = '';
-
     try {
       if (size < 500000) {
         // This is to avoid 'NS_BASE_STREAM_CLOSED' exception
@@ -522,7 +479,6 @@ PostDataHandler.prototype = {
     finally {
       this.rewind();
     }
-
     this.request.data = postString;
   }
 };
@@ -543,11 +499,9 @@ function ZestResponse(ZestReference, HttpChannelReference, EventSourceType) {
   catch(ex) {
     return;
   }
-
   this.ZestRecorder = ZestReference;
   this.EventSource = EventSourceType;
   this.timestamp = new Date().getTime();
-
   this.init();
 }
 

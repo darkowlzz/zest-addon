@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 /* global zestText */
 
 define(function() {
@@ -36,7 +41,6 @@ define(function() {
       var treeV = document.getElementById('treeview');
       var textV = document.getElementById('textview');
       var runV = document.getElementById('runview');
-
       switch(card) {
         case 'tree':
           treeV.style.display = 'inline';

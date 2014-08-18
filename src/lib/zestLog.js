@@ -1,3 +1,8 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 'use strict';
 
 let logs = [];
@@ -76,8 +81,9 @@ function getStringLogById(id) {
   if (log) {
     let l = {
       id: log.id,
-      zest: JSON.stringify(log.zest, undefined, 2)
+      zest: log.zest.getZestString()
     };
+    console.log(JSON.stringify(l));
     return l;
   }
   return false;
