@@ -10,10 +10,8 @@ const currDir = Cc['@mozilla.org/file/directory_service;1'].
 
 exports['test importZest'] = function (assert) {
   let path = currDir + '/test/sampleZest.zst';
-  console.log('path: ' + path);
  
   let z = importZest(path);
-  console.log(JSON.stringify(z));
   assert.equal(z.title, 'gmail', 'correct title received');
   assert.equal(z.id, 0, 'correct id');
 

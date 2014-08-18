@@ -45,7 +45,6 @@ exports['test zestAssertion new request'] = function (assert) {
     }
   };
   let za = new ZestAssertion(opts);
-  console.log(za.elementType);
   let t = za.toZest();
   t = JSON.stringify(t);
 

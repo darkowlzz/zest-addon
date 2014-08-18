@@ -103,7 +103,6 @@ function ZestScript(opts) {
 
 ZestScript.prototype.moveStatement = function (src, dst) {
   let stmts = this.getStatements();
-
   let tempSrc = this.getStatement(src - 1);
   if (src > dst) {
     stmts.splice(dst, 0, tempSrc);
@@ -113,8 +112,13 @@ ZestScript.prototype.moveStatement = function (src, dst) {
     }
   }
   else if (dst > src) {
-    stmts.splice(dst - 1, 0, tempSrc);
-    stmts.splice(src - 1, 1);
+    stmts.splice(dst, 0, tempSrc);
+    if (src === 1) {
+      stmts.shift();
+    }
+    else {
+      stmts.splice(src - 1, 1);
+    }
     for (let i = (src - 1); i < stmts.length; i++) {
       stmts[i].index = i + 1;
     }

@@ -83,8 +83,8 @@ function treeChange(tree) {
 }
 exports.treeChange = treeChange;
 
+// Applies change in attribute of any tree node.
 function changeAttr(node, worker) {
-  console.log('APPLYING ATTRIBUTE CHANGE');
   let target = node.nodeKey - 1;
   let b = getLogById(node.treeId);
   let z = b.zest;
@@ -129,6 +129,30 @@ function changeAttr(node, worker) {
   worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
 }
 exports.changeAttr = changeAttr;
+
+// Removes deleted tree node from the stored zest.
+function deleteNode(node, worker) {
+  let target = node.nodeKey - 1;
+  let start;
+  let b = getLogById(node.treeId);
+  let z = b.zest;
+  let stmts = z.getStatements();
+  if (target === 0) {
+    start = 0;
+    stmts.shift();
+  } else {
+    stmts.splice(target, 1);
+    start = target - 1;
+  }
+  let i = start;
+  while (stmts[i]) {
+    stmts[i].index = i + 1;
+    i++;
+  }
+  addToId(node.treeId, z);
+  worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
+}
+exports.deleteNode = deleteNode;
 
 // Imports a file and returns it's content.
 function importFile() {
