@@ -58,24 +58,8 @@ function ZestRecorder(worker) {
     this.sidebarWorker.port.emit(SIG_MONITOR_SIGNAL, this.tab._monitor);
   });
 
-  this.sidebarWorker.port.on('DELETE_ASSERTION', (node) => {
-    let target = node.nodeKey - 1;
-    let b = ZestLog.getLogById(node.treeId);
-    let z = b.zest;
-    let stmts = z.statements;
-    let s = stmts[target].assertions;
-    s.splice(node.id, 1);
-    stmts[target].assertions = s;
-
-    z.statements = stmts;
-    z = JSON.stringify(z, undefined, 2);
-
-    ZestLog.addToId(node.treeId, z);
-    this.sidebarWorker.port.emit('UPDATE_TEXT_VIEW', z);
-  });
-
   // Handle newly added child elements to parent request node.
-  this.sidebarWorker.port.on('ADD_ELEMENT', (node) => {
+  this.sidebarWorker.port.on('ADD_ASSERTION', (node) => {
     let target = node.nodeKey - 1;
 
     let b = ZestLog.getLogById(node.treeId);

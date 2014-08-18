@@ -154,6 +154,19 @@ function deleteNode(node, worker) {
 }
 exports.deleteNode = deleteNode;
 
+// Removed deleted assertion node from the stored zest.
+function deleteAssertion(node, worker) {
+  let target = node.nodeKey - 1;
+  let b = getLogById(node.treeId);
+  let z = b.zest;
+  let stmt = z.getStatement(target);
+  let assertions = stmt.assertions.expressions;
+  assertions.splice(node.id, 1);
+  addToId(node.treeId, z);
+  worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
+}
+exports.deleteAssertion = deleteAssertion;
+
 // Imports a file and returns it's content.
 function importFile() {
   let recentWindow = utils.getMostRecentBrowserWindow();

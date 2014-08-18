@@ -7,7 +7,8 @@ const { Hotkey } = require('sdk/hotkeys');
 
 let { ZestRecorder } = require('zestRecorder');
 let { runThis, runNode, treeChange, importFile, saveZest, changeAttr,
-      disableCache, setUserCachePref, deleteNode } = require('zestHelper');
+      disableCache, setUserCachePref, deleteAssertion,
+      deleteNode } = require('zestHelper');
 let { getStringLogById } = require('zestLog');
 
 /* Receive signal constants */
@@ -78,6 +79,10 @@ let sidebar = Sidebar({ // jshint ignore:line
 
     worker.port.on('DELETE_NODE', (node) => {
       deleteNode(node, worker);
+    });
+
+    worker.port.on('DELETE_ASSERTION', (node) => {
+      deleteAssertion(node, worker);
     });
 
     worker.port.on('TREE_CHANGED', (tree) => {
