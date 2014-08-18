@@ -45,7 +45,6 @@ function ZestRecorder(worker) {
   // Sidebar -> ZestRecorder signal listeners
   this.sidebarWorker.port.on(SIG_LOCKTAB, () => {
     this.tab = this.activeTab();
-
     this.tab._monitor = !this.tab._monitor;
     if (this.tab._monitor) {
       console.log('Monitoring tab ON');
@@ -53,68 +52,8 @@ function ZestRecorder(worker) {
     else {
       console.log('Monitoring tab OFF');
     }
-
     // Update the monitor signal
     this.sidebarWorker.port.emit(SIG_MONITOR_SIGNAL, this.tab._monitor);
-  });
-
-  // Handle newly added child elements to parent request node.
-  this.sidebarWorker.port.on('ADD_ASSERTION', (node) => {
-    let target = node.nodeKey - 1;
-
-    let b = ZestLog.getLogById(node.treeId);
-    let z = b.zest;
-    let stmts = z.statements;
-    let ele;
-
-    switch (node.element.type) {
-      case 'ZestExpressionStatusCode':
-        ele = {
-          rootExpression: {
-            code: node.element.statusCode,
-            not: false,
-            elementType: node.element.type
-          },
-          elementType: 'ZestAssertion'
-        };
-        break;
-
-      case 'ZestExpressionLength':
-        ele = {
-          rootExpression: {
-            length: node.element.length,
-            approx: node.element.approx,
-            variableName: node.element.varName,
-            not: false,
-            elementType: node.element.type
-          },
-          elementType: 'ZestAssertion'
-        };
-        break;
-
-      case 'ZestExpressionRegex':
-        ele = {
-          rootExpression: {
-            regex: node.element.regex,
-            variableName: node.element.varName,
-            caseExact: node.element.caseSense,
-            not: node.element.inverse,
-            elementType: node.element.type
-          },
-          elementType: 'ZestAssertion'
-        };
-        break;
-
-      default:
-    }
-
-    stmts[target].assertions.push(ele);
-
-    z.statements = stmts;
-    z = JSON.stringify(z, undefined, 2);
-
-    ZestLog.addToId(node.treeId, z);
-    this.sidebarWorker.port.emit('UPDATE_TEXT_VIEW', z);
   });
 
   // Add a parent node, like a comment, to the tree.

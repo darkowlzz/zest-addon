@@ -9,6 +9,10 @@ let { ZestObject } = require('zestObject');
 let { run, runStmt } = require('zestRunner');
 let { getLogById, addToId } = require('zestLog');
 let { importZest } = require('zestImport');
+const { ZestExpressionStatusCode } =
+  require('./Zest/core/zestExpressionStatusCode');
+const { ZestExpressionLength } = require('./Zest/core/zestExpressionLength');
+const { ZestExpressionRegex } = require('./Zest/core/zestExpressionRegex');
 
 const nsIFilePicker = Ci.nsIFilePicker;
 
@@ -166,6 +170,35 @@ function deleteAssertion(node, worker) {
   worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
 }
 exports.deleteAssertion = deleteAssertion;
+
+// Inserts new assertion element in the stored zest.
+function addAssertion(node, worker) {
+  console.log('ADDING ASSERTION');
+  let target = node.nodeKey - 1;
+  let b = getLogById(node.treeId);
+  let z = b.zest;
+  let stmts = z.getStatement(target);
+  let assertions = stmts.assertions.expressions;
+  let ele;
+  switch (node.element.type) {
+    case 'ZestExpressionStatusCode':
+      ele = new ZestExpressionStatusCode(node.element.statusCode);
+      break;
+    case 'ZestExpressionLength':
+      ele = new ZestExpressionLength(node.element.varName, node.element.length,
+                                     node.element.approx);
+      break;
+    case 'ZestExpressionRegex':
+      ele = new ZestExpressionRegex(node.element.varName, node.element.regex,
+                                    node.element.caseSense);
+      break;
+    default:
+  }
+  assertions.push(ele);
+  addToId(node.treeId, z);
+  worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
+}
+exports.addAssertion = addAssertion;
 
 // Imports a file and returns it's content.
 function importFile() {
