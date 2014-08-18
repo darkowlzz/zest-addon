@@ -29,7 +29,7 @@ define(function() {
   // to delete the same node from the data store.
   function deleteNode(node) {
     var newNode;
-    if (node.isLastSibling()) {
+    if (!node.isLastSibling()) {
       newNode = node.getNextSibling();
     }
     var num = node.data.key;
@@ -68,9 +68,13 @@ define(function() {
   function renameTree(initNum, start) {
     var num = initNum;
     start.data.key = num;
-    while(start == start.getNextSibling()) {
+    while(true) {
+      start = start.getNextSibling();
       num++;
       start.data.key = num;
+      if (start.isLastSibling()) {
+        break;
+      }
     }
   }
 

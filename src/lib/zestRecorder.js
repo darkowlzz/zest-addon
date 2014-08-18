@@ -58,36 +58,6 @@ function ZestRecorder(worker) {
     this.sidebarWorker.port.emit(SIG_MONITOR_SIGNAL, this.tab._monitor);
   });
 
-  // Delete a Request element
-  this.sidebarWorker.port.on('DELETE_NODE', (node) => {
-    let target = node.nodeKey - 1;
-    let start;
-
-    let b = ZestLog.getLogById(node.treeId);
-    let z = b.zest;
-    let stmts = z.statements;
-    if (target === 0) {
-      start = 0;
-      stmts.shift();
-    } else {
-      //start = target - 1;
-      stmts.splice(target, 1);
-      start = target - 1;
-    }
-
-    let i = start;
-    while (stmts[i]) {
-      stmts[i].index = i + 1;
-      i++;
-    }
-
-    z.statements = stmts;
-    z = JSON.stringify(z, undefined, 2);
-
-    ZestLog.addToId(node.treeId, z);
-    this.sidebarWorker.port.emit('UPDATE_TEXT_VIEW', z);
-  });
-
   this.sidebarWorker.port.on('DELETE_ASSERTION', (node) => {
     let target = node.nodeKey - 1;
     let b = ZestLog.getLogById(node.treeId);
