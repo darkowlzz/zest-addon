@@ -228,7 +228,7 @@ define(function() {
         break;
       default:
     }
-    emitSignal('addElement', {
+    emitSignal('addAssertion', {
       nodeKey: node.data.key,
       treeId: parseInt(zestId),
       element: ele,

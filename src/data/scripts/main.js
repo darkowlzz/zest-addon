@@ -319,8 +319,8 @@ define(['signalConst', 'labels', 'treeView', 'helper'],
       });
 
       // Add assertion child elements
-      document.addEventListener('addElement', function(data) {
-        addon.port.emit('ADD_ELEMENT', data.detail);
+      document.addEventListener('addAssertion', function(data) {
+        addon.port.emit('ADD_ASSERTION', data.detail);
       });
 
       document.addEventListener('deleteAssertionNode', function(data) {
