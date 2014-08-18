@@ -1,6 +1,5 @@
 'use strict';
 
-//let { ZestStatement } = require('Zest/core/zestStatement');
 let { ZestResponse } = require('Zest/core/zestResponse');
 let { ZestAssertion } = require('Zest/core/zestAssertion');
 
@@ -9,19 +8,10 @@ let { ZestAssertion } = require('Zest/core/zestAssertion');
  * https://github.com/mozilla/zest/blob/master/src/org/mozilla/zest/core/v1/ZestRequest.java
  */
 
-// XXX import after implementation
-//let ZestAssertion = require('zestAssertion');
-
 const ELEMENT_TYPE = 'ZestRequest';
 
 /**
  * ZestRequest class
- * @param {number} index
- *    The index of the statement.
- * @param {Object} request
- *    The raw request object.
- * @param {Object} response
- *    The raw response object.
  */
 function ZestRequest(opts) {
   let _index, _url, _data, _method, _headers, _response, _assertions,

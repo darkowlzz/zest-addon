@@ -6,8 +6,9 @@ const { Sidebar } = require('sdk/ui/sidebar');
 const { Hotkey } = require('sdk/hotkeys');
 
 let { ZestRecorder } = require('zestRecorder');
-let { runThis, treeChange, importFile, saveZest,
+let { runThis, runNode, treeChange, importFile, saveZest, changeAttr,
       disableCache, setUserCachePref } = require('zestHelper');
+let { getStringLogById } = require('zestLog');
 
 /* Receive signal constants */
 const SIG_RECORD_ON = 'RECORDON';
@@ -41,6 +42,12 @@ let sidebar = Sidebar({ // jshint ignore:line
       zRec.stopWatching();
     });
 
+    // Retrieve the zest json and display in sidebar
+    worker.port.on('SHOWJSON', (id) => {
+      let b = getStringLogById(id);
+      worker.port.emit('VIEWJSON', b);
+    });
+
     worker.port.on(SIG_SAVE_ZEST, (text) => {
       saveZest(text);
     });
@@ -59,6 +66,15 @@ let sidebar = Sidebar({ // jshint ignore:line
 
     worker.port.on('RUNTHIS', (zest) => {
       runThis(zest, worker);
+    });
+
+    worker.port.on('RUN_NODE', (node) => {
+      runNode(node, worker);
+    });
+
+    worker.port.on('CHANGE_ATTR', (node) => {
+      console.log('HAVE TO CHANGE ATTRIBUTE');
+      changeAttr(node, worker);
     });
 
     worker.port.on('TREE_CHANGED', (tree) => {

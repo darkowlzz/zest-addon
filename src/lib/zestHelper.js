@@ -6,8 +6,8 @@ const fileIO = require('sdk/io/file');
 const pref = require('sdk/preferences/service');
 
 let { ZestObject } = require('zestObject');
-let { run } = require('zestRunner');
-let ZestLog = require('zestLog');
+let { run, runStmt } = require('zestRunner');
+let { getLogById, addToId } = require('zestLog');
 let { importZest } = require('zestImport');
 
 const nsIFilePicker = Ci.nsIFilePicker;
@@ -64,15 +64,71 @@ function runThis(zest, worker) {
 }
 exports.runThis = runThis;
 
-// Applies the changes in zest tree to the stored zest objects.
+function runNode(node, worker) {
+  let target = node.nodeKey - 1;
+  let b = getLogById(node.treeId);
+  let z = b.zest;
+  let req = z.getStatement(target);
+  runStmt(req, worker);
+}
+exports.runNode = runNode;
+
+// Applies the changes in zest tree node arrangement to the stored zest objects.
 function treeChange(tree) {
-  let b = ZestLog.getLogById(tree.id);
+  let b = getLogById(tree.id);
   let z = b.zest;
   z.moveStatement(tree.src, tree.dst);
-  ZestLog.addToId(tree.id, z);
+  addToId(tree.id, z);
   return z.getZestString();
 }
 exports.treeChange = treeChange;
+
+function changeAttr(node, worker) {
+  console.log('APPLYING ATTRIBUTE CHANGE');
+  let target = node.nodeKey - 1;
+  let b = getLogById(node.treeId);
+  let z = b.zest;
+  let stmt = z.getStatement(target);
+  if (node.changes.type == 'ZestRequest') {
+    let changes = node.changes.attr;
+    stmt.url = changes['request.url'];
+    stmt.method = changes['request.method'];
+    stmt.data = changes['request.body'];
+    stmt.headers = changes['request.header'];
+    let resp = stmt.response;
+    resp.responseTime = changes['response.statusCode'];
+    resp.headers = changes['response.header'];
+    resp.body = changes['response.body'];
+  }
+  else if (node.changes.type == 'ZestComment') {
+    stmt.comment = node.changes.attr;
+  }
+  else {
+    let assertions = stmt.assertions;
+    let assertion = assertions.expressions[node.id];
+    switch (node.changes.type) {
+      case 'ZestExpressionStatusCode':
+        assertion.code = node.changes.code;
+        break;
+
+      case 'ZestExpressionLength':
+        assertion.variableName = node.changes.variableName;
+        assertion.length = node.changes.length;
+        assertion.approx = node.changes.approx;
+        break;
+
+      case 'ZestExpressionRegex':
+        assertion.variableName = node.changes.variableName;
+        assertion.regex = node.changes.regex;
+        assertion.caseExact = node.changes.caseSense;
+        assertion.not = node.changes.inverse;
+        break;
+    }
+  }
+  addToId(node.treeId, z);
+  worker.port.emit('UPDATE_TEXT_VIEW', z.getZestString());
+}
+exports.changeAttr = changeAttr;
 
 // Imports a file and returns it's content.
 function importFile() {

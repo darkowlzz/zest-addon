@@ -7,7 +7,6 @@ let sdk_tabs = require('sdk/tabs');
 let window = require('sdk/window/utils');
 let { ZestObject } = require('zestObject');
 let ZestLog = require('zestLog');
-let ZestRunner = require('zestRunner');
 const { beautify } = require('zestHelper');
 
 let observerService = Cc['@mozilla.org/observer-service;1'].
@@ -15,16 +14,13 @@ let observerService = Cc['@mozilla.org/observer-service;1'].
 
 Cu.import('resource://gre/modules/XPCOMUtils.jsm');
 
-
 /* Receive signal constants */
 const SIG_LOCKTAB = 'LOCKTAB';
-const SIG_GET_JSON = 'SHOWJSON';
 const SIG_CLEAR_LOGS = 'CLEAR';
 const SIG_WITH_RESPONSE_BODY = 'WITHRESPBODY';
 
 /* Emit signal constants */
 const SIG_MONITOR_SIGNAL = 'MONITORSIG';
-const SIG_RCV_JSON = 'VIEWJSON';
 const SIG_LOG_REQUEST = 'LOGREQUEST';
 
 /* Other constants */
@@ -60,73 +56,6 @@ function ZestRecorder(worker) {
 
     // Update the monitor signal
     this.sidebarWorker.port.emit(SIG_MONITOR_SIGNAL, this.tab._monitor);
-  });
-
-  // Retrieve the zest json and display in sidebar
-  this.sidebarWorker.port.on(SIG_GET_JSON, (id) => {
-    // Get the required request 
-    let b = ZestLog.getStringLogById(id);
-    this.sidebarWorker.port.emit(SIG_RCV_JSON, b);
-  });
-
-  this.sidebarWorker.port.on('RUN_NODE', (node) => {
-    let target = node.nodeKey - 1;
-    let b = ZestLog.getLogById(node.treeId);
-    let z = b.zest;
-    let stmt = z.statements[target];
-    stmt = JSON.stringify(stmt);
-    ZestRunner.run(stmt, 'req', this.sidebarWorker);
-  });
-
-  this.sidebarWorker.port.on('CHANGE_ATTR', (node) => {
-    let target = node.nodeKey - 1;
-    let b = ZestLog.getLogById(node.treeId);
-    let z = b.zest;
-    let stmts = z.statements;
-    if (node.changes.type == 'ZestRequest') {
-      let changes = node.changes.attr;
-      stmts[target].url = changes['request.url'];
-      stmts[target].method = changes['request.method'];
-      stmts[target].data = changes['request.body'];
-      stmts[target].headers = changes['request.header'];
-      stmts[target].response.statusCode = changes['response.statusCode'];
-      stmts[target].response.responseTimeInMs = changes['response.time'];
-      stmts[target].response.headers = changes['response.header'];
-      stmts[target].response.body = changes['response.body'];
-    }
-    else if (node.changes.type == 'ZestComment') {
-      stmts[target].comment = node.changes.attr;
-    }
-    else {
-      let s = stmts[target].assertions[node.id];
-
-      switch (node.changes.type) {
-        case 'ZestExpressionStatusCode':
-          s.rootExpression.code = node.changes.code;
-          break;
-
-        case 'ZestExpressionLength':
-          s.rootExpression.variableName = node.changes.variableName;
-          s.rootExpression.length = node.changes.length;
-          s.rootExpression.approx = node.changes.approx;
-          break;
-
-        case 'ZestExpressionRegex':
-          s.rootExpression.variableName = node.changes.variableName;
-          s.rootExpression.regex = node.changes.regex;
-          s.rootExpression.caseExact = node.changes.caseSense;
-          s.rootExpression.not = node.changes.inverse;
-          break;
-      }
-
-      stmts[target].assertions[node.id] = s;
-    }
-
-    z.statements = stmts;
-    z = JSON.stringify(z, undefined, 2);
-
-    ZestLog.addToId(node.treeId, z);
-    this.sidebarWorker.port.emit('UPDATE_TEXT_VIEW', z);
   });
 
   // Delete a Request element
