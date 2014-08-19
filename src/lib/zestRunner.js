@@ -10,10 +10,19 @@ const { Cu } = require('chrome');
 const { Task } = Cu.import('resource://gre/modules/Task.jsm', {});
 const { defer } = require('sdk/core/promise');
 
+/**
+ * Given a `script` and `worker`, steps through every statement in the script
+ * and run each statement. Use the `worker` to communicate back to the sidebar
+ * as the results are received.
+ * @param {Object} script
+ *    A ZestScript object.
+ * @param {Object} worker
+ *    A worker object.
+ */
 function run(script, worker) {
-  let statements;
-  let opts, resVar, runResult, lastResponse, lastRequest;
-  let reqCount = 0;
+  console.log('TYPE: ' + (typeof worker));
+  let statements, opts, resVar, runResult, lastResponse, lastRequest,
+      reqCount = 0;
   Task.spawn(function* () {
     statements = script.getStatements();
     for (let stmt of statements) {
@@ -68,6 +77,14 @@ function run(script, worker) {
 }
 exports.run = run;
 
+/**
+ * Given a `stmt` and a `worker`, runs the statement and communicates back the
+ * result to the sidebar using the `worker`.
+ * @param {Object} stmt
+ *    A ZestStatement object (like ZestRequest).
+ * @param {Object} worker
+ *    A worker object.
+ */
 function runStmt(stmt, worker) {
   let opts, resVar, runResult;
   Task.spawn(function* () {
@@ -98,6 +115,14 @@ function runStmt(stmt, worker) {
 }
 exports.runStmt = runStmt;
 
+/**
+ * Sends requests to the specified `url` with the given `content` and `method`.
+ * @param {Object} opts
+ *    An object with properties `url`, `content` and `method`.
+ * @return {Object} promise
+ *    Returns a promise object which when resolved gives `time`, `status`,
+ *    `header`, `text` of the response.
+ */
 function send(opts) {
   let deferred = defer();
   let startTime, endTime;
@@ -141,6 +166,18 @@ function send(opts) {
 }
 exports.send = send;
 
+/**
+ * Performs check on the response received with the assertions of ZestRequest.
+ * @param {Object} req
+ *    A ZestRequest object.
+ * @param {Object} res
+ *    A standardized response object with all the response attributes.
+ * @return {Object} result
+ *    An array object consisting of objects with attributes `passed` and
+ *    `failReason`.
+ *    Example:
+ *    [{ passed: true, failReason: null}]
+ */
 function handleResponse(req, res) {
   let result = [],
       currResult;
@@ -152,19 +189,13 @@ function handleResponse(req, res) {
 }
 exports.handleResponse = handleResponse;
 
-/*
-function setStandardReqVariables(request) {
-  let reqMap = new Map();
-  reqMap.set('request.url', request.url);
-  reqMap.set('request.headers', request.headers);
-  reqMap.set('request.method', request.method);
-  reqMap.set('request.body', request.data);
-
-  return reqMap;
-};
-exports.setStandardReqVariables = setStandardReqVariables;
-*/
-
+/**
+ * Organizes the response data in a standard form.
+ * @param {Object} response
+ *    A response object returned by a request.
+ * @return {Object} resMap
+ *    A Map object with the organized response attributes.
+ */
 function setStandardResVariables(response) {
   let resMap = new Map();
   resMap.set('response.status', response.status);

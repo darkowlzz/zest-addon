@@ -74,6 +74,7 @@ function runThis(zest, worker) {
 }
 exports.runThis = runThis;
 
+// Run a single statement.
 function runNode(node, worker) {
   let target = node.nodeKey - 1;
   let b = getLogById(node.treeId);
