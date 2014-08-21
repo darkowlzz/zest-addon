@@ -83,7 +83,6 @@ function getStringLogById(id) {
       id: log.id,
       zest: log.zest.getZestString()
     };
-    console.log(JSON.stringify(l));
     return l;
   }
   return false;

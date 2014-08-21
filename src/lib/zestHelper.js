@@ -10,10 +10,10 @@ const { Cc, Ci } = require('chrome');
 const fileIO = require('sdk/io/file');
 const pref = require('sdk/preferences/service');
 
-let { ZestObject } = require('zestObject');
-let { run, runStmt } = require('zestRunner');
-let { getLogById, addToId } = require('zestLog');
-let { importZest } = require('zestImport');
+const { ZestObject } = require('zestObject');
+const { run, runStmt } = require('zestRunner');
+const { getLogById, addToId } = require('zestLog');
+const { importZest } = require('zestImport');
 const { ZestExpressionStatusCode } =
   require('./Zest/core/zestExpressionStatusCode');
 const { ZestExpressionLength } = require('./Zest/core/zestExpressionLength');
@@ -121,13 +121,11 @@ function changeAttr(node, worker) {
       case 'ZestExpressionStatusCode':
         assertion.code = node.changes.code;
         break;
-
       case 'ZestExpressionLength':
         assertion.variableName = node.changes.variableName;
         assertion.length = node.changes.length;
         assertion.approx = node.changes.approx;
         break;
-
       case 'ZestExpressionRegex':
         assertion.variableName = node.changes.variableName;
         assertion.regex = node.changes.regex;

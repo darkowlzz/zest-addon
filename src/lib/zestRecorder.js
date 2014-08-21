@@ -7,14 +7,14 @@
 
 /* Library imports */
 const { Cc, Ci, Cr, Cu } = require('chrome');
-let tabs_tabs = require('sdk/tabs/utils');
-let sdk_tabs = require('sdk/tabs');
-let window = require('sdk/window/utils');
-let { ZestObject } = require('zestObject');
-let ZestLog = require('zestLog');
+const tabs_tabs = require('sdk/tabs/utils');
+const sdk_tabs = require('sdk/tabs');
+const window = require('sdk/window/utils');
+const { ZestObject } = require('zestObject');
+const ZestLog = require('zestLog');
 const { beautify } = require('zestHelper');
 
-let observerService = Cc['@mozilla.org/observer-service;1'].
+const observerService = Cc['@mozilla.org/observer-service;1'].
                       getService(Ci.nsIObserverService);
 
 Cu.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -698,7 +698,7 @@ GroupedRequests.prototype = {
       withRespBody: this.ZestRecorder.withRespBody
     };
     this.zest = new ZestObject(opts);
-    return this.zest.getZestJSON();
+    return this.zest;
   }
 };
 

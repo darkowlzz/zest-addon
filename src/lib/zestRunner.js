@@ -5,7 +5,7 @@
 
 'use strict';
 
-let Request = require('sdk/request').Request;
+const { Request } = require('sdk/request');
 const { Cu } = require('chrome');
 const { Task } = Cu.import('resource://gre/modules/Task.jsm', {});
 const { defer } = require('sdk/core/promise');
@@ -20,7 +20,6 @@ const { defer } = require('sdk/core/promise');
  *    A worker object.
  */
 function run(script, worker) {
-  console.log('TYPE: ' + (typeof worker));
   let statements, opts, resVar, runResult, lastResponse, lastRequest,
       reqCount = 0;
   Task.spawn(function* () {

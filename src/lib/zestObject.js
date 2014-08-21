@@ -5,9 +5,9 @@
 
 'use strict';
 
-let { ZestScript } = require('Zest/core/zestScript');
-let { ZestRequest } = require('Zest/core/zestRequest');
-let { ZestComment } = require('Zest/core/zestComment');
+const { ZestScript } = require('Zest/core/zestScript');
+const { ZestRequest } = require('Zest/core/zestRequest');
+const { ZestComment } = require('Zest/core/zestComment');
 
 /**
  * ZestObject class
