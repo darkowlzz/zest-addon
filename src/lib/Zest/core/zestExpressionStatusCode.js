@@ -46,9 +46,9 @@ ZestExpressionStatusCode.prototype.isTrue = function(response) {
 
 ZestExpressionStatusCode.prototype.toZest = function() {
   let zst = {
-    'code': this.code,
-    'not': this.not,
-    'elementType': this.elementType
+    code: this.code,
+    not: this.not,
+    elementType: this.elementType
   };
   return zst;
 };

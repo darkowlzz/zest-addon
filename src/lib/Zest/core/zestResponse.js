@@ -18,70 +18,70 @@ const ELEMENT_TYPE = 'ZestResponse';
  *    The raw response object.
  */
 function ZestResponse (opts) {
-  let url = opts.response.url,
-      headers,
-      body,
-      statusCode = opts.response.statusCode,
-      responseTime = opts.response.responseTimeInMs,
-      elementType = ELEMENT_TYPE;
+  let _url = opts.response.url,
+      _headers,
+      _body,
+      _statusCode = opts.response.statusCode,
+      _responseTime = opts.response.responseTimeInMs,
+      _elementType = ELEMENT_TYPE;
 
   try {
-    headers = opts.response.headers;
+    _headers = opts.response.headers;
   }
   catch(e) {
-    headers = '';
+    _headers = '';
   }
 
   if (opts.withRespBody) {
     try {
-      body = opts.response.body;
+      _body = opts.response.body;
     }
     catch(e) {
       console.log('error: zestResponse.js : ' + e);
-      body = '';
+      _body = '';
     }
   }
   else {
-    body = '';
+    _body = '';
   }
 
   this.__defineGetter__('url', function() {
-    return url;
+    return _url;
   });
   this.__defineSetter__('url', function(val) {
-    url = val;
+    _url = val;
   });
 
   this.__defineGetter__('headers', function() {
-    return headers;
+    return _headers;
   });
   this.__defineSetter__('headers', function(val) {
-    headers = val;
+    _headers = val;
   });
 
   this.__defineGetter__('body', function() {
-    return body;
+    return _body;
   });
   this.__defineSetter__('body', function(val) {
-    body = val;
+    _body = val;
   });
 
   this.__defineGetter__('statusCode', function() {
-    return statusCode;
+    return _statusCode;
   });
   this.__defineSetter__('statusCode', function(val) {
-    statusCode = val;
+    _statusCode = val;
   });
 
   this.__defineGetter__('responseTime', function() {
-    return responseTime;
+    return _responseTime;
   });
   this.__defineSetter__('responseTime', function(val) {
-    responseTime = val;
+    _responseTime = val;
   });
 
   this.__defineGetter__('elementType', function() {
-    return elementType;
+    return _elementType;
   });
 }
 
