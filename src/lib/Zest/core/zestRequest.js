@@ -5,8 +5,8 @@
 
 'use strict';
 
-let { ZestResponse } = require('Zest/core/zestResponse');
-let { ZestAssertion } = require('Zest/core/zestAssertion');
+const { ZestResponse } = require('Zest/core/zestResponse');
+const { ZestAssertion } = require('Zest/core/zestAssertion');
 
 /**
  * Refer:

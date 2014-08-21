@@ -11,7 +11,8 @@ exports['test zestComment'] = function (assert) {
   let opts1 = {
     comment: {
       comment: 'a comment',
-      index: 5
+      index: 5,
+      elementType: 'ZestComment'
     }
   };
   let zc = new ZestComment(opts1);

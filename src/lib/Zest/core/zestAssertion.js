@@ -5,10 +5,10 @@
 
 'use strict';
 
-let { ZestExpressionStatusCode } =
+const { ZestExpressionStatusCode } =
   require('Zest/core/zestExpressionStatusCode');
-let { ZestExpressionLength } = require('Zest/core/zestExpressionLength');
-let { ZestExpressionRegex } = require('Zest/core/zestExpressionRegex');
+const { ZestExpressionLength } = require('Zest/core/zestExpressionLength');
+const { ZestExpressionRegex } = require('Zest/core/zestExpressionRegex');
 
 /**
  * Refer:

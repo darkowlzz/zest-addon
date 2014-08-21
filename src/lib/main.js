@@ -10,11 +10,11 @@ const { data } = require('sdk/self');
 const { Sidebar } = require('sdk/ui/sidebar');
 const { Hotkey } = require('sdk/hotkeys');
 
-let { ZestRecorder } = require('zestRecorder');
-let { runThis, runNode, treeChange, importFile, saveZest, changeAttr,
+const { ZestRecorder } = require('zestRecorder');
+const { runThis, runNode, treeChange, importFile, saveZest, changeAttr,
       disableCache, setUserCachePref, deleteAssertion, addAssertion,
       deleteNode, addParentElement } = require('zestHelper');
-let { getStringLogById } = require('zestLog');
+const { getStringLogById } = require('zestLog');
 
 /* Receive signal constants */
 const SIG_RECORD_ON = 'RECORDON';
@@ -37,7 +37,7 @@ let sidebar = Sidebar({ // jshint ignore:line
   onAttach: function (worker) {
     let zRec = new ZestRecorder(worker);
 
-    // Listen to control buttons
+    // Listen to control buttons.
     worker.port.on(SIG_RECORD_ON, function() {
       disableCache();
       zRec.startWatching();
@@ -48,17 +48,18 @@ let sidebar = Sidebar({ // jshint ignore:line
       zRec.stopWatching();
     });
 
-    // Retrieve the zest json and display in sidebar
+    // Retrieve the zest json and display in sidebar.
     worker.port.on('SHOWJSON', (id) => {
       let b = getStringLogById(id);
       worker.port.emit('VIEWJSON', b);
     });
 
+    // Save the received text form of zest.
     worker.port.on(SIG_SAVE_ZEST, (text) => {
       saveZest(text);
     });
 
-    // Import zest from file and send it's content to the sidebar
+    // Import zest from file and send it's content to the sidebar.
     worker.port.on(SIG_IMPORT, () => {
       let z = importFile();
       if (z) {
@@ -70,34 +71,44 @@ let sidebar = Sidebar({ // jshint ignore:line
       }
     });
 
+    // Run a whole zest script.
     worker.port.on('RUNTHIS', (zest) => {
       runThis(zest, worker);
     });
 
+    // Run a single zest statement.
     worker.port.on('RUN_NODE', (node) => {
       runNode(node, worker);
     });
 
+    // Receive the changes to a node (zest element) and apply on the stored
+    // zest.
     worker.port.on('CHANGE_ATTR', (node) => {
       changeAttr(node, worker);
     });
 
+    // Delete zest element from the zest object.
     worker.port.on('DELETE_NODE', (node) => {
       deleteNode(node, worker);
     });
 
+    // Delete ZestAssertion elements from zest object.
     worker.port.on('DELETE_ASSERTION', (node) => {
       deleteAssertion(node, worker);
     });
 
+    // Insert a new ZestAssertion element.
     worker.port.on('ADD_ASSERTION', (node) => {
       addAssertion(node, worker);
     });
 
+    // Insert a new parent element.
     worker.port.on('ADD_PARENT_ELEMENT', (node) => {
       addParentElement(node, worker);
     });
 
+    // Handle the drag and drop of zest elements and apply the changes to the
+    // stored zest. Also update the zest text view.
     worker.port.on('TREE_CHANGED', (tree) => {
       let newZestString = treeChange(tree);
       // update zest text in sidebar
