@@ -94,6 +94,13 @@ function ZestRequest(opts) {
   });
 }
 
+ZestRequest.prototype.replaceTokens = function(tokens) {
+  this.url = tokens.replaceInString(this.url);
+  this.method = tokens.replaceInString(this.method);
+  this.headers = tokens.replaceInString(this.headers);
+  this.data = tokens.replaceInString(this.data);
+};
+
 ZestRequest.prototype.toZest = function() {
   let asrt;
   try {

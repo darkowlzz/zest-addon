@@ -5,7 +5,7 @@
 
 'use strict';
 
-const { ZestFieldDefinition } = require('./Zest/core/zestFieldDefinition');
+const { ZestFieldDefinition } = require('Zest/core/zestFieldDefinition');
 
 const ELEMENT_TYPE = 'ZestAssignFieldValue';
 
