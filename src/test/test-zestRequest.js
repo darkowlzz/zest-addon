@@ -6,6 +6,7 @@
 'use strict';
 
 const { ZestRequest } = require('./Zest/core/zestRequest');
+const { ZestVariables } = require('./Zest/core/zestVariables');
 const { goodRequest } = require('dataSet');
 
 exports['test zestRequest new'] = function (assert) {
@@ -49,6 +50,25 @@ exports['test zestRequest new'] = function (assert) {
   assert.equal(zr.method, 'POST', 'returns correct method');
   zr.headers = 'xxyyzz';
   assert.equal(zr.headers, 'xxyyzz', 'returns correct headers');
+
+  let tokens = new ZestVariables();
+
+  opts.request.url = 'www.example.{{varInUrl}}';
+  tokens.addVariable('varInUrl', 'com');
+  opts.request.method = '{{varInMethod}}';
+  tokens.addVariable('varInMethod', 'GET');
+  opts.request.headers = 'aa{{varInHeader}}cc{{varInHeader2}}';
+  tokens.addVariable('varInHeader', 'zest');
+  tokens.addVariable('varInHeader2', 'mozilla');
+  opts.request.data = 'name:{{varInData}}';
+  tokens.addVariable('varInData', 'johnny');
+
+  let zr2 = new ZestRequest(opts);
+  zr2.replaceTokens(tokens);
+  assert.equal(zr2.url, 'www.example.com', 'url token replacer works');
+  assert.equal(zr2.method, 'GET', 'method token replacer works');
+  assert.equal(zr2.headers, 'aazestccmozilla', 'headers token replacer works');
+  assert.equal(zr2.data, 'name:johnny', 'data token replacer works');
 };
 
 /*
