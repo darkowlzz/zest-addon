@@ -15,7 +15,7 @@ const ZestLog = require('zestLog');
 const { beautify } = require('zestHelper');
 
 const observerService = Cc['@mozilla.org/observer-service;1'].
-                      getService(Ci.nsIObserverService);
+                        getService(Ci.nsIObserverService);
 
 Cu.import('resource://gre/modules/XPCOMUtils.jsm');
 

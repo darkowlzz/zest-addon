@@ -5,6 +5,7 @@
 
 'use strict';
 
+const { Source } = require('sourceParser');
 const { ZestFieldDefinition } = require('Zest/core/zestFieldDefinition');
 
 const ELEMENT_TYPE = 'ZestAssignFieldValue';
@@ -43,8 +44,22 @@ function ZestAssignFieldValue (opts) {
   });
 }
 
-ZestAssignFieldValue.prototype.assign = function() {
-  //XXX Requires a html parser
+ZestAssignFieldValue.prototype.assign = function(response) {
+  let src = new Source(response.header + response.body);
+  let formElements = src.getElementsByTagName('form');
+
+  if (formElements !== undefined &&
+      this.fieldDefinition < formElements.length) {
+    let form = formElements[this.fieldDefinition.formIndex];
+
+    let inputElements = form.getElementsByTagName('input');
+    for (let inputElement of inputElements) {
+      if ((this.fieldDefinition.fieldName == inputElement.id) ||
+          (this.fieldDefinition.fieldName == inputElement.name)) {
+        return inputElement.value;
+      }
+    }
+  }
 };
 
 ZestAssignFieldValue.prototype.toZest = function() {
