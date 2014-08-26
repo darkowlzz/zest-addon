@@ -22,13 +22,14 @@ const { defer } = require('sdk/core/promise');
 function run(script, worker) {
   let statements, opts, resVar, runResult, lastResponse, lastRequest,
       reqCount = 0;
+
   Task.spawn(function* () {
     statements = script.getStatements();
     for (let stmt of statements) {
+      reqCount += 1;
+      lastRequest = stmt;
       switch (stmt.elementType) {
         case 'ZestRequest':
-          reqCount += 1;
-          lastRequest = stmt;
           opts = {
             url: stmt.url,
             content: stmt.data,
@@ -54,6 +55,8 @@ function run(script, worker) {
         case 'ZestAction':
           break;
         case 'ZestAssignment':
+          break;
+        case 'ZestAssignString':
           break;
         case 'ZestLoop':
           break;

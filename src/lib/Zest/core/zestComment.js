@@ -22,7 +22,6 @@ function ZestComment(opts) {
   this.__defineGetter__('index', function() {
     return _index;
   });
-
   this.__defineSetter__('index', function(val) {
     _index = val;
   });

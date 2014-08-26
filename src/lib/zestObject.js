@@ -79,37 +79,15 @@ function ZestObject (opts) {
           break;
         case 'ZestConditional':
           break;
+        case 'ZestAssignString':
+
+          break;
         default:
       }
     }
   }
 
-  /*
-  this.__defineGetter__('script', function() {
-    return script;
-  });
-  this.__defineSetter__('script', function(val) {
-    script = val;
-  });
-
-  this.getStatements = function() {
-    return script.getStatements();
-  }
-  */
-
   return script;
 }
-
-/*
-ZestObject.prototype.getString = function() {
-  return this.script.getZestString();
-};
-
-ZestObject.prototype.getJSON = function() {
-  return this.script.getZestJSON();
-};
-*/
-
-//ZestObject.prototype.counter = 0;
 
 exports.ZestObject = ZestObject;
