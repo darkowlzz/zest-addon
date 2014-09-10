@@ -9,6 +9,7 @@ const { Request } = require('sdk/request');
 const { Cu } = require('chrome');
 const { Task } = Cu.import('resource://gre/modules/Task.jsm', {});
 const { defer } = require('sdk/core/promise');
+//const { ZestVariables } = require('Zest/core/zestVariables');
 
 /**
  * Given a `script` and `worker`, steps through every statement in the script
@@ -22,6 +23,7 @@ const { defer } = require('sdk/core/promise');
 function run(script, worker) {
   let statements, opts, resVar, runResult, lastResponse, lastRequest,
       reqCount = 0;
+  //let variables = new ZestVariables();
 
   Task.spawn(function* () {
     statements = script.getStatements();
