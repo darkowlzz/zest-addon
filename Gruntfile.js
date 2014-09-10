@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+const STABLE_VERSION = '1_17';
+
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
@@ -25,9 +27,9 @@ module.exports = function(grunt) {
     },
 
     'mozilla-addon-sdk': {
-      '1_16': {
+      '1_17': {
         options: {
-          revision: '1.16'
+          revision: '1.17'
         }
       },
       'master': {
@@ -40,7 +42,7 @@ module.exports = function(grunt) {
     'mozilla-cfx-xpi': {
       'stable': {
         options: {
-          'mozilla-addon-sdk': '1_16',
+          'mozilla-addon-sdk': STABLE_VERSION,
           extension_dir: 'src',
           dist_dir: 'tmp/dist-stable'
         }
@@ -56,7 +58,7 @@ module.exports = function(grunt) {
     'mozilla-cfx': {
       'run_stable': {
         options: {
-          'mozilla-addon-sdk': '1_16',
+          'mozilla-addon-sdk': STABLE_VERSION,
           extension_dir: 'src',
           command: 'run'
         }
@@ -70,7 +72,7 @@ module.exports = function(grunt) {
       },
       'run_test': {
         options: {
-          'mozilla-addon-sdk': '1_16',
+          'mozilla-addon-sdk': STABLE_VERSION,
           extension_dir: 'src',
           command: 'test'
         }
@@ -87,7 +89,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['jshint:all', 'watch']);
 
-  grunt.registerTask('build', ['mozilla-addon-sdk:1_16',
+  grunt.registerTask('build', ['mozilla-addon-sdk:' + STABLE_VERSION,
                                'mozilla-cfx-xpi:stable']);
 
   grunt.registerTask('run', ['mozilla-cfx:run_stable']);
