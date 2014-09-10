@@ -28,6 +28,11 @@ function run(script, worker) {
   Task.spawn(function* () {
     statements = script.getStatements();
     for (let stmt of statements) {
+      // check if the statement is a comment.
+      if (stmt.enabled === false) {
+        continue;
+      }
+
       reqCount += 1;
       lastRequest = stmt;
       switch (stmt.elementType) {
