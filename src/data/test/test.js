@@ -10,11 +10,11 @@
 require.config({
   baseUrl: '../scripts/',
   paths: {
-    QUnit: '../test/qunit',
-    jquery: 'dynatree/jquery/jquery',
-    jqueryUi: 'dynatree/jquery/jquery-ui.custom',
-    dynatree: 'dynatree/src/jquery.dynatree',
-    contextMenu: 'dynatree/doc/contextMenu/jquery.contextMenu-custom'
+    QUnit: '../bower_components/qunit/qunit',
+    jquery: '../bower_components/jquery/jquery',
+    jqueryUi: '../bower_components/jquery-ui/jquery-ui',
+    dynatree: '../bower_components/dynatree/dist/jquery.dynatree',
+    contextMenu: '../bower_components/dynatree/doc/contextMenu/jquery.contextMenu-custom'
   },
   shim: {
     QUnit: {

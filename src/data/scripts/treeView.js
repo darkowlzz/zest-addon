@@ -187,7 +187,7 @@ define(
             asserts.push({
               title: 'Assert - Status Code (' +
                      assert.rootExpression.code + ')',
-              icon: 'assert.png',
+              icon: '../../../../images/assert.png',
               parentNodeKey: parentReq.index,
               type: assert.rootExpression.elementType,
               statCode: assert.rootExpression.code,
@@ -201,7 +201,7 @@ define(
               title: 'Assert - Length (response.body = ' +
                      assert.rootExpression.length + ' +/- ' +
                      assert.rootExpression.approx + '%)',
-              icon: 'assert.png',
+              icon: '../../../../images/assert.png',
               parentNodeKey: parentReq.index,
               type: assert.rootExpression.elementType,
               selectedVar: assert.rootExpression.variableName,
@@ -222,7 +222,7 @@ define(
             asserts.push({
               title: 'Assert - ' + assert.rootExpression.variableName +
                      ' Regex (' + assert.rootExpression.regex + ')',
-              icon: 'assert.png',
+              icon: '../../../../images/assert.png',
               parentNodeKey: parentReq.index,
               type: assert.rootExpression.elementType,
               selectedVar: assert.rootExpression.variableName,
@@ -281,7 +281,7 @@ define(
               // returning data.
               title: (stmt.method + ' : ' + stmt.url),
               isFolder: true, key: stmt.index,
-              icon: 'request.png', children: temp2,
+              icon: '../../../../images/request.png', children: temp2,
               type: stmt.elementType,
               'request.url': stmt.url,
               'request.method': stmt.method,
@@ -299,7 +299,7 @@ define(
             temp = {
               title: 'Comment: ' + stmt.comment,
               isFolder: true, key: stmt.index,
-              icon: 'comment.png',
+              icon: '../../../../images/comment.png',
               type: stmt.elementType,
               comment: stmt.comment,
               chidNodes: 0

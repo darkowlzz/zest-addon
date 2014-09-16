@@ -7,10 +7,10 @@
 
 require.config({
   paths: {
-    jquery: 'dynatree/jquery/jquery',
-    jqueryUi: 'dynatree/jquery/jquery-ui.custom',
-    dynatree: 'dynatree/src/jquery.dynatree',
-    contextMenu: 'dynatree/doc/contextmenu/jquery.contextMenu-custom'
+    jquery: '../bower_components/jquery/jquery',
+    jqueryUi: '../bower_components/jquery-ui/jquery-ui',
+    dynatree: '../bower_components/dynatree/dist/jquery.dynatree',
+    contextMenu: '../bower_components/dynatree/doc/contextmenu/jquery.contextMenu-custom'
   },
   shim: {
     jqueryUi: {
