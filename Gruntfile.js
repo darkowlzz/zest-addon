@@ -100,6 +100,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint:all', 'watch']);
 
   grunt.registerTask('build', ['mozilla-addon-sdk:' + STABLE_VERSION,
+                               'bower',
                                'mozilla-cfx-xpi:stable']);
 
   grunt.registerTask('run', ['mozilla-cfx:run_stable']);
