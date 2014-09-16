@@ -7,7 +7,7 @@
 
 'use strict';
 
-define(['treeView'],
+define(['../scripts/treeView'],
   function (tv) {
 
     function initializeTree(z) {
@@ -33,7 +33,8 @@ define(['treeView'],
         var node = tree.getNodeByKey('1');
         equal(node.data.title, 'GET : http://gmail.com/',
               'Titles do not match');
-        equal(node.data.icon, 'request.png', 'Icons do not match');
+        equal(node.data.icon, '../../../../images/request.png',
+                              'Icons do not match');
         ok(node.data.isFolder, 'Folder not recognized');
         equal(node.data.type, 'ZestRequest', 'Node types do not match');
         equal(node.data['request.url'], 'http://gmail.com/',
@@ -62,7 +63,8 @@ define(['treeView'],
         var node = parentNode.getChildren()[0];
         equal(node.data.title, 'Assert - Status Code (200)',
               'Titles do not match');
-        equal(node.data.icon, 'assert.png', 'Icons do not match');
+        equal(node.data.icon, '../../../../images/assert.png',
+                              'Icons do not match');
         equal(node.data.parentNodeKey, parentNode.data.key,
               'Parent node keys do not match');
         equal(node.data.type, 'ZestExpressionStatusCode',
@@ -78,7 +80,8 @@ define(['treeView'],
         var node = parentNode.getChildren()[1];
         equal(node.data.title, 'Assert - Length (response.body = 68120 +/- 1%)',
               'Titles do not match');
-        equal(node.data.icon, 'assert.png', 'Icons do not match');
+        equal(node.data.icon, '../../../../images/assert.png',
+                              'Icons do not match');
         equal(node.data.parentNodeKey, parentNode.data.key,
               'Parent node keys do not match');
         equal(node.data.type, 'ZestExpressionLength',
@@ -110,7 +113,8 @@ define(['treeView'],
         var node = parentNode.getChildren()[2];
         equal(node.data.title, 'Assert - response.header Regex (Mozilla)',
               'Titles do not match');
-        equal(node.data.icon, 'assert.png', 'Icons do not match');
+        equal(node.data.icon, '../../../../images/assert.png',
+                              'Icons do not match');
         equal(node.data.parentNodeKey, parentNode.data.key,
               'Parent node keys do not match');
         equal(node.data.type, 'ZestExpressionRegex',

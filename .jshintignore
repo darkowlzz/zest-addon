@@ -1,6 +1,8 @@
 src/data/scripts/dynatree/**
+src/data/bower_components/**
+src/data/scripts/app.js
 src/data/scripts/require.js
-src/data/test/qunit.js
+src/data/test/test.js
 node_modules/**
 src/test/dataSet.js
 src/test/template.js

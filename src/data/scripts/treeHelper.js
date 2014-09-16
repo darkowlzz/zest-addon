@@ -171,7 +171,7 @@ define(function() {
       case 'ZestExpressionStatusCode':
         node.addChild({
           title: 'Assert - Status Code (' + val + ')',
-          icon: 'assert.png',
+          icon: '../../../../images/assert.png',
           parentNodeKey: node.data.key,
           type: attr,
           statCode: val,
@@ -187,7 +187,7 @@ define(function() {
         var child = {
           title: 'Assert - Length (' + val.selectedVar + ' = ' +
                  val.length + ' +/- ' + val.approx + '%)',
-          icon: 'assert.png',
+          icon: '../../../../images/assert.png',
           parentNodeKey: node.data.key,
           type: attr,
           selectedVar: val.selectedVar,
@@ -214,7 +214,7 @@ define(function() {
       case 'ZestExpressionRegex':
         node.addChild({
           title: 'Assert - ' + val.selectedVar + ' Regex (' + val.regex + ')',
-          icon: 'assert.png',
+          icon: '../../../../images/assert.png',
           parentNodeKey: node.data.key,
           type: attr,
           selectedVar: val.selectedVar,
@@ -595,7 +595,7 @@ define(function() {
                 title: 'Comment: ' + cmt,
                 isFolder: true,
                 key: index,
-                icon: 'comment.png',
+                icon: '../../../../images/comment.png',
                 type: 'ZestComment',
                 comment: cmt
               });
