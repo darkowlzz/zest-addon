@@ -1,4 +1,4 @@
-Zest-Addon
+Zest-Addon [![Stories in Ready](https://badge.waffle.io/darkowlzz/zest-addon.svg?label=ready&title=Ready)](http://waffle.io/darkowlzz/zest-addon)
 ==========
 
 Zest Firefox add-on
