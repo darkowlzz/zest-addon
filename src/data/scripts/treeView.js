@@ -181,7 +181,7 @@ define(
     var childCount = 0;
     var asserts = [];
     try {
-      for (var assert of assertions) {
+      assertions.forEach(function(assert) {
         switch (assert.rootExpression.elementType) {
           case 'ZestExpressionStatusCode':
             asserts.push({
@@ -237,7 +237,7 @@ define(
           default:
 
         }
-      }
+      });
     }
     catch(e) {
       console.log('ErRoR: ' + e);
@@ -268,14 +268,14 @@ define(
       var temp;
       var temp2;
       var asserts;
-      for (var stmt of z.statements) {
+      z.statements.forEach(function(stmt) {
         switch(stmt.elementType) {
           case 'ZestRequest':
             temp2 = [];
             asserts = extractAsserts(stmt.assertions, stmt);
-            for (var assert of asserts) {
+            asserts.forEach(function(assert) {
               temp2.push(assert);
-            }
+            });
             temp = {
               // All the req/res data is binded to node to reduce complexity in
               // returning data.
@@ -313,7 +313,7 @@ define(
             };
         }
         root.addChild(temp);
-      }
+      });
     }
   };
 });

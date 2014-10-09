@@ -1,6 +1,9 @@
 {
   "name": "zest-addon",
   "version": "0.0.1",
+  "scripts": {
+    "test": "grunt test"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-bower-task": "^0.4.0",

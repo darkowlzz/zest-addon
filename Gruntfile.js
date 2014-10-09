@@ -110,7 +110,7 @@ module.exports = function(grunt) {
   grunt.registerTask('release', ['mozilla-cfx-xpi:stable']);
   grunt.registerTask('release:experimental',
                     ['mozilla-cfx-xpi:experimental']);
-  grunt.registerTask('test', ['mozilla-cfx:run_test']);
+  grunt.registerTask('test', ['jshint:all', 'mozilla-cfx:run_test']);
   grunt.registerTask('test:experimental',
-                    ['mozilla-cfx:run_test_experimental']);
+                    ['jshint:all', 'mozilla-cfx:run_test_experimental']);
 };
