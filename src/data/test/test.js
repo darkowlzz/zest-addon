@@ -36,14 +36,30 @@ require.config({
   }
 });
 
-var testList = [
-  '../test/test-treeHelper',
-  '../test/test-treeView'
-];
+/*
+ * Could also be done as:
+ * var testList = [
+ *   '../test/test-treeHelper',
+ *   '../test/test-treeView'
+ * ];
+ *
+ * require(['QUnit', ...testList], function(QUnit, ...tests) {
+ *
+ * and later:
+ * for (var test of tests) {
+ *   test.run();
+ * }
+ *
+ * only when rest parameters are available in v8(js).
+ */
+require(['QUnit',
+         '../test/test-treeHelper',
+         '../test/test-treeView'],
+  function(QUnit) {
+    console.log(JSON.stringify(arguments));
 
-require(['QUnit', ...testList], function(QUnit, ...tests) {
-    for (var test of tests) {
-      test.run();
+    for (var i = 1; i < arguments.length; i++) {
+      arguments[i].run();
     }
 
     QUnit.load();

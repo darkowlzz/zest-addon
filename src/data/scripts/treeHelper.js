@@ -60,10 +60,10 @@ define(function() {
     try {
       var list = parent.getChildren();
       var i = 0;
-      for (var c of list) {
+      list.forEach(function(c) {
         c.data.childId = i;
         i++;
-      }
+      });
     }
     catch(e) {}
   }
@@ -254,11 +254,11 @@ define(function() {
     $('#zestDialog').load('dialog.html #addElement', function () {
       $('#dialogTitle').text(eleName);
       var radio;
-      for (var t of assets.types) {
+      assets.types.forEach(function(t) {
         radio = $('<input type="radio" name="' + assets.name +
                 '" value="' + t + '"/>' + t + '<br>');
         $('#typesRadio').append(radio);
-      }
+      });
     }).dialog({
       modal: true,
       height: height,
@@ -398,13 +398,13 @@ define(function() {
     }
 
     $('#zestDialog').load('dialog.html #expStatus', function() {
-      for (var c of statusCodeList) {
+      statusCodeList.forEach(function(c) {
         tmp = $('<option value="' + c + '">' + c + '</option>');
         if (!assets.isNew && c == node.data.statCode) {
           tmp.attr('selected', 'selected');
         }
         $('#statCode').append(tmp);
-      }
+      });
     }).dialog({
       modal: true,
       height: 200,
@@ -446,13 +446,13 @@ define(function() {
     var tmp;
     var selectedVar = node.data.selectedVar;
     $('#zestDialog').load('dialog.html #expLength', function() {
-      for (var v of varExpList) {
+      varExpList.forEach(function(v) {
         tmp = $('<option value="' + v + '">' + v + '</option>');
         if (!assets.isNew && v == selectedVar) {
           tmp.attr('selected', 'selected');
         }
         $('#varName').append(tmp);
-      }
+      });
       if (!assets.isNew) {
         $('#length').val(node.data[selectedVar]);
         $('#approx').val(node.data.approx);
@@ -514,13 +514,13 @@ define(function() {
     var tmp;
     var selectedVar = node.data.selectedVar;
     $('#zestDialog').load('dialog.html #expRegex', function() {
-      for (var v of varExpList) {
+      varExpList.forEach(function(v) {
         tmp = $('<option value="' + v + '">' + v + '</option>');
         if (!assets.isNew && v == selectedVar) {
           tmp.attr('selected', 'selected');
         }
         $('#varName').append(tmp);
-      }
+      });
       if (!assets.isNew) {
         $('#regexString').val(node.data.regex);
         $('#caseSense').prop('checked', node.data.caseSense);
@@ -643,24 +643,24 @@ define(function() {
 
           $('#reqInfo-url').val(node.data['request.url']);
           var methodList = ['GET', 'POST'];
-          for (var m of methodList) {
+          methodList.forEach(function(m) {
             tmp = $('<option value="' + m + '">' + m + '</option>');
             if (m == node.data['request.method']) {
               tmp.attr('selected', 'selected');
             }
             $('#reqInfo-method').append(tmp);
-          }
+          });
 
           $('#reqInfo-method [name=options]').val(node.data['request.method']);
           $('#reqInfo-header').val(node.data['request.header']);
           $('#reqInfo-body').val(node.data['request.body']);
-          for (var c of statusCodeList) {
+          statusCodeList.forEach(function(c) {
             tmp = $('<option value="' + c + '">' + c + '</option>');
             if (c == node.data['response.statusCode']) {
               tmp.attr('selected', 'selected');
             }
             $('#resInfo-status').append(tmp);
-          }
+          });
           $('#resInfo-time').val(node.data['response.time']);
           $('#resInfo-header').val(node.data['response.header']);
           $('#resInfo-body').val(node.data['response.body']);
